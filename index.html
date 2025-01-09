@@ -75,47 +75,46 @@
     <script>
         const schedules = {
             "понедельник": [
-                ["Алгебра", "306"],
-                ["Литература", "202"],
-                ["Биология", "305"],
-                ["География", "205"],
-                ["Химия", "208"],
-                ["Геометрия", "306"],
-                ["Русский язык", "206"]
+                "Алгебра",
+                "Литература",
+                "Биология",
+                "География",
+                "Химия",
+                "Геометрия",
+                "Русский язык"
             ],
             "вторник": [
-                ["ОБЖ", "101"],
-                ["История", "103"],
-                ["Иностранный язык", "201/410"],
-                ["Русский язык", "206"],
-                ["Физика", "209"],
-                ["Алгебра", "306"],
-                ["Труд", "206"]
+                "ОБЖ",
+                "История",
+                "Иностранный язык",
+                "Русский язык",
+                "Физика",
+                "Алгебра",
+                "Труд"
             ],
             "среда": [
-                ["Геометрия", "306"],
-                ["Биология", "305"],
-                ["Литература", "202"],
-                ["Музыка", "207"],
-                ["Иностранный язык", "201/410"],
-                ["Физкультура", ""]
+                "Геометрия",
+                "Биология",
+                "Литература",
+                "Музыка",
+                "Иностранный язык",
+                "Физкультура"
             ],
             "четверг": [
-                ["География", "205"],
-                ["Русский язык", "206"],
-                ["Информатика", "210/310"],
-                ["Химия", "208"],
-                ["Алгебра", "306"],
-                ["Обществознание", "103"]
+                "География",
+                "Русский язык",
+                "Информатика",
+                "Химия",
+                "Алгебра",
+                "Обществознание"
             ],
             "пятница": [
-                ["Физкультура", ""],
-                ["История", "103"],
-                ["Физика", "209"],
-                ["Алгебра", "306"],
-                ["Иностранный язык", "201/410"],
-                ["Вероятность", "306"],
-                ["Информатика", "201/310"]
+                "Физкультура",
+                "История",
+                "Физика",
+                "Алгебра",
+                "Вероятность",
+                "Информатика"
             ]
         };
 
@@ -129,35 +128,45 @@
             "15:00-15:45"
         ];
 
-        let showingAllSchedules = false;
+        let showingAll = false;
 
-        function showSchedule() {
+        function updateSchedule() {
+            if (showingAll) {
+                showTodaySchedule();
+            } else {
+                showAllSchedules();
+            }
+            toggleButtonLabel();
+        }
+
+        function toggleButtonLabel() {
+            document.getElementById('toggleButton').innerText = showingAll ? "Все расписание" : "Сегодняшнее расписание";
+        }
+
+        function showTodaySchedule() {
             const day = new Date().toLocaleString('ru-RU', { weekday: 'long' }).toLowerCase();
             const schedule = schedules[day] || [];
             const table = document.getElementById('schedule');
 
             let tableHTML = `
                 <tr>
-                    <th>№</th>
+                    <th>#</th>
                     <th>Время</th>
                     <th>Предмет</th>
-                    <th>Кабинет</th>
                 </tr>`;
 
-            schedule.forEach(([subject, room], index) => {
+            schedule.forEach((subject, index) => {
                 tableHTML += `
                     <tr>
                         <td>${index + 1}</td>
                         <td>${times[index] || ""}</td>
                         <td>${subject}</td>
-                        <td>${room}</td>
                     </tr>`;
             });
 
             table.innerHTML = tableHTML;
             document.getElementById('day').innerText = day.charAt(0).toUpperCase() + day.slice(1);
-            document.getElementById('toggleButton').innerText = "Все расписание";
-            showingAllSchedules = false;
+            showingAll = false;
         }
 
         function showAllSchedules() {
@@ -165,33 +174,25 @@
             let tableHTML = "";
 
             Object.keys(schedules).forEach(day => {
-                tableHTML += `<tr><th colspan='4'>${day.charAt(0).toUpperCase() + day.slice(1)}</th></tr>`;
-                schedules[day].forEach(([subject, room], index) => {
+                tableHTML += `<tr><th colspan='3'>${day.charAt(0).toUpperCase() + day.slice(1)}</th></tr>`;
+                schedules[day].forEach((subject, index) => {
                     tableHTML += `
                         <tr>
                             <td>${index + 1}</td>
-                            <td>${times[index] || ""}</td>
                             <td>${subject}</td>
-                            <td>${room}</td>
+                            <td>${times[index] || ""}</td>
                         </tr>`;
                 });
             });
 
             table.innerHTML = tableHTML;
-            document.getElementById('day').innerText = "Полное расписание";
-            document.getElementById('toggleButton').innerText = "Сегодняшнее расписание";
-            showingAllSchedules = true;
+            showingAll = true;
         }
 
-        function toggleSchedule() {
-            if (showingAllSchedules) {
-                showSchedule();
-            } else {
-                showAllSchedules();
-            }
-        }
-
-        window.onload = showSchedule;
+        window.onload = () => {
+            showTodaySchedule();
+            toggleButtonLabel();
+        };
     </script>
 </head>
 <body>
@@ -202,7 +203,7 @@
         <h2>Сегодня: <span id="day"></span></h2>
         <table id="schedule"></table>
         <div class="button-container">
-            <button id="toggleButton" onclick="toggleSchedule()">Все расписание</button>
+            <button id="toggleButton" onclick="updateSchedule()"></button>
         </div>
     </div>
 </body>
