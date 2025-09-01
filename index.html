@@ -1,215 +1,178 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Расписание</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #2c2c2c, #ff0303);
-            background-size: 400% 400%;
-            animation: gradientAnimation 15s ease infinite;
-            color: #e0e0e0;
-        }
-        @keyframes gradientAnimation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        header {
-            background: #2f2f2f;
-            color: #e0e0e0;
-            padding: 10px 20px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        }
-        .container {
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: rgba(40, 40, 40, 0.9);
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background-color: rgba(60, 60, 60, 0.9);
-            color: #e0e0e0;
-        }
-        table, th, td {
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        th, td {
-            padding: 10px;
-            text-align: center;
-        }
-        th {
-            background-color: #3f3f3f;
-            color: #e0e0e0;
-        }
-        h2 span {
-            color: #a8a8a8;
-        }
-        .button-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-        button {
-            background-color: #5a5a5a;
-            color: #e0e0e0;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #4a4a4a;
-        }
-    </style>
-    <script>
-        const schedules = {
-            "понедельник": [
-                "История",
-                "Физкультура",
-                "Алгебра",
-                "География",
-                "Обществознание",
-                "Иностранный язык"
-            ],
-            "вторник": [
-                "Литература",
-                "Русский язык",
-                "ОБЖ",
-                "Алгебра",
-                "Физика",
-                "Иностранный язык",
-                "История"
-            ],
-            "среда": [
-                "Русский язык",
-                "Литература",
-                "География",
-                "Химия",
-                "Информатика",
-                "Физкультура",
-                "Труд"
-            ],
-            "четверг": [
-                "Алгебра",
-                "Геометрия",
-                "Физика",
-                "Биология",
-                "Русский язык",
-                "Литература"
-            ],
-            "пятница": [
-                "Вероятность и статистика",
-                "Геометрия",
-                "Алгебра",
-                "Химия",
-                "Биология",
-                "Физика",
-                "Иностранный язык"
-            ]
-        };
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Расписание</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #2c2c2c, #ff0303);
+      background-size: 400% 400%;
+      animation: gradientAnimation 15s ease infinite;
+      color: #e0e0e0;
+    }
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    header {
+      background: #2f2f2f;
+      color: #e0e0e0;
+      padding: 10px 20px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+    .container {
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: rgba(40, 40, 40, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: rgba(60, 60, 60, 0.9);
+      color: #e0e0e0;
+    }
+    table, th, td {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    th, td {
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #3f3f3f;
+      color: #e0e0e0;
+    }
+    h2 span {
+      color: #a8a8a8;
+    }
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+    }
+    button {
+      background-color: #5a5a5a;
+      color: #e0e0e0;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #4a4a4a;
+    }
+  </style>
+  <script>
+    const schedules = {
+      "понедельник": [ "История", "Физкультура", "Алгебра", "География", "Обществознание", "Иностранный язык" ],
+      "вторник": [ "Литература", "Русский язык", "ОБЖ", "Алгебра", "Физика", "Иностранный язык", "История" ],
+      "среда": [ "Русский язык", "Литература", "География", "Химия", "Информатика", "Физкультура", "Труд" ],
+      "четверг": [ "Алгебра", "Геометрия", "Физика", "Биология", "Русский язык", "Литература" ],
+      "пятница": [ "Вероятность и статистика", "Геометрия", "Алгебра", "Химия", "Биология", "Физика", "Иностранный язык" ]
+    };
 
-        const times = [
-            "8:30-9:15",
-            "9:40-10:25",
-            "10:50-11:35",
-            "12:05-12:50",
-            "13:10-13:55",
-            "14:05-14:50",
-            "15:00-15:45"
-        ];
+    const times = [
+      "8:30-9:15", "9:40-10:25", "10:50-11:35",
+      "12:05-12:50", "13:10-13:55", "14:05-14:50", "15:00-15:45"
+    ];
 
-        let showingAll = false;
+    const days = Object.keys(schedules);
+    let currentDayIndex = new Date().getDay() - 1; // Пн=0, Вс=6
+    if (currentDayIndex < 0 || currentDayIndex >= days.length) currentDayIndex = 0;
 
-        function updateSchedule() {
-            if (showingAll) {
-                showTodaySchedule();
-            } else {
-                showAllSchedules();
-            }
-            toggleButtonLabel();
-        }
+    let showingAll = false;
 
-        function toggleButtonLabel() {
-            document.getElementById('toggleButton').innerText = showingAll ? "Сегодняшнее расписание" : "Все расписание";
-        }
+    function updateSchedule() {
+      if (showingAll) {
+        showTodaySchedule();
+      } else {
+        showAllSchedules();
+      }
+      toggleButtonLabel();
+    }
 
-        function showTodaySchedule() {
-            const day = new Date().toLocaleString('ru-RU', { weekday: 'long' }).toLowerCase();
-            const schedule = schedules[day] || [];
-            const table = document.getElementById('schedule');
+    function toggleButtonLabel() {
+      document.getElementById('toggleButton').innerText = showingAll ? "Сегодняшнее расписание" : "Все расписание";
+    }
 
-            let tableHTML = `
-                <tr>
-                    <th>#</th>
-                    <th>Время</th>
-                    <th>Предмет</th>
-                </tr>`;
+    function showTodaySchedule() {
+      const day = days[currentDayIndex];
+      const schedule = schedules[day] || [];
+      const table = document.getElementById('schedule');
 
-            schedule.forEach((subject, index) => {
-                tableHTML += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${times[index] || ""}</td>
-                        <td>${subject}</td>
-                    </tr>`;
-            });
+      let tableHTML = `<tr><th>#</th><th>Время</th><th>Предмет</th></tr>`;
+      schedule.forEach((subject, index) => {
+        tableHTML += `<tr>
+          <td>${index + 1}</td>
+          <td>${times[index] || ""}</td>
+          <td>${subject}</td>
+        </tr>`;
+      });
 
-            table.innerHTML = tableHTML;
-            document.getElementById('day').innerText = day.charAt(0).toUpperCase() + day.slice(1);
-            showingAll = false;
-        }
+      table.innerHTML = tableHTML;
+      document.getElementById('day').innerText = day.charAt(0).toUpperCase() + day.slice(1);
+      showingAll = false;
+    }
 
-        function showAllSchedules() {
-            const table = document.getElementById('schedule');
-            let tableHTML = "";
+    function showAllSchedules() {
+      const table = document.getElementById('schedule');
+      let tableHTML = "";
 
-            Object.keys(schedules).forEach(day => {
-                tableHTML += `<tr><th colspan='3'>${day.charAt(0).toUpperCase() + day.slice(1)}</th></tr>`;
-                schedules[day].forEach((subject, index) => {
-                    tableHTML += `
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td>${subject}</td>
-                            <td>${times[index] || ""}</td>
-                        </tr>`;
-                });
-            });
+      days.forEach(day => {
+        tableHTML += `<tr><th colspan='3'>${day.charAt(0).toUpperCase() + day.slice(1)}</th></tr>`;
+        schedules[day].forEach((subject, index) => {
+          tableHTML += `<tr>
+            <td>${index + 1}</td>
+            <td>${subject}</td>
+            <td>${times[index] || ""}</td>
+          </tr>`;
+        });
+      });
 
-            table.innerHTML = tableHTML;
-            showingAll = true;
-        }
+      table.innerHTML = tableHTML;
+      showingAll = true;
+    }
 
-        window.onload = () => {
-            showTodaySchedule();
-            toggleButtonLabel();
-        };
-    </script>
+    function prevDay() {
+      currentDayIndex = (currentDayIndex - 1 + days.length) % days.length;
+      showTodaySchedule();
+    }
+
+    function nextDay() {
+      currentDayIndex = (currentDayIndex + 1) % days.length;
+      showTodaySchedule();
+    }
+
+    window.onload = () => {
+      showTodaySchedule();
+      toggleButtonLabel();
+    };
+  </script>
 </head>
 <body>
-    <header>
-        <h1>Расписание уроков</h1>
-    </header>
-    <div class="container">
-        <h2>Сегодня: <span id="day"></span></h2>
-        <table id="schedule"></table>
-        <div class="button-container">
-            <button id="toggleButton" onclick="updateSchedule()"></button>
-        </div>
+  <header>
+    <h1>Расписание уроков</h1>
+  </header>
+  <div class="container">
+    <h2>Сегодня: <span id="day"></span></h2>
+    <table id="schedule"></table>
+    <div class="button-container">
+      <button onclick="prevDay()">← Предыдущее</button>
+      <button id="toggleButton" onclick="updateSchedule()"></button>
+      <button onclick="nextDay()">Следующее →</button>
     </div>
+  </div>
 </body>
 </html>
-
-
-
-
