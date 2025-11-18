@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Расписание</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>Расписание уроков</header>
+
+<div class="container">
+  <h2>Сегодня: <span id="dayTitle"></span></h2>
+
+  <div id="content"></div>
+
+  <div class="button-container">
+    <button onclick="prevDay()">←</button>
+    <button id="toggleButton" onclick="toggleAll()"></button>
+    <button onclick="nextDay()">→</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
