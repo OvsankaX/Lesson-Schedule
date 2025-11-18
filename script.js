@@ -1,4 +1,4 @@
-const schedules = {
+var schedules = {
   "понедельник": ["Разговоры о какашках", "История", "Физкультура", "Алгебра", "География", "Обществознание", "Иностранный язык"],
   "вторник": ["Литература", "Русский язык", "ОБЖ", "Алгебра", "Физика", "Иностранный язык", "История"],
   "среда": ["Русский язык", "Литература", "География", "Химия", "Информатика", "Физкультура", "Труд"],
@@ -6,70 +6,98 @@ const schedules = {
   "пятница": ["Вероятность и статистика", "Геометрия", "Алгебра", "Химия", "Биология", "Физика", "Иностранный язык"]
 };
 
-const times = [
-  "8:30–9:15", "9:35–10:20", "10:40–11:25",
-  "11:50–12:35", "12:55–13:40", "13:50–14:35", "14:40–15:25"
+var times = [
+  "8:30–9:15",
+  "9:35–10:20",
+  "10:40–11:25",
+  "11:50–12:35",
+  "12:55–13:40",
+  "13:50–14:35",
+  "14:40–15:25"
 ];
 
-const days = Object.keys(schedules);
-let currentDayIndex = new Date().getDay() - 1;
+var days = Object.keys(schedules);
+var currentDayIndex = new Date().getDay() - 1;
 if (currentDayIndex < 0 || currentDayIndex > 4) currentDayIndex = 0;
 
-let showAll = false;
+var showAll = false;
+
 
 function render() {
-  const container = document.getElementById("content");
+  var container = document.getElementById("content");
   container.innerHTML = "";
 
   if (!showAll) {
-    const day = days[currentDayIndex];
-    document.getElementById("dayTitle").innerText = capitalize(day);
+    var day = days[currentDayIndex];
+    document.getElementById("dayTitle").innerHTML = capitalize(day);
 
     renderDay(container, day);
   } else {
-    document.getElementById("dayTitle").innerText = "Все дни";
+    document.getElementById("dayTitle").innerHTML = "Все дни";
 
-    days.forEach(day => {
-      const title = document.createElement("div");
+    for (var i = 0; i < days.length; i++) {
+      var d = days[i];
+
+      var title = document.createElement("div");
       title.className = "day-title";
-      title.innerText = capitalize(day);
+      title.textContent = capitalize(d);
       container.appendChild(title);
 
-      renderDay(container, day);
-    });
+      renderDay(container, d);
+    }
   }
 
-  document.getElementById("toggleButton").innerText = showAll ? "Сегодня" : "Все дни";
+  document.getElementById("toggleButton").textContent = showAll ? "Сегодня" : "Все дни";
 }
 
+
 function renderDay(container, day) {
-  const subjects = schedules[day];
+  var subs = schedules[day];
 
-  subjects.forEach((subj, i) => {
-    const c = document.createElement("div");
-    c.className = "card";
-    c.innerHTML = `
-      <div class="time">${times[i]}</div>
-      <div class="subject">${subj}</div>
-    `;
-    container.appendChild(c);
-  });
+  for (var i = 0; i < subs.length; i++) {
+    var card = document.createElement("div");
+    card.className = "card";
 
-  const table = document.createElement("table");
-  table.innerHTML = `<tr><th>#</th><th>Время</th><th>Предмет</th></tr>`;
+    var t = document.createElement("div");
+    t.className = "time";
+    t.textContent = times[i];
 
-  subjects.forEach((subj, i) => {
-    table.innerHTML += `
-      <tr>
-        <td>${i + 1}</td>
-        <td>${times[i]}</td>
-        <td>${subj}</td>
-      </tr>
-    `;
-  });
+    var s = document.createElement("div");
+    s.className = "subject";
+    s.textContent = subs[i];
+
+    card.appendChild(t);
+    card.appendChild(s);
+
+    container.appendChild(card);
+  }
+
+  var table = document.createElement("table");
+
+  var head = document.createElement("tr");
+  addCell(head, "#", true);
+  addCell(head, "Время", true);
+  addCell(head, "Предмет", true);
+  table.appendChild(head);
+
+  for (var i = 0; i < subs.length; i++) {
+    var row = document.createElement("tr");
+    addCell(row, String(i + 1), false);
+    addCell(row, times[i], false);
+    addCell(row, subs[i], false);
+    table.appendChild(row);
+  }
 
   container.appendChild(table);
 }
+
+
+function addCell(row, text, isHead) {
+  var cell = document.createElement(isHead ? "th" : "td");
+  cell.textContent = text;
+  row.appendChild(cell);
+}
+
 
 function prevDay() {
   currentDayIndex = (currentDayIndex - 1 + days.length) % days.length;
@@ -88,8 +116,12 @@ function toggleAll() {
   render();
 }
 
-function capitalize(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+function capitalize(s) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-window.onload = render;
+document.getElementById("prevBtn").onclick = prevDay;
+document.getElementById("toggleButton").onclick = toggleAll;
+document.getElementById("nextBtn").onclick = nextDay;
+
+render();
