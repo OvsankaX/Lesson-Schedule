@@ -1,27 +1,229 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Расписание</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Расписание</title>
+
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, Arial, sans-serif;
+    background: #121212;
+    color: #e5e5e5;
+  }
+
+  header {
+    text-align: center;
+    padding: 18px;
+    font-size: 22px;
+    background: #1c1c1c;
+    border-bottom: 1px solid #2a2a2a;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 14px;
+  }
+
+  /* карточки */
+  .card {
+    background: #1c1c1c;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    border: 1px solid #2a2a2a;
+  }
+
+  .card .time {
+    opacity: 0.7;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .card .subject {
+    font-size: 17px;
+    font-weight: 500;
+  }
+
+  .day-title {
+    font-size: 19px;
+    margin: 20px 0 10px;
+    opacity: 0.85;
+  }
+
+  /* кнопки */
+  .btns {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  button {
+    flex: 1;
+    padding: 14px 0;
+    background: #2d2d2d;
+    border: none;
+    border-radius: 8px;
+    color: #e5e5e5;
+    font-size: 16px;
+  }
+
+  /* ПК — таблица */
+  @media (min-width: 750px) {
+    .card { display: none; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #1c1c1c;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #2a2a2a;
+      text-align: center;
+    }
+
+    th {
+      background: #222;
+      font-weight: 600;
+    }
+  }
+</style>
 </head>
 <body>
 
 <header>Расписание уроков</header>
 
 <div class="container">
-  <h2>Сегодня: <span id="dayTitle"></span></h2>
-
   <div id="content"></div>
 
-  <div class="button-container">
-    <button id="prevBtn">←</button>
-    <button id="toggleButton"></button>
-    <button id="nextBtn">→</button>
+  <div class="btns">
+    <button onclick="prevDay()">←</button>
+    <button onclick="toggleAll()" id="toggleBtn"></button>
+    <button onclick="nextDay()">→</button>
   </div>
 </div>
 
-<script src="script.js" defer></script>
+<script>
+/* ——— ДАННЫЕ ——— */
+var schedules = {
+  "понедельник": ["Разговоры о какашках", "История", "Физкультура", "Алгебра", "География", "Обществознание", "Иностранный язык"],
+  "вторник": ["Литература", "Русский язык", "ОБЖ", "Алгебра", "Физика", "Иностранный язык", "История"],
+  "среда": ["Русский язык", "Литература", "География", "Химия", "Информатика", "Физкультура", "Труд"],
+  "четверг": ["Говно фуууу", "Алгебра", "Геометрия", "Физика", "Биология", "Русский язык", "Литература"],
+  "пятница": ["Вероятность и статистика", "Геометрия", "Алгебра", "Химия", "Биология", "Физика", "Иностранный язык"]
+};
+
+var times = [
+  "8:30–9:15",
+  "9:35–10:20",
+  "10:40–11:25",
+  "11:50–12:35",
+  "12:55–13:40",
+  "13:50–14:35",
+  "14:40–15:25"
+];
+
+var days = ["понедельник","вторник","среда","четверг","пятница"];
+var dayIndex = new Date().getDay() - 1;
+if (dayIndex < 0 || dayIndex > 4) dayIndex = 0;
+
+var showAll = false;
+
+
+/* ——— РЕНДЕР ——— */
+function render() {
+  var root = document.getElementById("content");
+  root.innerHTML = "";
+
+  document.getElementById("toggleBtn").textContent = showAll ? "Один день" : "Все дни";
+
+  if (showAll) {
+    for (var d = 0; d < days.length; d++) {
+      renderDayBlock(root, days[d]);
+    }
+  } else {
+    renderDayBlock(root, days[dayIndex]);
+  }
+}
+
+function renderDayBlock(root, day) {
+  var title = document.createElement("div");
+  title.className = "day-title";
+  title.textContent = day.charAt(0).toUpperCase() + day.slice(1);
+  root.appendChild(title);
+
+  // карточки (телефон)
+  for (var i = 0; i < schedules[day].length; i++) {
+    var card = document.createElement("div");
+    card.className = "card";
+
+    var t = document.createElement("div");
+    t.className = "time";
+    t.textContent = times[i];
+
+    var s = document.createElement("div");
+    s.className = "subject";
+    s.textContent = schedules[day][i];
+
+    card.appendChild(t);
+    card.appendChild(s);
+    root.appendChild(card);
+  }
+
+  // таблица (ПК)
+  var table = document.createElement("table");
+  var head = document.createElement("tr");
+  addCell(head, "#", true);
+  addCell(head, "Время", true);
+  addCell(head, "Предмет", true);
+  table.appendChild(head);
+
+  for (var i = 0; i < schedules[day].length; i++) {
+    var row = document.createElement("tr");
+    addCell(row, i + 1, false);
+    addCell(row, times[i], false);
+    addCell(row, schedules[day][i], false);
+    table.appendChild(row);
+  }
+
+  root.appendChild(table);
+}
+
+function addCell(row, text, head) {
+  var c = document.createElement(head ? "th" : "td");
+  c.textContent = text;
+  row.appendChild(c);
+}
+
+/* ——— КНОПКИ ——— */
+function prevDay() {
+  dayIndex = (dayIndex - 1 + days.length) % days.length;
+  showAll = false;
+  render();
+}
+
+function nextDay() {
+  dayIndex = (dayIndex + 1) % days.length;
+  showAll = false;
+  render();
+}
+
+function toggleAll() {
+  showAll = !showAll;
+  render();
+}
+
+/* старт */
+render();
+</script>
+
 </body>
 </html>
