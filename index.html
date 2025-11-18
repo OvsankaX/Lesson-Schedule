@@ -162,7 +162,7 @@ function renderDayBlock(root, day) {
   title.textContent = day.charAt(0).toUpperCase() + day.slice(1);
   root.appendChild(title);
 
-  // карточки (телефон)
+  // карточки (мобильные)
   for (var i = 0; i < schedules[day].length; i++) {
     var card = document.createElement("div");
     card.className = "card";
@@ -180,23 +180,25 @@ function renderDayBlock(root, day) {
     root.appendChild(card);
   }
 
-  // таблица (ПК)
-  var table = document.createElement("table");
-  var head = document.createElement("tr");
-  addCell(head, "#", true);
-  addCell(head, "Время", true);
-  addCell(head, "Предмет", true);
-  table.appendChild(head);
+  // таблица только если ширина экрана >= 750px
+  if (window.innerWidth >= 750) {
+    var table = document.createElement("table");
+    var head = document.createElement("tr");
+    addCell(head, "#", true);
+    addCell(head, "Время", true);
+    addCell(head, "Предмет", true);
+    table.appendChild(head);
 
-  for (var i = 0; i < schedules[day].length; i++) {
-    var row = document.createElement("tr");
-    addCell(row, i + 1, false);
-    addCell(row, times[i], false);
-    addCell(row, schedules[day][i], false);
-    table.appendChild(row);
+    for (var i = 0; i < schedules[day].length; i++) {
+      var row = document.createElement("tr");
+      addCell(row, i + 1, false);
+      addCell(row, times[i], false);
+      addCell(row, schedules[day][i], false);
+      table.appendChild(row);
+    }
+
+    root.appendChild(table);
   }
-
-  root.appendChild(table);
 }
 
 function addCell(row, text, head) {
@@ -229,4 +231,5 @@ render();
 
 </body>
 </html>
+
 
