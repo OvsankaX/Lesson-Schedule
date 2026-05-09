@@ -462,23 +462,20 @@
 
   // --------------------------  РЕКЛАМНАЯ КАРУСЕЛЬ (ЦИКЛ С ЗАДЕРЖКОЙ) --------------------------
   // Три рекламных объявления (картинка + ссылка)
-  const adCampaigns = [
-    {
-      imgUrl: "https://placehold.co/600x400/2c2e3a/FFA559?text=CASE+BATTLE&font=montserrat", 
-      link: "https://case-battle.red/",
-      alt: "Case Battle"
-    },
-    {
-      imgUrl: "https://placehold.co/600x400/2e2a44/70D6FF?text=UPGRADER.PRO&font=montserrat",
-      link: "https://upgrader.pro/ru",
-      alt: "Upgrader Pro"
-    },
-    {
-      imgUrl: "https://placehold.co/600x400/1d3b3f/FFC857?text=ГОСУСЛУГИ&font=montserrat",
-      link: "https://contract.gosuslugi.ru/",
-      alt: "Госуслуги Контракт"
-    }
-  ];
+const adCampaigns = [
+  {
+    imgUrl: "images/ad-casebattle.png",  // путь к вашему файлу
+    link: "https://case-battle.red/",
+  },
+  {
+    imgUrl: "images/ad-upgrader.png",
+    link: "https://upgrader.pro/ru",
+  },
+  {
+    imgUrl: "images/ad-gosuslugi.png",
+    link: "https://contract.gosuslugi.ru/",
+  }
+];
 
   let currentAdIndex = 0;
   let sideCloseBtnActive = true;       // на пк кнопка закрыть НЕ работает по условию, но мы сделаем так: по клику она будет делать переключение? сказано "на пк сбоку, кнопка закрыть не работает и просто в ряд реклама". Значит кнопка на пк должна быть, но она не закрывает, а просто ничего не делает? Но по заданию: и при нажатии на нее открывается сайт ссылка, есть кнопка закрыть, реклама пропадает на 1 секунду и появляется другая. Но для ПК кнопка закрыть не работает + просто в ряд. Уточняю логику:
