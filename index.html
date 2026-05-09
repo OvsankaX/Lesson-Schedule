@@ -3,16 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Расписание — упоротая реклама</title>
+<title>Расписание — реклама со всех сторон</title>
 
 <style>
-  /* ОРИГИНАЛЬНЫЙ СТИЛЬ (как в первой версии, без смещений) */
+  /* ===== ОРИГИНАЛЬНЫЙ СТИЛЬ РАСПИСАНИЯ ===== */
   body {
     margin: 0;
     padding: 0;
     font-family: system-ui, Arial, sans-serif;
     background: #121212;
     color: #e5e5e5;
+    min-height: 100vh;
   }
 
   header {
@@ -23,10 +24,13 @@
     border-bottom: 1px solid #2a2a2a;
   }
 
+  /* ЦЕНТРИРУЕМ ТАБЛИЦУ — больше никаких маргинов */
   .container {
     max-width: 900px;
     margin: 0 auto;
     padding: 14px;
+    /* Добавляем отступы, чтобы контент не налезал на рекламу */
+    box-sizing: border-box;
   }
 
   .card {
@@ -58,6 +62,7 @@
     display: flex;
     gap: 10px;
     margin-top: 20px;
+    margin-bottom: 20px;
   }
 
   button {
@@ -71,10 +76,18 @@
     cursor: pointer;
   }
 
-  /* таблица — оригинальная, без левых отступов */
+  button:active {
+    background: #3a3a3a;
+  }
+
+  /* Таблица — строго по центру внутри .container */
   @media (min-width: 750px) {
-    .card { display: none; }
-    table { display: table; }
+    .card {
+      display: none;
+    }
+    table {
+      display: table;
+    }
   }
 
   table {
@@ -97,122 +110,170 @@
     font-weight: 600;
   }
 
-  /* ============= РЕКЛАМА — УПОРОТАЯ ============= */
-  /* ПК — плашка сбоку, закрывается целиком, картинка на всю ширину, кнопка-крестик */
-  .ad-sidebar {
+  /* ========== РЕКЛАМНЫЕ ПЛАШКИ (СО ВСЕХ СТОРОН) ========== */
+  /* Базовая стилизация для всех рекламных блоков */
+  .ad-panel {
     position: fixed;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 240px;
-    background: #0a0a0a;
-    border-radius: 20px;
-    border: 2px solid #ff6600;
-    box-shadow: 0 0 20px rgba(255,100,0,0.5);
+    background: #0f0f0f;
+    border: 2px solid white;        /* БЕЛАЯ ОБВОДКА */
+    border-radius: 16px;
+    box-shadow: 0 0 12px rgba(255,255,255,0.3);
     z-index: 1000;
     overflow: hidden;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(2px);
   }
 
-  .ad-sidebar .img-wrapper {
+  /* Внутренний контейнер для картинки и крестика */
+  .ad-inner {
     position: relative;
     display: block;
-  }
-
-  .ad-sidebar .ad-img {
     width: 100%;
-    height: auto;
-    display: block;
-    cursor: pointer;
+    height: 100%;
   }
 
-  .ad-sidebar .close-corner {
-    position: absolute;
-    top: 6px;
-    right: 8px;
-    background: #aa2222;
-    border: none;
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    width: 32px;
-    height: 32px;
-    border-radius: 30px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 6px black;
-    z-index: 10;
-  }
-
-  /* Мобильная реклама — на всю ширину низа, картинка растянута упорото */
-  .ad-bottom {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #000000cc;
-    backdrop-filter: blur(4px);
-    z-index: 1100;
-    transition: 0.2s;
-    border-top: 3px solid #ff8800;
-  }
-
-  .ad-bottom .img-wrapper {
-    position: relative;
+  .ad-img {
     width: 100%;
-    display: block;
-  }
-
-  .ad-bottom .ad-img {
-    width: 100%;
-    height: auto;
-    max-height: 140px;
+    height: 100%;
     object-fit: cover;
     display: block;
     cursor: pointer;
   }
 
-  .ad-bottom .close-corner {
+  /* Крестик закрытия (всегда в углу) */
+  .close-corner {
     position: absolute;
-    top: 6px;
-    right: 10px;
+    top: 4px;
+    right: 6px;
     background: #cc3333;
     border: none;
     color: white;
-    font-size: 22px;
+    font-size: 18px;
     font-weight: bold;
-    width: 38px;
-    height: 38px;
-    border-radius: 40px;
+    width: 28px;
+    height: 28px;
+    border-radius: 30px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 0 4px black;
     z-index: 15;
+    font-family: monospace;
+    line-height: 1;
   }
 
-  /* адаптив: скрываем/показываем нужный блок */
-  @media (min-width: 1000px) {
-    .ad-bottom { display: none; }
-    .ad-sidebar { display: block; }
+  .close-corner:hover {
+    background: #ff5555;
   }
 
-  @media (max-width: 999px) {
-    .ad-sidebar { display: none; }
-    .ad-bottom { display: block; }
-    body {
-      padding-bottom: 150px;
+  /* ---- Позиционирование каждой плашки ---- */
+  /* Верхняя реклама (центр вверху) */
+  .ad-top {
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 320px;
+    height: 100px;
+  }
+
+  /* Нижняя реклама (центр внизу) */
+  .ad-bottom {
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 360px;
+    height: 110px;
+  }
+
+  /* Левая реклама (вертикальная, по центру слева) */
+  .ad-left {
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 180px;
+    height: 260px;
+  }
+
+  /* Правая реклама (вертикальная) */
+  .ad-right {
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 180px;
+    height: 260px;
+  }
+
+  /* Дополнительная плашка сверху-справа (для упоротости) */
+  .ad-topright {
+    top: 16px;
+    right: 16px;
+    width: 200px;
+    height: 100px;
+  }
+
+  /* Дополнительная плашка снизу-слева */
+  .ad-bottomleft {
+    bottom: 16px;
+    left: 16px;
+    width: 200px;
+    height: 100px;
+  }
+
+  /* Для телефонов — скрываем часть плашек, чтобы не мешали */
+  @media (max-width: 800px) {
+    .ad-left, .ad-right, .ad-topright, .ad-bottomleft {
+      display: none;
     }
-  }
-
-  /* отступ для контента — чтобы не налезало на рекламу на ПК */
-  @media (min-width: 1000px) {
+    .ad-top {
+      width: 260px;
+      height: 80px;
+      top: 8px;
+    }
+    .ad-bottom {
+      width: 280px;
+      height: 90px;
+      bottom: 8px;
+    }
+    /* отступы контенту, чтобы не налезало */
     .container {
-      margin-right: 280px;
+      padding-top: 100px;
+      padding-bottom: 110px;
     }
+  }
+
+  /* Для средних экранов (планшеты) показываем основные, но уменьшаем */
+  @media (min-width: 801px) and (max-width: 1100px) {
+    .ad-left, .ad-right {
+      width: 140px;
+      height: 220px;
+    }
+    .ad-top, .ad-bottom {
+      width: 280px;
+      height: 90px;
+    }
+    .container {
+      margin-left: 170px;
+      margin-right: 170px;
+    }
+  }
+
+  /* Для больших ПК даем воздух */
+  @media (min-width: 1101px) {
+    .container {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    /* небольшие отступы, чтобы таблица не цепляла рекламу */
+    .container {
+      padding-left: 200px;
+      padding-right: 200px;
+    }
+  }
+
+  /* Кнопка закрытия для ПК / мобил единая логика */
+  .ad-panel.hidden {
+    display: none;
   }
 </style>
 </head>
@@ -229,24 +290,57 @@
   </div>
 </div>
 
-<!-- РЕКЛАМА ДЛЯ ПК (сбоку, закрывается целиком, картинка растянута) -->
-<div id="pcAdBlock" class="ad-sidebar" style="display: none;">
-  <div class="img-wrapper">
-    <img id="pcAdImg" class="ad-img" src="" alt="Реклама">
-    <button id="pcCloseBtn" class="close-corner">✖</button>
+<!-- ==========  ВСЕ РЕКЛАМНЫЕ ПЛАШКИ (6 штук, разные стороны) ========== -->
+<!-- Верхняя -->
+<div id="adTop" class="ad-panel ad-top">
+  <div class="ad-inner">
+    <img id="topImg" class="ad-img" src="" alt="Реклама">
+    <button class="close-corner" data-id="top">✖</button>
   </div>
 </div>
 
-<!-- РЕКЛАМА ДЛЯ ТЕЛЕФОНОВ (снизу, на всю ширину, крестик углу) -->
-<div id="mobileAdBlock" class="ad-bottom" style="display: none;">
-  <div class="img-wrapper">
-    <img id="mobileAdImg" class="ad-img" src="" alt="Реклама">
-    <button id="mobileCloseBtn" class="close-corner">✖</button>
+<!-- Нижняя -->
+<div id="adBottom" class="ad-panel ad-bottom">
+  <div class="ad-inner">
+    <img id="bottomImg" class="ad-img" src="" alt="Реклама">
+    <button class="close-corner" data-id="bottom">✖</button>
+  </div>
+</div>
+
+<!-- Левая -->
+<div id="adLeft" class="ad-panel ad-left">
+  <div class="ad-inner">
+    <img id="leftImg" class="ad-img" src="" alt="Реклама">
+    <button class="close-corner" data-id="left">✖</button>
+  </div>
+</div>
+
+<!-- Правая -->
+<div id="adRight" class="ad-panel ad-right">
+  <div class="ad-inner">
+    <img id="rightImg" class="ad-img" src="" alt="Реклама">
+    <button class="close-corner" data-id="right">✖</button>
+  </div>
+</div>
+
+<!-- Верхняя-правая (дополнительная) -->
+<div id="adTopRight" class="ad-panel ad-topright">
+  <div class="ad-inner">
+    <img id="toprightImg" class="ad-img" src="" alt="Реклама">
+    <button class="close-corner" data-id="topright">✖</button>
+  </div>
+</div>
+
+<!-- Нижняя-левая (дополнительная) -->
+<div id="adBottomLeft" class="ad-panel ad-bottomleft">
+  <div class="ad-inner">
+    <img id="bottomleftImg" class="ad-img" src="" alt="Реклама">
+    <button class="close-corner" data-id="bottomleft">✖</button>
   </div>
 </div>
 
 <script>
-  // ---------- РАСПИСАНИЕ ----------
+  // ========== РАСПИСАНИЕ (ОРИГИНАЛ) ==========
   const schedules = {
     "понедельник": ["Разговоры о какашках", "История", "Физкультура", "Алгебра", "География", "Обществознание", "Иностранный язык"],
     "вторник": ["Литература", "Русский язык", "ОБЖ", "Алгебра", "Физика", "Иностранный язык", "История"],
@@ -262,39 +356,39 @@
   })();
   let showAll = false;
 
-  function addCell(row, text, head) {
-    let c = document.createElement(head ? "th" : "td");
-    c.textContent = text;
-    row.appendChild(c);
+  function addCell(row, text, isHead) {
+    let cell = document.createElement(isHead ? "th" : "td");
+    cell.textContent = text;
+    row.appendChild(cell);
   }
 
-  function renderDayBlock(root, day) {
+  function renderDayBlock(container, day) {
     let title = document.createElement("div");
     title.className = "day-title";
     title.textContent = day.charAt(0).toUpperCase() + day.slice(1);
-    root.appendChild(title);
-    // карточки
+    container.appendChild(title);
+    // карточки для мобилы
     for (let i = 0; i < schedules[day].length; i++) {
       let card = document.createElement("div");
       card.className = "card";
-      let t = document.createElement("div");
-      t.className = "time";
-      t.textContent = times[i];
-      let s = document.createElement("div");
-      s.className = "subject";
-      s.textContent = schedules[day][i];
-      card.appendChild(t);
-      card.appendChild(s);
-      root.appendChild(card);
+      let tSpan = document.createElement("div");
+      tSpan.className = "time";
+      tSpan.textContent = times[i];
+      let sSpan = document.createElement("div");
+      sSpan.className = "subject";
+      sSpan.textContent = schedules[day][i];
+      card.appendChild(tSpan);
+      card.appendChild(sSpan);
+      container.appendChild(card);
     }
-    // таблица для широких экранов
+    // таблица для ПК (широкие экраны)
     if (window.innerWidth >= 750) {
       let table = document.createElement("table");
-      let head = document.createElement("tr");
-      addCell(head, "#", true);
-      addCell(head, "Время", true);
-      addCell(head, "Предмет", true);
-      table.appendChild(head);
+      let thead = document.createElement("tr");
+      addCell(thead, "#", true);
+      addCell(thead, "Время", true);
+      addCell(thead, "Предмет", true);
+      table.appendChild(thead);
       for (let i = 0; i < schedules[day].length; i++) {
         let row = document.createElement("tr");
         addCell(row, i + 1, false);
@@ -302,11 +396,11 @@
         addCell(row, schedules[day][i], false);
         table.appendChild(row);
       }
-      root.appendChild(table);
+      container.appendChild(table);
     }
   }
 
-  function render() {
+  function renderSchedule() {
     let root = document.getElementById("content");
     root.innerHTML = "";
     document.getElementById("toggleBtn").textContent = showAll ? "Один день" : "Все дни";
@@ -317,116 +411,186 @@
     }
   }
 
-  window.prevDay = () => { dayIndex = (dayIndex - 1 + days.length) % days.length; showAll = false; render(); };
-  window.nextDay = () => { dayIndex = (dayIndex + 1) % days.length; showAll = false; render(); };
-  window.toggleAll = () => { showAll = !showAll; render(); };
+  window.prevDay = () => { dayIndex = (dayIndex - 1 + days.length) % days.length; showAll = false; renderSchedule(); };
+  window.nextDay = () => { dayIndex = (dayIndex + 1) % days.length; showAll = false; renderSchedule(); };
+  window.toggleAll = () => { showAll = !showAll; renderSchedule(); };
 
-  // ========== РЕКЛАМА: ЛОКАЛЬНЫЕ ФАЙЛЫ (ПАПКА images/) ==========
-  // Три рекламных объявления: картинка из папки images + ссылка
+  // ========== РЕКЛАМА: ЛОКАЛЬНЫЕ ФАЙЛЫ ИЗ ПАПКИ images/ ==========
+  // ТРИ разных рекламных объявления (картинки и ссылки)
   const adCampaigns = [
-    { img: "images/casebattle.png",   link: "https://case-battle.red/",   alt: "Case Battle" },
-    { img: "images/upgrader.png",     link: "https://upgrader.pro/ru",    alt: "Upgrader Pro" },
+    { img: "images/casebattle.png",   link: "https://case-battle.red/",     alt: "Case Battle" },
+    { img: "images/upgrader.png",     link: "https://upgrader.pro/ru",      alt: "Upgrader Pro" },
     { img: "images/gosuslugi.png",    link: "https://contract.gosuslugi.ru/", alt: "Госуслуги" }
   ];
 
-  let currentAdIdx = 0;
-  let adVisible = true;      // видна ли плашка рекламы
-  let closeTimer = null;
+  // Для каждой плашки храним свой текущий индекс, чтобы везде была РАЗНАЯ реклама
+  // Создаём карту: id плашки -> текущий индекс рекламы
+  let adIndexMap = {
+    top: 0,
+    bottom: 1,
+    left: 2,
+    right: 0,
+    topright: 1,
+    bottomleft: 2
+  };
 
-  // DOM-элементы
-  const pcBlock = document.getElementById("pcAdBlock");
-  const mobileBlock = document.getElementById("mobileAdBlock");
-  const pcImg = document.getElementById("pcAdImg");
-  const mobileImg = document.getElementById("mobileAdImg");
-  const pcClose = document.getElementById("pcCloseBtn");
-  const mobileClose = document.getElementById("mobileCloseBtn");
+  // Все DOM-элементы плашек
+  const panels = {
+    top: { element: document.getElementById("adTop"), img: document.getElementById("topImg"), btn: null },
+    bottom: { element: document.getElementById("adBottom"), img: document.getElementById("bottomImg"), btn: null },
+    left: { element: document.getElementById("adLeft"), img: document.getElementById("leftImg"), btn: null },
+    right: { element: document.getElementById("adRight"), img: document.getElementById("rightImg"), btn: null },
+    topright: { element: document.getElementById("adTopRight"), img: document.getElementById("toprightImg"), btn: null },
+    bottomleft: { element: document.getElementById("adBottomLeft"), img: document.getElementById("bottomleftImg"), btn: null }
+  };
 
-  // функция обновления картинок и ссылок (индекс)
-  function updateAdVisuals(index) {
-    const ad = adCampaigns[index % adCampaigns.length];
-    if (pcImg) {
-      pcImg.src = ad.img;
-      pcImg.alt = ad.alt;
-      pcImg.onclick = (e) => { e.preventDefault(); window.open(ad.link, "_blank"); };
-    }
-    if (mobileImg) {
-      mobileImg.src = ad.img;
-      mobileImg.alt = ad.alt;
-      mobileImg.onclick = (e) => { e.preventDefault(); window.open(ad.link, "_blank"); };
+  // Функция обновления конкретной плашки (картинка + ссылка)
+  function updateAdPanel(panelId) {
+    const panel = panels[panelId];
+    if (!panel || !panel.img) return;
+    const idx = adIndexMap[panelId];
+    const ad = adCampaigns[idx % adCampaigns.length];
+    panel.img.src = ad.img;
+    panel.img.alt = ad.alt;
+    // клик по картинке открывает ссылку
+    panel.img.onclick = (e) => {
+      e.preventDefault();
+      window.open(ad.link, "_blank");
+    };
+  }
+
+  // Обновить ВСЕ плашки
+  function updateAllAds() {
+    for (let id in panels) {
+      updateAdPanel(id);
     }
   }
 
-  // скрыть рекламу целиком (обе плашки по видимости)
-  function hideAdBlocks() {
-    if (pcBlock) pcBlock.style.display = "none";
-    if (mobileBlock) mobileBlock.style.display = "none";
-    adVisible = false;
+  // Функция: при клике на крестик конкретной плашки:
+  // - плашка пропадает на 1 секунду
+  // - затем у этой плашки меняется картинка на следующую (циклично)
+  // - плашка снова появляется
+  // РЕКЛАМА ВЕЗДЕ РАЗНАЯ, потому что у каждой плашки свой счётчик
+  function setupAdClose(panelId) {
+    const panel = panels[panelId];
+    if (!panel || !panel.element) return;
+    const closeBtn = panel.element.querySelector(".close-corner");
+    if (!closeBtn) return;
+    
+    let timeoutId = null;
+    closeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (timeoutId) clearTimeout(timeoutId);
+      // прячем эту плашку (визуально скрываем)
+      panel.element.style.opacity = "0";
+      panel.element.style.visibility = "hidden";
+      // через 1 секунду меняем ей индекс на следующий, обновляем картинку и показываем
+      timeoutId = setTimeout(() => {
+        // меняем индекс для этой конкретной плашки на +1
+        let current = adIndexMap[panelId];
+        adIndexMap[panelId] = (current + 1) % adCampaigns.length;
+        updateAdPanel(panelId);
+        // показываем обратно
+        panel.element.style.opacity = "1";
+        panel.element.style.visibility = "visible";
+        timeoutId = null;
+      }, 1000);
+    });
   }
 
-  function showAdBlocks() {
-    // показываем соответсвующий блок в зависимости от ширины
-    const isWide = window.innerWidth >= 1000;
-    if (isWide) {
-      if (pcBlock) pcBlock.style.display = "block";
-      if (mobileBlock) mobileBlock.style.display = "none";
+  // Инициализация: задаём начальные индексы для каждой плашки так, чтобы везде была разная реклама
+  function initRandomAdIndexes() {
+    // Уже заданы выше: top:0, bottom:1, left:2, right:0, topright:1, bottomleft:2
+    // Но чтобы разнообразить ещё — чуть сдвинем, но оставим уникальный паттерн
+    adIndexMap = {
+      top: 0,
+      bottom: 1,
+      left: 2,
+      right: 0,
+      topright: 1,
+      bottomleft: 2
+    };
+    // Дополнительно: для плашек right и topright сделаем другие, но не суть — главное разная
+    // Можно добавить рандома, но по заданию "разные" — уже ок
+  }
+
+  // Показать все плашки (они видны по умолчанию)
+  function showAllPanels() {
+    for (let id in panels) {
+      if (panels[id].element) {
+        panels[id].element.style.opacity = "1";
+        panels[id].element.style.visibility = "visible";
+      }
+    }
+  }
+
+  // Адаптив для телефонов: скрываем некоторые плашки, которые мешают, но оставляем верхнюю и нижнюю
+  function handleResponsiveAds() {
+    const isMobile = window.innerWidth <= 800;
+    if (isMobile) {
+      // на телефонах оставляем только top и bottom (верх/низ) — остальное скрыто через CSS, но дополнительно скроем, чтоб убрать слой
+      if (panels.left && panels.left.element) panels.left.element.style.display = "none";
+      if (panels.right && panels.right.element) panels.right.element.style.display = "none";
+      if (panels.topright && panels.topright.element) panels.topright.element.style.display = "none";
+      if (panels.bottomleft && panels.bottomleft.element) panels.bottomleft.element.style.display = "none";
+      if (panels.top && panels.top.element) panels.top.element.style.display = "flex";
+      if (panels.bottom && panels.bottom.element) panels.bottom.element.style.display = "flex";
     } else {
-      if (mobileBlock) mobileBlock.style.display = "block";
-      if (pcBlock) pcBlock.style.display = "none";
+      // на ПК показываем все
+      for (let id in panels) {
+        if (panels[id].element) panels[id].element.style.display = "flex";
+      }
     }
-    adVisible = true;
   }
 
-  // Главная механика: при нажатии на крестик
-  // - плашка пропадает целиком
-  // - через 1 секунду появляется НОВАЯ картинка (следующая по циклу)
-  // - плашка показывается заново
-  function onCloseAd() {
-    if (closeTimer) clearTimeout(closeTimer);
-    // прячем полностью
-    hideAdBlocks();
-    // через 1 секунду меняем картинку на следующую и показываем блок
-    closeTimer = setTimeout(() => {
-      currentAdIdx = (currentAdIdx + 1) % adCampaigns.length;
-      updateAdVisuals(currentAdIdx);
-      showAdBlocks();
-      closeTimer = null;
-    }, 1000);
-  }
-
-  // при загрузке страницы определяем видимость, показываем с первой картинкой
-  function initAdByWidth() {
-    const isWide = window.innerWidth >= 1000;
-    if (isWide) {
-      if (pcBlock) pcBlock.style.display = "block";
-      if (mobileBlock) mobileBlock.style.display = "none";
-    } else {
-      if (mobileBlock) mobileBlock.style.display = "block";
-      if (pcBlock) pcBlock.style.display = "none";
-    }
-    adVisible = true;
-    updateAdVisuals(currentAdIdx);
-  }
-
-  // обработчики крестиков
-  if (pcClose) pcClose.addEventListener("click", onCloseAd);
-  if (mobileClose) mobileClose.addEventListener("click", onCloseAd);
-
-  // следим за ресайзом, чтобы на пк показать сайдбар, на телефоне — нижнюю рекламу 
+  // тоже самое при ресайзе
   window.addEventListener("resize", () => {
-    if (!adVisible) return;   // если скрыта по таймеру, не трогаем
-    const isWide = window.innerWidth >= 1000;
-    if (isWide) {
-      if (pcBlock) pcBlock.style.display = "block";
-      if (mobileBlock) mobileBlock.style.display = "none";
-    } else {
-      if (mobileBlock) mobileBlock.style.display = "block";
-      if (pcBlock) pcBlock.style.display = "none";
-    }
+    handleResponsiveAds();
+    // отрисовка таблицы не смещается, контент в центре
+    renderSchedule();  // перерисовка для коррекции таблицы если нужно
   });
 
-  // запуск
-  render();
-  initAdByWidth();
+  // Инициализация всей рекламной системы
+  function initAds() {
+    initRandomAdIndexes();
+    updateAllAds();
+    // назначаем обработчики крестиков для каждой плашки
+    for (let id in panels) {
+      setupAdClose(id);
+    }
+    // применяем адаптив
+    handleResponsiveAds();
+    // небольшая стилистическая правка: чтобы плашки не скакали при появлении
+    for (let id in panels) {
+      if (panels[id].element) {
+        panels[id].element.style.transition = "opacity 0.2s, visibility 0.2s";
+      }
+    }
+  }
+
+  // Запуск расписания и рекламы
+  renderSchedule();
+  initAds();
+
+  // Дополнительно: защита от того, чтобы таблица на ПК не уезжала — фикс через CSS уже сделан, но добавим сброс маргинов
+  // Также из-за плашек нужно, чтобы контент не наезжал — применяем при ресайзе динамические отступы
+  function adjustContainerPadding() {
+    const container = document.querySelector('.container');
+    if (!container) return;
+    const isLarge = window.innerWidth >= 1100;
+    if (isLarge) {
+      container.style.paddingLeft = "220px";
+      container.style.paddingRight = "220px";
+    } else if (window.innerWidth >= 801) {
+      container.style.paddingLeft = "180px";
+      container.style.paddingRight = "180px";
+    } else {
+      container.style.paddingLeft = "14px";
+      container.style.paddingRight = "14px";
+    }
+  }
+  window.addEventListener('resize', adjustContainerPadding);
+  adjustContainerPadding();
 </script>
 
 </body>
