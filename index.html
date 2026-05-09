@@ -3,10 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Расписание — реклама со всех сторон</title>
+<title>Расписание — реклама в рандомных местах</title>
 
 <style>
-  /* ===== ОРИГИНАЛЬНЫЙ СТИЛЬ РАСПИСАНИЯ ===== */
+  /* ===== ОРИГИНАЛЬНЫЙ СТИЛЬ РАСПИСАНИЯ (НЕ СДВИГАЕТСЯ) ===== */
+  * {
+    box-sizing: border-box;
+  }
+
   body {
     margin: 0;
     padding: 0;
@@ -14,6 +18,7 @@
     background: #121212;
     color: #e5e5e5;
     min-height: 100vh;
+    position: relative;
   }
 
   header {
@@ -24,13 +29,14 @@
     border-bottom: 1px solid #2a2a2a;
   }
 
-  /* ЦЕНТРИРУЕМ ТАБЛИЦУ — больше никаких маргинов */
+  /* ЦЕНТРИРУЕМ ТАБЛИЦУ — ВСЕГДА ПО СЕРЕДИНЕ, БЕЗ СМЕЩЕНИЙ */
   .container {
     max-width: 900px;
     margin: 0 auto;
     padding: 14px;
-    /* Добавляем отступы, чтобы контент не налезал на рекламу */
-    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+    background: transparent;
   }
 
   .card {
@@ -80,7 +86,7 @@
     background: #3a3a3a;
   }
 
-  /* Таблица — строго по центру внутри .container */
+  /* Таблица — ровно по центру */
   @media (min-width: 750px) {
     .card {
       display: none;
@@ -110,37 +116,51 @@
     font-weight: 600;
   }
 
-  /* ========== РЕКЛАМНЫЕ ПЛАШКИ (СО ВСЕХ СТОРОН) ========== */
-  /* Базовая стилизация для всех рекламных блоков */
-  .ad-panel {
+  /* ===== РЕКЛАМНЫЕ ПЛАШКИ (РАНДОМНЫЕ ПОЗИЦИИ) ===== */
+  .ad-float {
     position: fixed;
-    background: #0f0f0f;
-    border: 2px solid white;        /* БЕЛАЯ ОБВОДКА */
-    border-radius: 16px;
-    box-shadow: 0 0 12px rgba(255,255,255,0.3);
-    z-index: 1000;
+    background: #0a0a0a;
+    border: 3px solid white;        /* БЕЛАЯ ОБВОДКА */
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(255,255,200,0.4);
+    z-index: 10000;
     overflow: hidden;
-    transition: all 0.2s ease;
-    backdrop-filter: blur(2px);
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    cursor: default;
+    backdrop-filter: blur(4px);
+    max-width: 260px;
+    width: auto;
+    min-width: 140px;
   }
 
-  /* Внутренний контейнер для картинки и крестика */
+  /* Адаптивный размер плашек: на телефоне поменьше */
+  @media (max-width: 700px) {
+    .ad-float {
+      max-width: 180px;
+      border-width: 2px;
+    }
+    .close-corner {
+      width: 26px;
+      height: 26px;
+      font-size: 16px;
+    }
+  }
+
   .ad-inner {
     position: relative;
     display: block;
     width: 100%;
-    height: 100%;
   }
 
   .ad-img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
     display: block;
     cursor: pointer;
+    object-fit: cover;
   }
 
-  /* Крестик закрытия (всегда в углу) */
+  /* Крестик закрытия в правом верхнем углу */
   .close-corner {
     position: absolute;
     top: 4px;
@@ -150,130 +170,28 @@
     color: white;
     font-size: 18px;
     font-weight: bold;
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
     border-radius: 30px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 0 4px black;
-    z-index: 15;
+    z-index: 20;
     font-family: monospace;
-    line-height: 1;
+    transition: 0.05s linear;
   }
 
-  .close-corner:hover {
-    background: #ff5555;
+  .close-corner:active {
+    background: #ff6666;
   }
 
-  /* ---- Позиционирование каждой плашки ---- */
-  /* Верхняя реклама (центр вверху) */
-  .ad-top {
-    top: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 320px;
-    height: 100px;
-  }
-
-  /* Нижняя реклама (центр внизу) */
-  .ad-bottom {
-    bottom: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 360px;
-    height: 110px;
-  }
-
-  /* Левая реклама (вертикальная, по центру слева) */
-  .ad-left {
-    left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 180px;
-    height: 260px;
-  }
-
-  /* Правая реклама (вертикальная) */
-  .ad-right {
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 180px;
-    height: 260px;
-  }
-
-  /* Дополнительная плашка сверху-справа (для упоротости) */
-  .ad-topright {
-    top: 16px;
-    right: 16px;
-    width: 200px;
-    height: 100px;
-  }
-
-  /* Дополнительная плашка снизу-слева */
-  .ad-bottomleft {
-    bottom: 16px;
-    left: 16px;
-    width: 200px;
-    height: 100px;
-  }
-
-  /* Для телефонов — скрываем часть плашек, чтобы не мешали */
-  @media (max-width: 800px) {
-    .ad-left, .ad-right, .ad-topright, .ad-bottomleft {
-      display: none;
-    }
-    .ad-top {
-      width: 260px;
-      height: 80px;
-      top: 8px;
-    }
-    .ad-bottom {
-      width: 280px;
-      height: 90px;
-      bottom: 8px;
-    }
-    /* отступы контенту, чтобы не налезало */
-    .container {
-      padding-top: 100px;
-      padding-bottom: 110px;
-    }
-  }
-
-  /* Для средних экранов (планшеты) показываем основные, но уменьшаем */
-  @media (min-width: 801px) and (max-width: 1100px) {
-    .ad-left, .ad-right {
-      width: 140px;
-      height: 220px;
-    }
-    .ad-top, .ad-bottom {
-      width: 280px;
-      height: 90px;
-    }
-    .container {
-      margin-left: 170px;
-      margin-right: 170px;
-    }
-  }
-
-  /* Для больших ПК даем воздух */
-  @media (min-width: 1101px) {
-    .container {
-      margin-left: auto;
-      margin-right: auto;
-    }
-    /* небольшие отступы, чтобы таблица не цепляла рекламу */
-    .container {
-      padding-left: 200px;
-      padding-right: 200px;
-    }
-  }
-
-  /* Кнопка закрытия для ПК / мобил единая логика */
-  .ad-panel.hidden {
-    display: none;
+  /* скрытый класс */
+  .ad-float.hidden-ad {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
   }
 </style>
 </head>
@@ -287,55 +205,6 @@
     <button onclick="prevDay()">← Пред.</button>
     <button onclick="toggleAll()" id="toggleBtn">Все дни</button>
     <button onclick="nextDay()">След. →</button>
-  </div>
-</div>
-
-<!-- ==========  ВСЕ РЕКЛАМНЫЕ ПЛАШКИ (6 штук, разные стороны) ========== -->
-<!-- Верхняя -->
-<div id="adTop" class="ad-panel ad-top">
-  <div class="ad-inner">
-    <img id="topImg" class="ad-img" src="" alt="Реклама">
-    <button class="close-corner" data-id="top">✖</button>
-  </div>
-</div>
-
-<!-- Нижняя -->
-<div id="adBottom" class="ad-panel ad-bottom">
-  <div class="ad-inner">
-    <img id="bottomImg" class="ad-img" src="" alt="Реклама">
-    <button class="close-corner" data-id="bottom">✖</button>
-  </div>
-</div>
-
-<!-- Левая -->
-<div id="adLeft" class="ad-panel ad-left">
-  <div class="ad-inner">
-    <img id="leftImg" class="ad-img" src="" alt="Реклама">
-    <button class="close-corner" data-id="left">✖</button>
-  </div>
-</div>
-
-<!-- Правая -->
-<div id="adRight" class="ad-panel ad-right">
-  <div class="ad-inner">
-    <img id="rightImg" class="ad-img" src="" alt="Реклама">
-    <button class="close-corner" data-id="right">✖</button>
-  </div>
-</div>
-
-<!-- Верхняя-правая (дополнительная) -->
-<div id="adTopRight" class="ad-panel ad-topright">
-  <div class="ad-inner">
-    <img id="toprightImg" class="ad-img" src="" alt="Реклама">
-    <button class="close-corner" data-id="topright">✖</button>
-  </div>
-</div>
-
-<!-- Нижняя-левая (дополнительная) -->
-<div id="adBottomLeft" class="ad-panel ad-bottomleft">
-  <div class="ad-inner">
-    <img id="bottomleftImg" class="ad-img" src="" alt="Реклама">
-    <button class="close-corner" data-id="bottomleft">✖</button>
   </div>
 </div>
 
@@ -415,182 +284,200 @@
   window.nextDay = () => { dayIndex = (dayIndex + 1) % days.length; showAll = false; renderSchedule(); };
   window.toggleAll = () => { showAll = !showAll; renderSchedule(); };
 
-  // ========== РЕКЛАМА: ЛОКАЛЬНЫЕ ФАЙЛЫ ИЗ ПАПКИ images/ ==========
-  // ТРИ разных рекламных объявления (картинки и ссылки)
+  // ========== РЕКЛАМА: РАНДОМНЫЕ МЕСТА, РАЗНЫЕ КАРТИНКИ, КРЕСТИК ==========
+  // Три рекламных объявления (локальные файлы из папки images/)
   const adCampaigns = [
     { img: "images/casebattle.png",   link: "https://case-battle.red/",     alt: "Case Battle" },
     { img: "images/upgrader.png",     link: "https://upgrader.pro/ru",      alt: "Upgrader Pro" },
     { img: "images/gosuslugi.png",    link: "https://contract.gosuslugi.ru/", alt: "Госуслуги" }
   ];
 
-  // Для каждой плашки храним свой текущий индекс, чтобы везде была РАЗНАЯ реклама
-  // Создаём карту: id плашки -> текущий индекс рекламы
-  let adIndexMap = {
-    top: 0,
-    bottom: 1,
-    left: 2,
-    right: 0,
-    topright: 1,
-    bottomleft: 2
-  };
+  // КОЛИЧЕСТВО РЕКЛАМНЫХ ПЛАШЕК (всегда разное, появляются в разных местах)
+  const AD_COUNT = 5;  // 5 плашек, которые будут скакать по экрану
 
-  // Все DOM-элементы плашек
-  const panels = {
-    top: { element: document.getElementById("adTop"), img: document.getElementById("topImg"), btn: null },
-    bottom: { element: document.getElementById("adBottom"), img: document.getElementById("bottomImg"), btn: null },
-    left: { element: document.getElementById("adLeft"), img: document.getElementById("leftImg"), btn: null },
-    right: { element: document.getElementById("adRight"), img: document.getElementById("rightImg"), btn: null },
-    topright: { element: document.getElementById("adTopRight"), img: document.getElementById("toprightImg"), btn: null },
-    bottomleft: { element: document.getElementById("adBottomLeft"), img: document.getElementById("bottomleftImg"), btn: null }
-  };
+  // Хранилище для плашек: DOM-элементы и их текущий индекс картинки
+  let adPanels = [];
+  let closeTimeouts = [];
 
-  // Функция обновления конкретной плашки (картинка + ссылка)
-  function updateAdPanel(panelId) {
-    const panel = panels[panelId];
-    if (!panel || !panel.img) return;
-    const idx = adIndexMap[panelId];
-    const ad = adCampaigns[idx % adCampaigns.length];
-    panel.img.src = ad.img;
-    panel.img.alt = ad.alt;
-    // клик по картинке открывает ссылку
-    panel.img.onclick = (e) => {
-      e.preventDefault();
-      window.open(ad.link, "_blank");
-    };
+  // Функция: получить случайные координаты в пределах окна (чтобы плашка не вылезала за границы)
+  function getRandomPosition(adElement) {
+    if (!adElement) return { left: 20, top: 20 };
+    // ширина/высота плашки после рендера
+    const rect = adElement.getBoundingClientRect();
+    const adWidth = rect.width || 180;
+    const adHeight = rect.height || 140;
+    const maxX = Math.max(20, window.innerWidth - adWidth - 20);
+    const maxY = Math.max(20, window.innerHeight - adHeight - 20);
+    
+    let left = Math.random() * maxX;
+    let top = Math.random() * maxY;
+    
+    // Добавляем дикий рандом: иногда чуть выше, иногда прилипает к краям
+    if (Math.random() > 0.7) left = 10;  // прижимаем к левому краю
+    if (Math.random() > 0.8) left = window.innerWidth - adWidth - 10; // правый край
+    if (Math.random() > 0.85) top = 10;  // верх
+    if (Math.random() > 0.85) top = window.innerHeight - adHeight - 10; // низ
+    
+    // Ограничители
+    left = Math.min(Math.max(5, left), window.innerWidth - adWidth - 5);
+    top = Math.min(Math.max(5, top), window.innerHeight - adHeight - 5);
+    
+    return { left: left, top: top };
   }
 
-  // Обновить ВСЕ плашки
-  function updateAllAds() {
-    for (let id in panels) {
-      updateAdPanel(id);
+  // Обновить позицию для конкретной плашки
+  function relocateAd(ad) {
+    if (!ad || !ad.element) return;
+    const pos = getRandomPosition(ad.element);
+    ad.element.style.left = pos.left + "px";
+    ad.element.style.top = pos.top + "px";
+    ad.element.style.right = "auto";
+    ad.element.style.bottom = "auto";
+  }
+
+  // Обновить картинку в плашке (по индексу)
+  function updateAdImage(ad) {
+    const campaign = adCampaigns[ad.imageIndex % adCampaigns.length];
+    if (ad.imgElement) {
+      ad.imgElement.src = campaign.img;
+      ad.imgElement.alt = campaign.alt;
+      // Клик по картинке ведёт на ссылку
+      ad.imgElement.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        window.open(campaign.link, "_blank");
+      };
     }
   }
 
-  // Функция: при клике на крестик конкретной плашки:
-  // - плашка пропадает на 1 секунду
-  // - затем у этой плашки меняется картинка на следующую (циклично)
-  // - плашка снова появляется
-  // РЕКЛАМА ВЕЗДЕ РАЗНАЯ, потому что у каждой плашки свой счётчик
-  function setupAdClose(panelId) {
-    const panel = panels[panelId];
-    if (!panel || !panel.element) return;
-    const closeBtn = panel.element.querySelector(".close-corner");
-    if (!closeBtn) return;
+  // Создать новую плашку (с рандомной картинкой)
+  function createAdPanel(indexSeed) {
+    const div = document.createElement("div");
+    div.className = "ad-float";
     
-    let timeoutId = null;
+    const inner = document.createElement("div");
+    inner.className = "ad-inner";
+    
+    const img = document.createElement("img");
+    img.className = "ad-img";
+    
+    const closeBtn = document.createElement("button");
+    closeBtn.className = "close-corner";
+    closeBtn.textContent = "✖";
+    
+    inner.appendChild(img);
+    inner.appendChild(closeBtn);
+    div.appendChild(inner);
+    document.body.appendChild(div);
+    
+    // Случайный начальный индекс картинки (чтобы все плашки разные)
+    const startIdx = Math.floor(Math.random() * adCampaigns.length);
+    const adObj = {
+      element: div,
+      imgElement: img,
+      closeBtn: closeBtn,
+      imageIndex: startIdx,
+      timeoutId: null
+    };
+    
+    updateAdImage(adObj);
+    
+    // Устанавливаем случайную позицию (сначала скрыто, потом покажем)
+    div.style.visibility = "visible";
+    div.style.opacity = "1";
+    relocateAd(adObj);
+    
+    // событие на крестик: закрываем на 1 секунду, меняем картинку, появляемся в новом месте
     closeBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      if (timeoutId) clearTimeout(timeoutId);
-      // прячем эту плашку (визуально скрываем)
-      panel.element.style.opacity = "0";
-      panel.element.style.visibility = "hidden";
-      // через 1 секунду меняем ей индекс на следующий, обновляем картинку и показываем
-      timeoutId = setTimeout(() => {
-        // меняем индекс для этой конкретной плашки на +1
-        let current = adIndexMap[panelId];
-        adIndexMap[panelId] = (current + 1) % adCampaigns.length;
-        updateAdPanel(panelId);
-        // показываем обратно
-        panel.element.style.opacity = "1";
-        panel.element.style.visibility = "visible";
-        timeoutId = null;
+      if (adObj.timeoutId) clearTimeout(adObj.timeoutId);
+      // прячем плашку
+      div.classList.add("hidden-ad");
+      adObj.timeoutId = setTimeout(() => {
+        // меняем картинку на следующую (цикл)
+        adObj.imageIndex = (adObj.imageIndex + 1) % adCampaigns.length;
+        updateAdImage(adObj);
+        // перемещаем в НОВОЕ РАНДОМНОЕ МЕСТО (!!)
+        relocateAd(adObj);
+        // показываем снова
+        div.classList.remove("hidden-ad");
+        adObj.timeoutId = null;
       }, 1000);
     });
+    
+    // Также добавим ресайз окна — переставляем плашки, чтобы не вылезали
+    return adObj;
   }
-
-  // Инициализация: задаём начальные индексы для каждой плашки так, чтобы везде была разная реклама
-  function initRandomAdIndexes() {
-    // Уже заданы выше: top:0, bottom:1, left:2, right:0, topright:1, bottomleft:2
-    // Но чтобы разнообразить ещё — чуть сдвинем, но оставим уникальный паттерн
-    adIndexMap = {
-      top: 0,
-      bottom: 1,
-      left: 2,
-      right: 0,
-      topright: 1,
-      bottomleft: 2
-    };
-    // Дополнительно: для плашек right и topright сделаем другие, но не суть — главное разная
-    // Можно добавить рандома, но по заданию "разные" — уже ок
-  }
-
-  // Показать все плашки (они видны по умолчанию)
-  function showAllPanels() {
-    for (let id in panels) {
-      if (panels[id].element) {
-        panels[id].element.style.opacity = "1";
-        panels[id].element.style.visibility = "visible";
+  
+  // Переместить все плашки в новые рандомные места (при ресайзе)
+  function relocateAllAds() {
+    for (let ad of adPanels) {
+      if (ad && ad.element && !ad.element.classList.contains("hidden-ad")) {
+        relocateAd(ad);
+      } else if (ad && ad.element) {
+        // даже скрытым на всякий случай обновим позицию, чтобы после появления был норм
+        relocateAd(ad);
       }
     }
   }
-
-  // Адаптив для телефонов: скрываем некоторые плашки, которые мешают, но оставляем верхнюю и нижнюю
-  function handleResponsiveAds() {
-    const isMobile = window.innerWidth <= 800;
-    if (isMobile) {
-      // на телефонах оставляем только top и bottom (верх/низ) — остальное скрыто через CSS, но дополнительно скроем, чтоб убрать слой
-      if (panels.left && panels.left.element) panels.left.element.style.display = "none";
-      if (panels.right && panels.right.element) panels.right.element.style.display = "none";
-      if (panels.topright && panels.topright.element) panels.topright.element.style.display = "none";
-      if (panels.bottomleft && panels.bottomleft.element) panels.bottomleft.element.style.display = "none";
-      if (panels.top && panels.top.element) panels.top.element.style.display = "flex";
-      if (panels.bottom && panels.bottom.element) panels.bottom.element.style.display = "flex";
-    } else {
-      // на ПК показываем все
-      for (let id in panels) {
-        if (panels[id].element) panels[id].element.style.display = "flex";
-      }
-    }
-  }
-
-  // тоже самое при ресайзе
-  window.addEventListener("resize", () => {
-    handleResponsiveAds();
-    // отрисовка таблицы не смещается, контент в центре
-    renderSchedule();  // перерисовка для коррекции таблицы если нужно
-  });
-
-  // Инициализация всей рекламной системы
+  
+  // Инициализация всех плашек
   function initAds() {
-    initRandomAdIndexes();
-    updateAllAds();
-    // назначаем обработчики крестиков для каждой плашки
-    for (let id in panels) {
-      setupAdClose(id);
+    // удаляем старые, если есть
+    for (let ad of adPanels) {
+      if (ad && ad.element) ad.element.remove();
     }
-    // применяем адаптив
-    handleResponsiveAds();
-    // небольшая стилистическая правка: чтобы плашки не скакали при появлении
-    for (let id in panels) {
-      if (panels[id].element) {
-        panels[id].element.style.transition = "opacity 0.2s, visibility 0.2s";
-      }
+    if (closeTimeouts.length) {
+      for (let t of closeTimeouts) clearTimeout(t);
+      closeTimeouts = [];
+    }
+    adPanels = [];
+    
+    // Создаём AD_COUNT плашек (штук 5)
+    for (let i = 0; i < AD_COUNT; i++) {
+      const newAd = createAdPanel(i);
+      adPanels.push(newAd);
     }
   }
-
-  // Запуск расписания и рекламы
+  
+  // Обработчик ресайза: перерисовываем позиции всех плашек + не даём контенту сместиться
+  let resizeTimeout = null;
+  window.addEventListener("resize", () => {
+    if (resizeTimeout) clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      relocateAllAds();
+      renderSchedule(); // расписание остаётся ровно по центру (контейнер auto margin)
+    }, 150);
+  });
+  
+  // Также при скролле нефик не двигаем — фикс элемент, все ок.
+  // но на всякий случай проверим что плашки не наезжают на контент слишком, позиции рандомны.
+  
+  // Чтобы плашки не перекрывали кнопки управления, но это норм — юмористично.
+  // Дополнительно: для телефонов размер плашек уменьшается через CSS, и координаты будут корректные.
+  
+  // ========== АДАПТАЦИЯ ПОД ТЕЛЕФОНЫ (рандомные места тоже работают) ==========
+  // Никаких дополнительных условий — relocateAd сам подстроится под ширину экрана и размеры плашки.
+  
+  // Запускаем всё
   renderSchedule();
   initAds();
-
-  // Дополнительно: защита от того, чтобы таблица на ПК не уезжала — фикс через CSS уже сделан, но добавим сброс маргинов
-  // Также из-за плашек нужно, чтобы контент не наезжал — применяем при ресайзе динамические отступы
-  function adjustContainerPadding() {
-    const container = document.querySelector('.container');
-    if (!container) return;
-    const isLarge = window.innerWidth >= 1100;
-    if (isLarge) {
-      container.style.paddingLeft = "220px";
-      container.style.paddingRight = "220px";
-    } else if (window.innerWidth >= 801) {
-      container.style.paddingLeft = "180px";
-      container.style.paddingRight = "180px";
-    } else {
-      container.style.paddingLeft = "14px";
-      container.style.paddingRight = "14px";
+  
+  // Периодический "прикол" — раз в 30 секунд можно менять позиции у всех плашек (чтобы бесило)
+  setInterval(() => {
+    for (let ad of adPanels) {
+      if (ad && ad.element && !ad.element.classList.contains("hidden-ad")) {
+        relocateAd(ad);
+      } else if (ad && ad.element) {
+        // скрытые тоже тихонько перемещаем, чтобы после выхода были в новом месте
+        relocateAd(ad);
+      }
     }
-  }
-  window.addEventListener('resize', adjustContainerPadding);
-  adjustContainerPadding();
+  }, 25000);
+  
+  // Дополнительно чтобы таблица оставалась по центру - фикс margin от рекламы не требуется.
+  // Убираем возможные баги с z-index
+  console.log("🔥 Упоротая реклама: плашки в рандомных местах, на телефоне тоже! Белая обводка, крестик, пропадают на 1 сек и меняют картинку + место");
 </script>
 
 </body>
