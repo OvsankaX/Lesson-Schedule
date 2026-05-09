@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Расписание — абсурдные тарифы (чёрно-белый)</title>
+<title>Расписание — летающие рекламные плашки (DVD-эффект)</title>
 
 <style>
   /* ===== ОРИГИНАЛЬНЫЙ СТИЛЬ РАСПИСАНИЯ ===== */
@@ -109,7 +109,7 @@
     font-weight: 600;
   }
 
-  /* ===== РЕКЛАМНЫЕ ПЛАШКИ (белая обводка) ===== */
+  /* ===== РЕКЛАМНЫЕ ПЛАШКИ (белая обводка) — теперь они будут двигаться ===== */
   .ad-float {
     position: fixed;
     background: #0a0a0a;
@@ -122,14 +122,9 @@
     max-width: 260px;
     width: auto;
     min-width: 140px;
-    will-change: transform, opacity;
-    animation: popIn 0.2s cubic-bezier(0.34, 1.2, 0.64, 1);
-  }
-
-  @keyframes popIn {
-    0% { transform: scale(0.2) rotate(-10deg); opacity: 0; }
-    80% { transform: scale(1.1) rotate(2deg); }
-    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    will-change: left, top;
+    transition: none; /* движение через requestAnimationFrame, плавно */
+    cursor: default;
   }
 
   @media (max-width: 700px) {
@@ -236,7 +231,7 @@
   }
   .close-tariff:hover { color: #ffffff; }
 
-  /* Форма оформления (чёрно-белая) */
+  /* Форма оформления */
   .order-form {
     background: #0f111a;
     border-radius: 24px;
@@ -294,11 +289,6 @@
     cursor: pointer;
     opacity: 1;
   }
-  #payFinalBtn {
-    background: #1a1e2a;
-    border: 2px solid white;
-    color: white;
-  }
 </style>
 </head>
 <body>
@@ -315,7 +305,7 @@
 </div>
 
 <script>
-  // ========== РАСПИСАНИЕ ==========
+  // ========== РАСПИСАНИЕ (как вы сохранили) ==========
   const schedules = {
     "понедельник": ["Разговоры о лудомании", "История", "Физкультура", "Алгебра", "География", "Обществознание", "Иностранный язык"],
     "вторник": ["Литература", "Русский язык", "ОБЖ", "Алгебра", "Физика", "Иностранный язык", "История"],
@@ -351,33 +341,95 @@
   window.nextDay = () => { dayIndex = (dayIndex + 1) % days.length; showAll = false; renderSchedule(); };
   window.toggleAll = () => { showAll = !showAll; renderSchedule(); };
 
-  // ========== РЕКЛАМА С БЕЛЫМИ ЧАСТИЦАМИ ==========
+  // ========== ЛЕТАЮЩИЕ РЕКЛАМНЫЕ ПЛАШКИ (DVD-эффект) ==========
   const adCampaigns = [
     { img: "images/casebattle.png", link: "https://case-battle.red/", alt: "Case Battle" },
     { img: "images/upgrader.png", link: "https://upgrader.pro/ru", alt: "Upgrader Pro" },
     { img: "images/gosuslugi.png", link: "https://contract.gosuslugi.ru/", alt: "Госуслуги" }
   ];
+  
   let adPanels = [];
   let closedAdsCount = 0;
   let tariffOverlayActive = false;
-
-  function getRandomPosition(adElement) {
-    if (!adElement) return { left: 20, top: 20 };
-    const rect = adElement.getBoundingClientRect();
-    const adWidth = rect.width || 180, adHeight = rect.height || 140;
-    const maxX = Math.max(20, window.innerWidth - adWidth - 20), maxY = Math.max(20, window.innerHeight - adHeight - 20);
-    let left = Math.random() * maxX, top = Math.random() * maxY;
-    if (Math.random() > 0.7) left = 10;
-    if (Math.random() > 0.8) left = window.innerWidth - adWidth - 10;
-    if (Math.random() > 0.85) top = 10;
-    if (Math.random() > 0.85) top = window.innerHeight - adHeight - 10;
-    left = Math.min(Math.max(5, left), window.innerWidth - adWidth - 5);
-    top = Math.min(Math.max(5, top), window.innerHeight - adHeight - 5);
-    return { left, top };
+  let animationFrameId = null;
+  
+  // Функция для обновления позиции с отскоком (DVD-стиль)
+  function updateAdPosition(ad) {
+    if (!ad.element || ad.isClosing || !ad.element.style.display !== 'none') {
+      // если плашка скрыта или закрывается — не двигаем
+      return;
+    }
+    let rect = ad.element.getBoundingClientRect();
+    let adWidth = rect.width;
+    let adHeight = rect.height;
+    
+    let newX = ad.x + ad.vx;
+    let newY = ad.y + ad.vy;
+    
+    // отскок от границ экрана (с учётом всей ширины/высоты)
+    if (newX <= 0) {
+      newX = 0;
+      ad.vx = Math.abs(ad.vx);
+    }
+    if (newX + adWidth >= window.innerWidth) {
+      newX = window.innerWidth - adWidth;
+      ad.vx = -Math.abs(ad.vx);
+    }
+    if (newY <= 0) {
+      newY = 0;
+      ad.vy = Math.abs(ad.vy);
+    }
+    if (newY + adHeight >= window.innerHeight) {
+      newY = window.innerHeight - adHeight;
+      ad.vy = -Math.abs(ad.vy);
+    }
+    
+    ad.x = newX;
+    ad.y = newY;
+    ad.element.style.left = ad.x + 'px';
+    ad.element.style.top = ad.y + 'px';
   }
-  function relocateAd(ad) { if (!ad || !ad.element) return; const pos = getRandomPosition(ad.element); ad.element.style.left = pos.left + "px"; ad.element.style.top = pos.top + "px"; ad.element.style.right = "auto"; ad.element.style.bottom = "auto"; }
-  function updateAdImage(ad) { const campaign = adCampaigns[ad.imageIndex % adCampaigns.length]; if (ad.imgElement) { ad.imgElement.src = campaign.img; ad.imgElement.alt = campaign.alt; ad.imgElement.onclick = (e) => { e.preventDefault(); window.open(campaign.link, "_blank"); }; } }
-
+  
+  // Запуск анимации для всех плашек (один общий цикл)
+  function startFlyingAnimation() {
+    if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    function animate() {
+      for (let ad of adPanels) {
+        if (ad && ad.element && !tariffOverlayActive && !ad.isClosing && ad.element.style.display !== 'none') {
+          updateAdPosition(ad);
+        }
+      }
+      animationFrameId = requestAnimationFrame(animate);
+    }
+    animate();
+  }
+  
+  function getRandomPositionAndDirection(adElement) {
+    if (!adElement) return { x: 20, y: 20, vx: 0.8, vy: 0.8 };
+    const adWidth = adElement.offsetWidth || 180;
+    const adHeight = adElement.offsetHeight || 140;
+    const maxX = Math.max(10, window.innerWidth - adWidth - 10);
+    const maxY = Math.max(10, window.innerHeight - adHeight - 10);
+    let x = Math.random() * maxX;
+    let y = Math.random() * maxY;
+    // случайная скорость (медленно, чтобы успевать закрывать)
+    let vx = (Math.random() * 0.8 + 0.4) * (Math.random() > 0.5 ? 1 : -1);
+    let vy = (Math.random() * 0.8 + 0.4) * (Math.random() > 0.5 ? 1 : -1);
+    // минимальная скорость, чтобы не залипали
+    if (Math.abs(vx) < 0.4) vx = vx > 0 ? 0.5 : -0.5;
+    if (Math.abs(vy) < 0.4) vy = vy > 0 ? 0.5 : -0.5;
+    return { x, y, vx, vy };
+  }
+  
+  function updateAdImage(ad) {
+    const campaign = adCampaigns[ad.imageIndex % adCampaigns.length];
+    if (ad.imgElement) {
+      ad.imgElement.src = campaign.img;
+      ad.imgElement.alt = campaign.alt;
+      ad.imgElement.onclick = (e) => { e.preventDefault(); window.open(campaign.link, "_blank"); };
+    }
+  }
+  
   function pixelExplode(element, callback) {
     if (!element) { if(callback) callback(); return; }
     const rect = element.getBoundingClientRect();
@@ -400,7 +452,7 @@
     element.style.visibility = 'hidden'; element.style.opacity = '0';
     setTimeout(() => { if(dustContainer && dustContainer.remove) dustContainer.remove(); if(callback) callback(); }, 200);
   }
-
+  
   function closeAdWithAnimation(ad, onComplete) {
     if (!ad || !ad.element || ad.isClosing) { if(onComplete) onComplete(); return; }
     ad.isClosing = true;
@@ -411,7 +463,14 @@
       element.style.visibility = 'hidden';
       ad.imageIndex = (ad.imageIndex + 1) % adCampaigns.length;
       updateAdImage(ad);
-      relocateAd(ad);
+      // после закрытия перемещаем в новое рандомное место и даём новое направление
+      const newPos = getRandomPositionAndDirection(ad.element);
+      ad.x = newPos.x;
+      ad.y = newPos.y;
+      ad.vx = newPos.vx;
+      ad.vy = newPos.vy;
+      ad.element.style.left = ad.x + 'px';
+      ad.element.style.top = ad.y + 'px';
       element.classList.remove('hidden-temp');
       ad.isClosing = false;
       element.style.visibility = 'visible';
@@ -423,15 +482,31 @@
       if (onComplete) onComplete();
     });
   }
-
+  
   function createAdPanel() {
     const div = document.createElement("div"); div.className = "ad-float";
     const inner = document.createElement("div"); inner.className = "ad-inner";
     const img = document.createElement("img"); img.className = "ad-img";
     const closeBtn = document.createElement("button"); closeBtn.className = "close-corner"; closeBtn.textContent = "✖";
     inner.appendChild(img); inner.appendChild(closeBtn); div.appendChild(inner); document.body.appendChild(div);
-    const adObj = { element: div, imgElement: img, closeBtn, imageIndex: Math.floor(Math.random() * adCampaigns.length), isClosing: false };
-    updateAdImage(adObj); relocateAd(adObj);
+    
+    const initPos = getRandomPositionAndDirection(div);
+    div.style.left = initPos.x + 'px';
+    div.style.top = initPos.y + 'px';
+    
+    const adObj = {
+      element: div,
+      imgElement: img,
+      closeBtn,
+      imageIndex: Math.floor(Math.random() * adCampaigns.length),
+      isClosing: false,
+      x: initPos.x,
+      y: initPos.y,
+      vx: initPos.vx,
+      vy: initPos.vy
+    };
+    updateAdImage(adObj);
+    
     closeBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       if (adObj.isClosing || tariffOverlayActive) return;
@@ -444,8 +519,7 @@
     });
     return adObj;
   }
-
-  // Скрыть/показать рекламу
+  
   function hideAllAds() {
     for (let ad of adPanels) {
       if (ad && ad.element) ad.element.style.display = 'none';
@@ -456,11 +530,12 @@
       if (ad && ad.element) ad.element.style.display = '';
     }
   }
-
+  
+  // ========== ТАРИФЫ (как вы сохранили) ==========
   function showTariffMenu() {
     if (tariffOverlayActive) return;
     tariffOverlayActive = true;
-    hideAllAds(); // реклама пропадает на время работы с тарифами
+    hideAllAds();
     
     const overlay = document.createElement('div'); overlay.className = 'tariff-overlay';
     overlay.innerHTML = `
@@ -515,11 +590,11 @@
     closeBtnEl.addEventListener('click', () => {
       overlay.remove();
       tariffOverlayActive = false;
-      showAllAds(); // возвращаем рекламу
+      showAllAds();
       closedAdsCount = 0;
     });
   }
-
+  
   function showOrderForm(overlay, basePrice, tariffName) {
     const container = overlay.querySelector('.tariff-container');
     container.innerHTML = `
@@ -550,13 +625,9 @@
                         passportInput.value.trim() !== '' &&
                         phoneInput.value.trim() !== '' &&
                         addressInput.value.trim() !== '';
-      if (allFilled) {
-        nextBtn.disabled = false;
-        nextBtn.classList.add('active');
-      } else {
-        nextBtn.disabled = true;
-        nextBtn.classList.remove('active');
-      }
+      nextBtn.disabled = !allFilled;
+      if (allFilled) nextBtn.classList.add('active');
+      else nextBtn.classList.remove('active');
     }
     
     fullNameInput.addEventListener('input', checkFormComplete);
@@ -574,13 +645,11 @@
     nextBtn.addEventListener('click', () => {
       if (nextBtn.disabled) return;
       const deliverySelect = document.getElementById('delivery');
-      let deliveryCost = 0;
-      let deliveryText = "";
+      let deliveryCost = 0, deliveryText = "";
       switch(deliverySelect.value) {
         case "0": deliveryCost = 500; deliveryText = "Курьером в зубы"; break;
         case "1": deliveryCost = 200; deliveryText = "Почтой Украины"; break;
         case "2": deliveryCost = 9999; deliveryText = "Телепортация"; break;
-        default: deliveryCost = 0;
       }
       const commissions = [
         { name: "Комиссия за что-то", percent: 15 },
@@ -619,15 +688,32 @@
       });
     });
   }
-
+  
   function initAds() {
     for (let ad of adPanels) { if(ad && ad.element) ad.element.remove(); }
     adPanels = [];
     closedAdsCount = 0;
-    for (let i = 0; i < 5; i++) { adPanels.push(createAdPanel()); }
+    for (let i = 0; i < 5; i++) { 
+      adPanels.push(createAdPanel()); 
+    }
+    startFlyingAnimation();
   }
-
-  window.addEventListener("resize", () => { if(!tariffOverlayActive) for(let ad of adPanels) relocateAd(ad); renderSchedule(); });
+  
+  window.addEventListener("resize", () => {
+    if(!tariffOverlayActive) {
+      for(let ad of adPanels) {
+        // адаптируем позицию, чтобы не вылетела за границы
+        let maxX = window.innerWidth - ad.element.offsetWidth;
+        let maxY = window.innerHeight - ad.element.offsetHeight;
+        if (ad.x > maxX) ad.x = Math.max(0, maxX);
+        if (ad.y > maxY) ad.y = Math.max(0, maxY);
+        ad.element.style.left = ad.x + 'px';
+        ad.element.style.top = ad.y + 'px';
+      }
+    }
+    renderSchedule();
+  });
+  
   renderSchedule();
   initAds();
 </script>
