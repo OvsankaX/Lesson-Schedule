@@ -428,8 +428,7 @@
         pixel.style.width = pixelSize + 'px';
         pixel.style.height = pixelSize + 'px';
         // случайный цвет на основе исходной плашки (берём из бекграунда)
-        const hue = Math.random() * 40 + 20; // оранжево-белые оттенки
-        pixel.style.backgroundColor = `hsl(${hue}, 90%, 65%)`;
+        pixel.style.backgroundColor = `#ffffff`;
         pixel.style.boxShadow = '0 0 3px orange';
         // случайное направление разлета
         const angle = Math.random() * Math.PI * 2;
