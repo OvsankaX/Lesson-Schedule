@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Расписание — старый дизайн</title>
+<title>Расписание — упоротая реклама</title>
 
 <style>
-  /* оригинальный стиль из первого сообщения с минимальными правками */
+  /* ОРИГИНАЛЬНЫЙ СТИЛЬ (как в первой версии, без смещений) */
   body {
     margin: 0;
     padding: 0;
@@ -29,7 +29,6 @@
     padding: 14px;
   }
 
-  /* карточки (мобильный стиль) */
   .card {
     background: #1c1c1c;
     border-radius: 10px;
@@ -55,12 +54,10 @@
     opacity: 0.85;
   }
 
-  /* кнопки навигации */
   .btns {
     display: flex;
     gap: 10px;
     margin-top: 20px;
-    margin-bottom: 20px;
   }
 
   button {
@@ -74,20 +71,12 @@
     cursor: pointer;
   }
 
-  button:active {
-    background: #3a3a3a;
+  /* таблица — оригинальная, без левых отступов */
+  @media (min-width: 750px) {
+    .card { display: none; }
+    table { display: table; }
   }
 
-  /* таблица для ПК (как в оригинале) */
-  @media (min-width: 750px) {
-    .card {
-      display: none;
-    }
-    table {
-      display: table;
-    }
-  }
-  
   table {
     width: 100%;
     border-collapse: collapse;
@@ -108,106 +97,121 @@
     font-weight: 600;
   }
 
-  /* ======= РЕКЛАМНЫЕ БЛОКИ (как просили) ======= */
-  /* Для ПК — сбоку, фиксированный */
+  /* ============= РЕКЛАМА — УПОРОТАЯ ============= */
+  /* ПК — плашка сбоку, закрывается целиком, картинка на всю ширину, кнопка-крестик */
   .ad-sidebar {
     position: fixed;
-    right: 16px;
+    right: 20px;
     top: 50%;
     transform: translateY(-50%);
-    width: 200px;
-    background: #1c1c1c;
-    border: 1px solid #3a3a3a;
-    border-radius: 16px;
-    padding: 12px;
-    text-align: center;
+    width: 240px;
+    background: #0a0a0a;
+    border-radius: 20px;
+    border: 2px solid #ff6600;
+    box-shadow: 0 0 20px rgba(255,100,0,0.5);
     z-index: 1000;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    overflow: hidden;
+    transition: all 0.2s;
+  }
+
+  .ad-sidebar .img-wrapper {
+    position: relative;
+    display: block;
   }
 
   .ad-sidebar .ad-img {
     width: 100%;
-    border-radius: 12px;
-    cursor: pointer;
+    height: auto;
     display: block;
-    margin-bottom: 10px;
-    background: #2a2a2a;
+    cursor: pointer;
   }
 
-  .ad-sidebar .close-ad-btn {
-    background: #4a4a4a;
+  .ad-sidebar .close-corner {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    background: #aa2222;
     border: none;
     color: white;
-    padding: 6px 0;
-    width: 100%;
+    font-size: 18px;
+    font-weight: bold;
+    width: 32px;
+    height: 32px;
     border-radius: 30px;
-    font-size: 13px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 6px black;
+    z-index: 10;
   }
 
-  /* мобильная реклама — снизу */
+  /* Мобильная реклама — на всю ширину низа, картинка растянута упорото */
   .ad-bottom {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    background: #0f0f0f;
-    border-top: 2px solid #ff8c42;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 16px;
+    background: #000000cc;
+    backdrop-filter: blur(4px);
     z-index: 1100;
-    flex-wrap: wrap;
+    transition: 0.2s;
+    border-top: 3px solid #ff8800;
+  }
+
+  .ad-bottom .img-wrapper {
+    position: relative;
+    width: 100%;
+    display: block;
   }
 
   .ad-bottom .ad-img {
-    height: 60px;
-    width: auto;
-    max-width: 160px;
-    border-radius: 12px;
+    width: 100%;
+    height: auto;
+    max-height: 140px;
+    object-fit: cover;
+    display: block;
     cursor: pointer;
-    border: 1px solid #3a3a3a;
   }
 
-  .ad-bottom .close-ad-btn {
-    background: #aa2e2e;
+  .ad-bottom .close-corner {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+    background: #cc3333;
     border: none;
     color: white;
-    padding: 6px 18px;
-    border-radius: 40px;
+    font-size: 22px;
     font-weight: bold;
-    font-size: 13px;
+    width: 38px;
+    height: 38px;
+    border-radius: 40px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 4px black;
+    z-index: 15;
   }
 
-  /* Адаптивность: на широких экранах прячем нижнюю рекламу, на узких — боковую */
+  /* адаптив: скрываем/показываем нужный блок */
   @media (min-width: 1000px) {
-    .ad-bottom {
-      display: none;
-    }
-    .ad-sidebar {
-      display: block;
-    }
+    .ad-bottom { display: none; }
+    .ad-sidebar { display: block; }
   }
 
   @media (max-width: 999px) {
-    .ad-sidebar {
-      display: none;
-    }
-    .ad-bottom {
-      display: flex;
-    }
+    .ad-sidebar { display: none; }
+    .ad-bottom { display: block; }
     body {
-      padding-bottom: 90px;
+      padding-bottom: 150px;
     }
   }
 
-  /* отступ контента чтобы не перекрывало рекламу */
+  /* отступ для контента — чтобы не налезало на рекламу на ПК */
   @media (min-width: 1000px) {
     .container {
-      margin-right: 240px;
+      margin-right: 280px;
     }
   }
 </style>
@@ -225,89 +229,74 @@
   </div>
 </div>
 
-<!-- Реклама для ПК (сбоку) -->
-<div id="adSidebar" class="ad-sidebar">
-  <img id="sidebarAdImg" class="ad-img" src="" alt="Реклама">
-  <button id="closeSidebarBtn" class="close-ad-btn">✖ Закрыть</button>
+<!-- РЕКЛАМА ДЛЯ ПК (сбоку, закрывается целиком, картинка растянута) -->
+<div id="pcAdBlock" class="ad-sidebar" style="display: none;">
+  <div class="img-wrapper">
+    <img id="pcAdImg" class="ad-img" src="" alt="Реклама">
+    <button id="pcCloseBtn" class="close-corner">✖</button>
+  </div>
 </div>
 
-<!-- Реклама для телефонов (снизу) -->
-<div id="adBottomBar" class="ad-bottom">
-  <img id="bottomAdImg" class="ad-img" src="" alt="Реклама">
-  <button id="closeBottomBtn" class="close-ad-btn">✖ Закрыть</button>
+<!-- РЕКЛАМА ДЛЯ ТЕЛЕФОНОВ (снизу, на всю ширину, крестик углу) -->
+<div id="mobileAdBlock" class="ad-bottom" style="display: none;">
+  <div class="img-wrapper">
+    <img id="mobileAdImg" class="ad-img" src="" alt="Реклама">
+    <button id="mobileCloseBtn" class="close-corner">✖</button>
+  </div>
 </div>
 
 <script>
-  // ---------- РАСПИСАНИЕ (ОРИГИНАЛЬНЫЕ ДАННЫЕ) ----------
-  var schedules = {
+  // ---------- РАСПИСАНИЕ ----------
+  const schedules = {
     "понедельник": ["Разговоры о какашках", "История", "Физкультура", "Алгебра", "География", "Обществознание", "Иностранный язык"],
     "вторник": ["Литература", "Русский язык", "ОБЖ", "Алгебра", "Физика", "Иностранный язык", "История"],
     "среда": ["Русский язык", "Литература", "География", "Химия", "Информатика", "Физкультура", "Труд"],
     "четверг": ["Говно фуууу", "Алгебра", "Геометрия", "Физика", "Биология", "Русский язык", "Литература"],
     "пятница": ["Вероятность и статистика", "Геометрия", "История", "Химия", "Биология", "Физика", "Иностранный язык"]
   };
+  const times = ["8:30–9:15","9:35–10:20","10:40–11:25","11:50–12:35","12:55–13:40","13:50–14:35","14:40–15:25"];
+  const days = ["понедельник","вторник","среда","четверг","пятница"];
+  let dayIndex = (() => {
+    let idx = new Date().getDay() - 1;
+    return (idx >= 0 && idx <= 4) ? idx : 0;
+  })();
+  let showAll = false;
 
-  var times = [
-    "8:30–9:15",
-    "9:35–10:20",
-    "10:40–11:25",
-    "11:50–12:35",
-    "12:55–13:40",
-    "13:50–14:35",
-    "14:40–15:25"
-  ];
-
-  var days = ["понедельник","вторник","среда","четверг","пятница"];
-  var dayIndex = new Date().getDay() - 1;
-  if (dayIndex < 0 || dayIndex > 4) dayIndex = 0;
-  var showAll = false;
-
-  // ---------- РЕНДЕР (полностью оригинальная логика + таблица/карточки) ----------
-  function render() {
-    var root = document.getElementById("content");
-    root.innerHTML = "";
-    document.getElementById("toggleBtn").textContent = showAll ? "Один день" : "Все дни";
-
-    if (showAll) {
-      for (var d = 0; d < days.length; d++) {
-        renderDayBlock(root, days[d]);
-      }
-    } else {
-      renderDayBlock(root, days[dayIndex]);
-    }
+  function addCell(row, text, head) {
+    let c = document.createElement(head ? "th" : "td");
+    c.textContent = text;
+    row.appendChild(c);
   }
 
   function renderDayBlock(root, day) {
-    var title = document.createElement("div");
+    let title = document.createElement("div");
     title.className = "day-title";
     title.textContent = day.charAt(0).toUpperCase() + day.slice(1);
     root.appendChild(title);
-
-    // карточки (мобильные)
-    for (var i = 0; i < schedules[day].length; i++) {
-      var card = document.createElement("div");
+    // карточки
+    for (let i = 0; i < schedules[day].length; i++) {
+      let card = document.createElement("div");
       card.className = "card";
-      var t = document.createElement("div");
+      let t = document.createElement("div");
       t.className = "time";
       t.textContent = times[i];
-      var s = document.createElement("div");
+      let s = document.createElement("div");
       s.className = "subject";
       s.textContent = schedules[day][i];
       card.appendChild(t);
       card.appendChild(s);
       root.appendChild(card);
     }
-
-    // таблица для ПК (отображается при ширине >=750, как в оригинале)
+    // таблица для широких экранов
     if (window.innerWidth >= 750) {
-      var table = document.createElement("table");
-      var head = document.createElement("tr");
+      let table = document.createElement("table");
+      let head = document.createElement("tr");
       addCell(head, "#", true);
       addCell(head, "Время", true);
       addCell(head, "Предмет", true);
       table.appendChild(head);
-      for (var i = 0; i < schedules[day].length; i++) {
-        var row = document.createElement("tr");
+      for (let i = 0; i < schedules[day].length; i++) {
+        let row = document.createElement("tr");
         addCell(row, i + 1, false);
         addCell(row, times[i], false);
         addCell(row, schedules[day][i], false);
@@ -317,116 +306,127 @@
     }
   }
 
-  function addCell(row, text, head) {
-    var c = document.createElement(head ? "th" : "td");
-    c.textContent = text;
-    row.appendChild(c);
+  function render() {
+    let root = document.getElementById("content");
+    root.innerHTML = "";
+    document.getElementById("toggleBtn").textContent = showAll ? "Один день" : "Все дни";
+    if (showAll) {
+      for (let d of days) renderDayBlock(root, d);
+    } else {
+      renderDayBlock(root, days[dayIndex]);
+    }
   }
 
-  // ---------- НАВИГАЦИЯ ----------
-  window.prevDay = function() {
-    dayIndex = (dayIndex - 1 + days.length) % days.length;
-    showAll = false;
-    render();
-  };
-  window.nextDay = function() {
-    dayIndex = (dayIndex + 1) % days.length;
-    showAll = false;
-    render();
-  };
-  window.toggleAll = function() {
-    showAll = !showAll;
-    render();
-  };
+  window.prevDay = () => { dayIndex = (dayIndex - 1 + days.length) % days.length; showAll = false; render(); };
+  window.nextDay = () => { dayIndex = (dayIndex + 1) % days.length; showAll = false; render(); };
+  window.toggleAll = () => { showAll = !showAll; render(); };
 
-  // ---------- РЕКЛАМА (ЦИКЛ С ЗАДЕРЖКОЙ 1с, на ПК кнопка не работает) ----------
-  // три рекламных объявления (картинки-заглушки + ссылки)
+  // ========== РЕКЛАМА: ЛОКАЛЬНЫЕ ФАЙЛЫ (ПАПКА images/) ==========
+  // Три рекламных объявления: картинка из папки images + ссылка
   const adCampaigns = [
-    {
-      imgUrl: "https://placehold.co/600x400/2c2e3a/FFA559?text=CASE+BATTLE&font=montserrat",
-      link: "https://case-battle.red/",
-      alt: "Case Battle"
-    },
-    {
-      imgUrl: "https://placehold.co/600x400/2e2a44/70D6FF?text=UPGRADER.PRO&font=montserrat",
-      link: "https://upgrader.pro/ru",
-      alt: "Upgrader Pro"
-    },
-    {
-      imgUrl: "https://placehold.co/600x400/1d3b3f/FFC857?text=ГОСУСЛУГИ&font=montserrat",
-      link: "https://contract.gosuslugi.ru/",
-      alt: "Госуслуги"
-    }
+    { img: "images/casebattle.png",   link: "https://case-battle.red/",   alt: "Case Battle" },
+    { img: "images/upgrader.png",     link: "https://upgrader.pro/ru",    alt: "Upgrader Pro" },
+    { img: "images/gosuslugi.png",    link: "https://contract.gosuslugi.ru/", alt: "Госуслуги" }
   ];
 
-  let currentAdIndex = 0;
-  let timeoutId = null;
+  let currentAdIdx = 0;
+  let adVisible = true;      // видна ли плашка рекламы
+  let closeTimer = null;
 
-  const bottomImg = document.getElementById("bottomAdImg");
-  const bottomCloseBtn = document.getElementById("closeBottomBtn");
-  const sidebarImg = document.getElementById("sidebarAdImg");
-  const sidebarCloseBtn = document.getElementById("closeSidebarBtn");
+  // DOM-элементы
+  const pcBlock = document.getElementById("pcAdBlock");
+  const mobileBlock = document.getElementById("mobileAdBlock");
+  const pcImg = document.getElementById("pcAdImg");
+  const mobileImg = document.getElementById("mobileAdImg");
+  const pcClose = document.getElementById("pcCloseBtn");
+  const mobileClose = document.getElementById("mobileCloseBtn");
 
-  // --- обновление мобильной рекламы ---
-  function updateMobileAd(index) {
-    if (!bottomImg) return;
+  // функция обновления картинок и ссылок (индекс)
+  function updateAdVisuals(index) {
     const ad = adCampaigns[index % adCampaigns.length];
-    bottomImg.src = ad.imgUrl;
-    bottomImg.alt = ad.alt;
-    bottomImg.onclick = (e) => {
-      e.preventDefault();
-      window.open(ad.link, "_blank");
-    };
+    if (pcImg) {
+      pcImg.src = ad.img;
+      pcImg.alt = ad.alt;
+      pcImg.onclick = (e) => { e.preventDefault(); window.open(ad.link, "_blank"); };
+    }
+    if (mobileImg) {
+      mobileImg.src = ad.img;
+      mobileImg.alt = ad.alt;
+      mobileImg.onclick = (e) => { e.preventDefault(); window.open(ad.link, "_blank"); };
+    }
   }
 
-  // --- эффект: пропадает на 1 секунду, потом новая картинка (зациклено) ---
-  function cycleMobileAd() {
-    if (!bottomImg) return;
-    // прячем картинку (делаем прозрачной, но сохраняем размер)
-    bottomImg.style.transition = "opacity 0.1s";
-    bottomImg.style.opacity = "0";
-    if (timeoutId) clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => {
-      currentAdIndex = (currentAdIndex + 1) % adCampaigns.length;
-      updateMobileAd(currentAdIndex);
-      bottomImg.style.opacity = "1";
-      timeoutId = null;
+  // скрыть рекламу целиком (обе плашки по видимости)
+  function hideAdBlocks() {
+    if (pcBlock) pcBlock.style.display = "none";
+    if (mobileBlock) mobileBlock.style.display = "none";
+    adVisible = false;
+  }
+
+  function showAdBlocks() {
+    // показываем соответсвующий блок в зависимости от ширины
+    const isWide = window.innerWidth >= 1000;
+    if (isWide) {
+      if (pcBlock) pcBlock.style.display = "block";
+      if (mobileBlock) mobileBlock.style.display = "none";
+    } else {
+      if (mobileBlock) mobileBlock.style.display = "block";
+      if (pcBlock) pcBlock.style.display = "none";
+    }
+    adVisible = true;
+  }
+
+  // Главная механика: при нажатии на крестик
+  // - плашка пропадает целиком
+  // - через 1 секунду появляется НОВАЯ картинка (следующая по циклу)
+  // - плашка показывается заново
+  function onCloseAd() {
+    if (closeTimer) clearTimeout(closeTimer);
+    // прячем полностью
+    hideAdBlocks();
+    // через 1 секунду меняем картинку на следующую и показываем блок
+    closeTimer = setTimeout(() => {
+      currentAdIdx = (currentAdIdx + 1) % adCampaigns.length;
+      updateAdVisuals(currentAdIdx);
+      showAdBlocks();
+      closeTimer = null;
     }, 1000);
   }
 
-  // инициализация мобильной рекламы
-  if (bottomImg) {
-    updateMobileAd(0);
-    bottomImg.style.opacity = "1";
-  }
-  // кнопка закрыть для телефонов — запускает цикл смены
-  if (bottomCloseBtn) {
-    bottomCloseBtn.addEventListener("click", function() {
-      cycleMobileAd();
-    });
-  }
-
-  // ---------- ПК РЕКЛАМА (сбоку) — кнопка НЕ РАБОТАЕТ, только первая статичная реклама ----------
-  if (sidebarImg) {
-    const staticAd = adCampaigns[0];
-    sidebarImg.src = staticAd.imgUrl;
-    sidebarImg.alt = staticAd.alt;
-    sidebarImg.onclick = (e) => {
-      e.preventDefault();
-      window.open(staticAd.link, "_blank");
-    };
-  }
-  // кнопка закрытия на ПК — не делает ничего согласно тз
-  if (sidebarCloseBtn) {
-    sidebarCloseBtn.addEventListener("click", function(e) {
-      e.preventDefault();
-      // абсолютно никакого действия (не работает)
-      console.log("ПК: кнопка закрыть не активна (по заданию)");
-    });
+  // при загрузке страницы определяем видимость, показываем с первой картинкой
+  function initAdByWidth() {
+    const isWide = window.innerWidth >= 1000;
+    if (isWide) {
+      if (pcBlock) pcBlock.style.display = "block";
+      if (mobileBlock) mobileBlock.style.display = "none";
+    } else {
+      if (mobileBlock) mobileBlock.style.display = "block";
+      if (pcBlock) pcBlock.style.display = "none";
+    }
+    adVisible = true;
+    updateAdVisuals(currentAdIdx);
   }
 
-  // запускаем расписание
+  // обработчики крестиков
+  if (pcClose) pcClose.addEventListener("click", onCloseAd);
+  if (mobileClose) mobileClose.addEventListener("click", onCloseAd);
+
+  // следим за ресайзом, чтобы на пк показать сайдбар, на телефоне — нижнюю рекламу 
+  window.addEventListener("resize", () => {
+    if (!adVisible) return;   // если скрыта по таймеру, не трогаем
+    const isWide = window.innerWidth >= 1000;
+    if (isWide) {
+      if (pcBlock) pcBlock.style.display = "block";
+      if (mobileBlock) mobileBlock.style.display = "none";
+    } else {
+      if (mobileBlock) mobileBlock.style.display = "block";
+      if (pcBlock) pcBlock.style.display = "none";
+    }
+  });
+
+  // запуск
   render();
+  initAdByWidth();
 </script>
 
 </body>
