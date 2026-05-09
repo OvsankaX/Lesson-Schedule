@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Расписание — летающая реклама + отключаемый ЛСД-трип</title>
+<title>Расписание — отключи рекламу и получи ЛСД-трип</title>
 
 <style>
-  /* ===== ОРИГИНАЛЬНЫЙ СТИЛЬ РАСПИСАНИЯ ===== */
+  /* ===== ОРИГИНАЛЬНЫЙ СТИЛЬ РАСПИСАНИЯ (полностью сохранён) ===== */
   * {
     box-sizing: border-box;
   }
@@ -19,7 +19,13 @@
     color: #e5e5e5;
     min-height: 100vh;
     position: relative;
-    transition: all 0.03s linear;
+    transition: filter 0.1s ease;
+  }
+
+  /* инверсия цветов для ЛСД-трипа */
+  body.lsd-invert {
+    filter: invert(1) hue-rotate(180deg);
+    background: #ededed;
   }
 
   header {
@@ -28,7 +34,6 @@
     font-size: 22px;
     background: #1c1c1c;
     border-bottom: 1px solid #2a2a2a;
-    transition: all 0.05s ease;
   }
 
   .container {
@@ -37,7 +42,6 @@
     padding: 14px;
     position: relative;
     z-index: 1;
-    transition: all 0.05s cubic-bezier(0.4, 1.3, 0.6, 1);
   }
 
   .card {
@@ -46,7 +50,6 @@
     padding: 14px 16px;
     margin-bottom: 12px;
     border: 1px solid #2a2a2a;
-    transition: all 0.05s;
   }
 
   .card .time {
@@ -82,7 +85,10 @@
     color: #e5e5e5;
     font-size: 16px;
     cursor: pointer;
-    transition: all 0.05s;
+  }
+
+  button:active {
+    background: #3a3a3a;
   }
 
   @media (min-width: 750px) {
@@ -150,7 +156,7 @@
     100% { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; }
   }
 
-  /* ===== КНОПКА ОТКЛЮЧЕНИЯ РЕКЛАМЫ (ЛЕВЫЙ ВЕРХНИЙ УГОЛ) ===== */
+  /* ===== КНОПКА ОТКЛЮЧЕНИЯ РЕКЛАМЫ ===== */
   .ad-killer {
     position: fixed;
     top: 20px;
@@ -186,7 +192,7 @@
     background: #2a1a1a;
   }
 
-  /* ===== МЕНЮ ТАРИФОВ (оригинал) ===== */
+  /* ===== МЕНЮ ТАРИФОВ (полная версия) ===== */
   .tariff-overlay {
     position: fixed;
     top: 0;
@@ -276,7 +282,7 @@
   window.nextDay = () => { dayIndex = (dayIndex + 1) % days.length; showAll = false; renderSchedule(); };
   window.toggleAll = () => { showAll = !showAll; renderSchedule(); };
 
-  // ========== ЛЕТАЮЩИЕ РЕКЛАМНЫЕ ПЛАШКИ (полностью оригинальная механика) ==========
+  // ========== ЛЕТАЮЩИЕ РЕКЛАМНЫЕ ПЛАШКИ ==========
   const adCampaigns = [
     { img: "images/casebattle.png", link: "https://case-battle.red/", alt: "Case Battle" },
     { img: "images/upgrader.png", link: "https://upgrader.pro/ru", alt: "Upgrader Pro" },
@@ -287,6 +293,8 @@
   let closedAdsCount = 0;
   let tariffOverlayActive = false;
   let animationFrameId = null;
+  let isLsdMode = false;
+  let driftInterval = null;
   
   function getRandomPositionAndDirection(adElement) {
     if (!adElement) return { x: 20, y: 20, vx: 0.8, vy: 0.8 };
@@ -306,11 +314,27 @@
   function updateAdPosition(ad) {
     if (!ad.element || ad.isClosing) return;
     if (ad.element.style.display === 'none') return;
+    let newX = ad.x + ad.vx;
+    let newY = ad.y + ad.vy;
+    
+    // В ЛСД-режиме: не отскакиваем, а уплываем за экран
+    if (isLsdMode) {
+      ad.x = newX;
+      ad.y = newY;
+      ad.element.style.left = ad.x + 'px';
+      ad.element.style.top = ad.y + 'px';
+      // если уплыл далеко за экран — удаляем
+      if (ad.x > window.innerWidth + 500 || ad.x < -500 || ad.y > window.innerHeight + 500 || ad.y < -500) {
+        if (ad.element) ad.element.remove();
+        ad.isClosing = true;
+      }
+      return;
+    }
+    
+    // обычный режим с отскоками
     let rect = ad.element.getBoundingClientRect();
     let adWidth = rect.width;
     let adHeight = rect.height;
-    let newX = ad.x + ad.vx;
-    let newY = ad.y + ad.vy;
     if (newX <= 0) { newX = 0; ad.vx = Math.abs(ad.vx); }
     if (newX + adWidth >= window.innerWidth) { newX = window.innerWidth - adWidth; ad.vx = -Math.abs(ad.vx); }
     if (newY <= 0) { newY = 0; ad.vy = Math.abs(ad.vy); }
@@ -421,127 +445,240 @@
     if (animationFrameId) cancelAnimationFrame(animationFrameId);
   }
 
-  // ========== ТАРИФЫ (оригинал) ==========
+  // ========== ТАРИФЫ (полная версия) ==========
   function showTariffMenu() {
     if (tariffOverlayActive) return;
     tariffOverlayActive = true;
     hideAllAds();
     const overlay = document.createElement('div'); overlay.className = 'tariff-overlay';
-    overlay.innerHTML = `<div class="tariff-container"><div class="tariff-title">💸 VIP ТАРИФЫ ДЛЯ ПИЗДАТЫХ 💸</div>
-      <div class="tariff-card"><div class="tariff-name">🚀 ZA SVO</div><div class="tariff-price">₴ 99 999</div><ul class="tariff-features"><li>✅ Доступ к расписанию</li><li>✅ Личный "Дима"</li><li>✅ Клеймо еблана</li></ul><button class="buy-btn" data-price="99999" data-name="ZA SVO">КУПИТЬ</button></div>
-      <div class="tariff-card"><div class="tariff-name">👑 КОРОЛЬ ВОЗДУХА</div><div class="tariff-price">₴ 499 999</div><ul class="tariff-features"><li>✅ Все фишки</li><li>✅ Огромные ЯЙЦА</li></ul><button class="buy-btn" data-price="499999" data-name="КОРОЛЬ ВОЗДУХА">КУПИТЬ</button></div>
-      <div class="close-tariff" id="closeTariffBtn">❌ нет, спасибо ❌</div></div>`;
+    overlay.innerHTML = `
+      <div class="tariff-container">
+        <div class="tariff-title">💸 VIP ТАРИФЫ ДЛЯ ПИЗДАТЫХ 💸</div>
+        <div class="tariff-card" data-tariff="premium">
+          <div class="tariff-name">🚀 ZA SVO</div>
+          <div class="tariff-price">₴ 99 999</div>
+          <ul class="tariff-features">
+            <li>✅ Доступ к расписанию</li>
+            <li>✅ Личный "Дима пьяный украинец"</li>
+            <li>✅ Ваня воздухан</li>
+            <li>✅ Клеймо еблана</li>
+          </ul>
+          <button class="buy-btn" data-price="99999" data-name="ZA SVO">КУПИТЬ ЗА 99 999 ₴</button>
+        </div>
+        <div class="tariff-card" data-tariff="ultra">
+          <div class="tariff-name">👑 КОРОЛЬ ВОЗДУХА</div>
+          <div class="tariff-price">₴ 499 999</div>
+          <ul class="tariff-features">
+            <li>✅ Все фишки премиума</li>
+            <li>✅ Реклама будет закрываться за тебя (может быть)</li>
+            <li>✅ Огромные ЯЙЦА</li>
+            <li>✅ Кейс батл не будет давать диме</li>
+          </ul>
+          <button class="buy-btn" data-price="499999" data-name="КОРОЛЬ ВОЗДУХА">КУПИТЬ ЗА 499 999 ₴</button>
+        </div>
+        <div class="tariff-card" data-tariff="god">
+          <div class="tariff-name">⚡ У МЕНЯ ЧЕРВИ В ГЛАЗАХ</div>
+          <div class="tariff-price">₴ 1 337 000</div>
+          <ul class="tariff-features">
+            <li>✅ Тимошина пожрет говна</li>
+            <li>✅ Бонуска в кб +10%</li>
+            <li>✅ Стальные яйки</li>
+            <li>✅ Бессрочная гарантия на </li>
+          </ul>
+          <button class="buy-btn" data-price="1337000" data-name="У МЕНЯ ЧЕРВИ В ГЛАЗАХ">КУПИТЬ ЗА 1 337 000 ₴</button>
+        </div>
+        <div class="close-tariff" id="closeTariffBtn">❌ нет, спасибо, я бедный ❌</div>
+      </div>
+    `;
     document.body.appendChild(overlay);
     overlay.querySelectorAll('.buy-btn').forEach(btn => {
-      btn.addEventListener('click', () => { alert("Оплата через Совкомбанк"); window.open("https://sovcombank.ru/apply/credit/city-spb/", "_blank"); });
+      btn.addEventListener('click', (e) => {
+        const price = parseInt(btn.dataset.price);
+        const name = btn.dataset.name;
+        showOrderForm(overlay, price, name);
+      });
     });
-    overlay.querySelector('#closeTariffBtn').addEventListener('click', () => {
-      overlay.remove(); tariffOverlayActive = false; showAllAds(); closedAdsCount = 0;
+    const closeBtnEl = overlay.querySelector('#closeTariffBtn');
+    closeBtnEl.addEventListener('click', () => {
+      overlay.remove();
+      tariffOverlayActive = false;
+      showAllAds();
+      closedAdsCount = 0;
     });
   }
 
-  // ========== ЛСД-БЕСПРЕДЕЛ (после нажатия на кнопку) ==========
-  let lsdInterval = null;
-  function startLsdMadness() {
-    if (lsdInterval) clearInterval(lsdInterval);
-    // добавляем класс для тряски и цвета
-    document.body.classList.add('lsd-active');
-    
-    // Стили для ЛСД-эффектов (добавляем динамически, чтобы не засорять CSS)
-    const style = document.createElement('style');
-    style.id = 'lsd-styles';
-    style.textContent = `
-      body.lsd-active { animation: lsdShake 0.05s infinite alternate; }
-      @keyframes lsdShake { 0% { transform: translate(2px, -2px); } 100% { transform: translate(-2px, 2px); } }
-      body.lsd-active .container { animation: lsdFloat 0.15s infinite alternate; }
-      @keyframes lsdFloat { 0% { transform: translate(0px, 0px) rotate(0deg); } 100% { transform: translate(12px, -8px) rotate(3deg); } }
-      body.lsd-active .card, body.lsd-active table, body.lsd-active .day-title { animation: lsdColor 0.08s infinite alternate; }
-      @keyframes lsdColor { 0% { background: #1c1c1c; color: white; border-color: #2a2a2a; } 25% { background: #2a1a2a; color: #ff66aa; border-color: #ff3366; text-shadow: 2px 2px magenta; } 50% { background: #1a2a2a; color: #66ffcc; border-color: #33ffaa; text-shadow: -2px -1px cyan; } 75% { background: #2a2a1a; color: #ffff99; border-color: #ffcc33; text-shadow: 3px -1px yellow; } 100% { background: #1a1a3a; color: #cc66ff; border-color: #aa44ff; text-shadow: -2px 2px violet; } }
-      body.lsd-active .btns button { animation: lsdButton 0.1s infinite alternate; }
-      @keyframes lsdButton { 0% { transform: scale(1); background: #2d2d2d; } 100% { transform: scale(0.92) rotate(-2deg); background: #8a2a6a; color: #ffcccc; } }
-      body.lsd-active header { animation: lsdHeader 0.12s infinite alternate; }
-      @keyframes lsdHeader { 0% { transform: translateX(0); letter-spacing: normal; } 100% { transform: translateX(15px); letter-spacing: 5px; background: #2a1a2a; } }
+  function showOrderForm(overlay, basePrice, tariffName) {
+    const container = overlay.querySelector('.tariff-container');
+    container.innerHTML = `
+      <div class="tariff-title">📝 ОФОРМЛЕНИЕ ТАРИФА "${tariffName}"</div>
+      <div class="order-form">
+        <input type="text" id="fullName" placeholder="ФИО (как в паспорте)">
+        <input type="text" id="passport" placeholder="Серия и номер паспорта">
+        <input type="text" id="phone" placeholder="Телефон (обязательно)">
+        <input type="text" id="address" placeholder="Адрес прописки">
+        <select id="delivery">
+          <option value="0">Курьером в зубы (+500₴)</option>
+          <option value="1">Почтой Украины (+200₴)</option>
+          <option value="2">Телепортация (ещё нет) (+9999₴)</option>
+        </select>
+        <button id="nextToInvoiceBtn" disabled>👉 ПЕРЕЙТИ К ОПЛАТЕ 👈</button>
+      </div>
+      <div class="close-tariff" id="backToTariffs">◀ Назад к тарифам</div>
     `;
-    document.head.appendChild(style);
-    
-    // Дополнительно: каждые 100-200 мс меняем параметры элементов (масштаб, поворот, съезжание)
-    lsdInterval = setInterval(() => {
-      if (!document.body.classList.contains('lsd-active')) return;
-      // случайные трансформации для контейнера
-      const container = document.querySelector('.container');
-      if (container) {
-        const randomRot = (Math.random() - 0.5) * 6;
-        const randomX = (Math.random() - 0.5) * 20;
-        const randomY = (Math.random() - 0.5) * 15;
-        container.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${randomRot}deg)`;
+    const fullNameInput = document.getElementById('fullName');
+    const passportInput = document.getElementById('passport');
+    const phoneInput = document.getElementById('phone');
+    const addressInput = document.getElementById('address');
+    const nextBtn = document.getElementById('nextToInvoiceBtn');
+    function checkFormComplete() {
+      const allFilled = fullNameInput.value.trim() !== '' &&
+                        passportInput.value.trim() !== '' &&
+                        phoneInput.value.trim() !== '' &&
+                        addressInput.value.trim() !== '';
+      nextBtn.disabled = !allFilled;
+      if (allFilled) nextBtn.classList.add('active');
+      else nextBtn.classList.remove('active');
+    }
+    fullNameInput.addEventListener('input', checkFormComplete);
+    passportInput.addEventListener('input', checkFormComplete);
+    phoneInput.addEventListener('input', checkFormComplete);
+    addressInput.addEventListener('input', checkFormComplete);
+    checkFormComplete();
+    const backBtn = container.querySelector('#backToTariffs');
+    backBtn.addEventListener('click', () => { overlay.remove(); showTariffMenu(); });
+    nextBtn.addEventListener('click', () => {
+      if (nextBtn.disabled) return;
+      const deliverySelect = document.getElementById('delivery');
+      let deliveryCost = 0, deliveryText = "";
+      switch(deliverySelect.value) {
+        case "0": deliveryCost = 500; deliveryText = "Курьером в зубы"; break;
+        case "1": deliveryCost = 200; deliveryText = "Почтой Украины"; break;
+        case "2": deliveryCost = 9999; deliveryText = "Телепортация"; break;
       }
-      // случайные трансформации для заголовков дней
-      document.querySelectorAll('.day-title').forEach(el => {
-        const scale = 0.8 + Math.random() * 0.8;
-        const rot = (Math.random() - 0.5) * 12;
-        el.style.transform = `scale(${scale}) rotate(${rot}deg)`;
-        el.style.display = 'inline-block';
-      });
-      // карточки разъезжаются
-      document.querySelectorAll('.card, table').forEach(el => {
-        const shiftX = (Math.random() - 0.5) * 25;
-        const shiftY = (Math.random() - 0.5) * 20;
-        const rotSmall = (Math.random() - 0.5) * 8;
-        el.style.transform = `translate(${shiftX}px, ${shiftY}px) rotate(${rotSmall}deg)`;
-      });
-      // кнопки дрожат
-      document.querySelectorAll('.btns button').forEach(btn => {
-        btn.style.transform = `scale(${0.85 + Math.random() * 0.4}) rotate(${(Math.random() - 0.5) * 8}deg)`;
-      });
-    }, 100);
+      const commissions = [
+        { name: "Комиссия за что-то", percent: 15 },
+        { name: "Сбор Кирушэ на депозит", percent: 12 },
+        { name: "Налог", percent: 8 },
+        { name: "Плата за воздух", percent: 5 }
+      ];
+      let total = basePrice + deliveryCost;
+      let commissionRows = [];
+      for (let comm of commissions) {
+        let amount = Math.round(total * comm.percent / 100);
+        commissionRows.push({ name: comm.name, amount: amount, percent: comm.percent });
+        total += amount;
+      }
+      total = Math.round(total);
+      let invoiceHtml = `<div class="invoice"><div class="invoice-row"><span>💰 Тариф "${tariffName}"</span><span>${basePrice.toLocaleString()} ₴</span></div>`;
+      invoiceHtml += `<div class="invoice-row"><span>🚚 Доставка: ${deliveryText}</span><span>+${deliveryCost.toLocaleString()} ₴</span></div>`;
+      for (let cr of commissionRows) {
+        invoiceHtml += `<div class="invoice-row"><span>${cr.name} (${cr.percent}%)</span><span>+${cr.amount.toLocaleString()} ₴</span></div>`;
+      }
+      invoiceHtml += `<div class="invoice-row total-row"><span>🐷 ИТОГО К ОПЛАТЕ</span><span>${total.toLocaleString()} ₴</span></div>`;
+      invoiceHtml += `<div style="font-size:12px; opacity:0.6; margin-top:12px;">Комиссия за что-то уже включена</div></div>`;
+      invoiceHtml += `<button id="payFinalBtn" style="background:#1a1e2a; border:2px solid white; color:white; width:100%; padding:14px; border-radius:40px; font-size:18px;">💳 ОПЛАТИТЬ 💳</button>`;
+      container.innerHTML = `
+        <div class="tariff-title">🧾 ЧЕК НА ОПЛАТУ</div>
+        ${invoiceHtml}
+        <div class="close-tariff" id="backToForm" style="margin-top:20px;">◀ Редактировать данные</div>
+      `;
+      const backForm = container.querySelector('#backToForm');
+      backForm.addEventListener('click', () => { showOrderForm(overlay, basePrice, tariffName); });
+      const payBtn = container.querySelector('#payFinalBtn');
+      payBtn.addEventListener('click', () => { window.open("https://sovcombank.ru/apply/credit/city-spb/", "_blank"); });
+    });
   }
 
-  function stopLsdMadness() {
-    if (lsdInterval) clearInterval(lsdInterval);
-    document.body.classList.remove('lsd-active');
-    const lsdStyle = document.getElementById('lsd-styles');
-    if (lsdStyle) lsdStyle.remove();
-    // сброс трансформаций
-    const container = document.querySelector('.container');
-    if (container) container.style.transform = '';
-    document.querySelectorAll('.day-title, .card, table, .btns button').forEach(el => {
-      el.style.transform = '';
-      el.style.display = '';
-    });
+  // ========== ЛСД-ТРИП ==========
+  function startLsdTrip() {
+    if (isLsdMode) return;
+    isLsdMode = true;
+    
+    // включаем инверсию цветов
+    document.body.classList.add('lsd-invert');
+    
+    // запускаем дрифт плашек (они просто уплывают)
+    // направление для каждой плашки — случайное, скорость побольше
+    for (let ad of adPanels) {
+      if (ad && ad.element) {
+        ad.vx = (Math.random() * 3 + 1.5) * (Math.random() > 0.5 ? 1 : -1);
+        ad.vy = (Math.random() * 3 + 1.5) * (Math.random() > 0.5 ? 1 : -1);
+      }
+    }
+    
+    // через 10 секунд — взрыв экрана
+    setTimeout(() => {
+      explodeWholeScreen();
+    }, 10000);
+  }
+  
+  function explodeWholeScreen() {
+    // создаём пиксели на весь экран
+    const dustContainer = document.createElement('div');
+    dustContainer.className = 'pixel-dust';
+    document.body.appendChild(dustContainer);
+    
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const pixelSize = 12;
+    const cols = Math.ceil(width / pixelSize);
+    const rows = Math.ceil(height / pixelSize);
+    
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        const pixel = document.createElement('div');
+        pixel.className = 'pixel';
+        pixel.style.left = (i * pixelSize) + 'px';
+        pixel.style.top = (j * pixelSize) + 'px';
+        pixel.style.width = pixelSize + 'px';
+        pixel.style.height = pixelSize + 'px';
+        pixel.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 60%)`;
+        pixel.style.boxShadow = '0 0 6px currentColor';
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 150 + Math.random() * 200;
+        const dx = Math.cos(angle) * distance;
+        const dy = Math.sin(angle) * distance;
+        pixel.style.setProperty('--dx', dx + 'px');
+        pixel.style.setProperty('--dy', dy + 'px');
+        dustContainer.appendChild(pixel);
+        setTimeout(() => { if(pixel && pixel.remove) pixel.remove(); }, 600);
+      }
+    }
+    
+    // удаляем всё содержимое body, оставляя белый экран
+    setTimeout(() => {
+      document.body.innerHTML = '';
+      document.body.style.background = 'white';
+      document.body.style.margin = '0';
+      document.body.style.height = '100vh';
+    }, 200);
   }
 
   // ========== ЗАПУСК ==========
-  // Инициализация рекламы
   for (let i = 0; i < 5; i++) { adPanels.push(createAdPanel()); }
   startFlyingAnimation();
   renderSchedule();
 
-  // Обработчик кнопки "откл рекламу"
   const killBtn = document.getElementById('adKillerBtn');
   killBtn.addEventListener('click', () => {
-    // убиваем рекламу навсегда
     killAllAdsPermanently();
-    // удаляем кнопку
     killBtn.remove();
-    // через 5 секунд включаем ЛСД-беспредел
     setTimeout(() => {
-      startLsdMadness();
+      startLsdTrip();
     }, 5000);
   });
 
   window.addEventListener("resize", () => {
     if(!tariffOverlayActive && adPanels.length) {
       for(let ad of adPanels) {
-        let maxX = window.innerWidth - ad.element.offsetWidth;
-        let maxY = window.innerHeight - ad.element.offsetHeight;
-        if (ad.x > maxX) ad.x = Math.max(0, maxX);
-        if (ad.y > maxY) ad.y = Math.max(0, maxY);
-        ad.element.style.left = ad.x + 'px';
-        ad.element.style.top = ad.y + 'px';
-        if (ad.x <= 0) ad.vx = Math.abs(ad.vx);
-        if (ad.x + ad.element.offsetWidth >= window.innerWidth) ad.vx = -Math.abs(ad.vx);
-        if (ad.y <= 0) ad.vy = Math.abs(ad.vy);
-        if (ad.y + ad.element.offsetHeight >= window.innerHeight) ad.vy = -Math.abs(ad.vy);
+        if (!ad.isClosing) {
+          let maxX = window.innerWidth - ad.element.offsetWidth;
+          let maxY = window.innerHeight - ad.element.offsetHeight;
+          if (ad.x > maxX) ad.x = Math.max(0, maxX);
+          if (ad.y > maxY) ad.y = Math.max(0, maxY);
+          ad.element.style.left = ad.x + 'px';
+          ad.element.style.top = ad.y + 'px';
+        }
       }
     }
     renderSchedule();
