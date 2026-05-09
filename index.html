@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Расписание — абсурдные тарифы</title>
+<title>Расписание — абсурдные тарифы (чёрно-белый стиль)</title>
 
 <style>
   /* ===== ОРИГИНАЛЬНЫЙ СТИЛЬ РАСПИСАНИЯ ===== */
@@ -109,13 +109,13 @@
     font-weight: 600;
   }
 
-  /* ===== РЕКЛАМНЫЕ ПЛАШКИ (как были) ===== */
+  /* ===== РЕКЛАМНЫЕ ПЛАШКИ (белая обводка) ===== */
   .ad-float {
     position: fixed;
     background: #0a0a0a;
     border: 3px solid white;
     border-radius: 20px;
-    box-shadow: 0 0 20px rgba(255,255,200,0.4);
+    box-shadow: 0 0 20px rgba(255,255,255,0.3);
     z-index: 1000;
     overflow: hidden;
     backdrop-filter: blur(4px);
@@ -165,7 +165,7 @@
     100% { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; }
   }
 
-  /* ===== МЕНЮ ТАРИФОВ (fullscreen, поверх всего) ===== */
+  /* ===== МЕНЮ ТАРИФОВ (ЧЁРНО-БЕЛЫЙ СТИЛЬ) ===== */
   .tariff-overlay {
     position: fixed;
     top: 0;
@@ -189,26 +189,27 @@
     font-size: 28px;
     text-align: center;
     margin: 20px 0;
-    color: #ffaa66;
+    color: #ffffff;
     text-transform: uppercase;
+    letter-spacing: 2px;
   }
   .tariff-card {
     background: #1a1e2a;
     border-radius: 24px;
     padding: 20px;
     margin-bottom: 20px;
-    border: 1px solid #ffaa66;
+    border: 2px solid #ffffff;
     transition: 0.1s;
   }
   .tariff-name {
     font-size: 26px;
     font-weight: bold;
-    color: #ffcc88;
+    color: #ffffff;
   }
   .tariff-price {
     font-size: 32px;
     margin: 10px 0;
-    color: #ffaa66;
+    color: #ffffff;
   }
   .tariff-features {
     list-style: none;
@@ -218,10 +219,11 @@
   .tariff-features li {
     padding: 6px 0;
     border-bottom: 1px solid #2a2e3a;
+    color: #dddddd;
   }
   .buy-btn {
-    background: #6a3e1a;
-    border: none;
+    background: #1a1e2a;
+    border: 2px solid white;
     color: white;
     padding: 12px 20px;
     border-radius: 40px;
@@ -229,6 +231,10 @@
     cursor: pointer;
     width: 100%;
     margin-top: 10px;
+    transition: 0.1s;
+  }
+  .buy-btn:active {
+    background: #2a2e3a;
   }
   .close-tariff {
     text-align: center;
@@ -238,14 +244,15 @@
     cursor: pointer;
     font-size: 16px;
   }
-  .close-tariff:hover { color: #ff8888; }
+  .close-tariff:hover { color: #ffffff; }
 
-  /* Форма оформления */
+  /* Форма оформления (чёрно-белая) */
   .order-form {
     background: #0f111a;
     border-radius: 24px;
     padding: 20px;
     margin-top: 10px;
+    border: 1px solid #333;
   }
   .order-form input, .order-form select {
     width: 100%;
@@ -256,25 +263,41 @@
     color: white;
     border-radius: 12px;
   }
+  .order-form input:focus, .order-form select:focus {
+    outline: none;
+    border-color: white;
+  }
   .invoice {
     background: #0a0c16;
     padding: 16px;
     border-radius: 16px;
     margin: 15px 0;
+    border: 1px solid #333;
   }
   .invoice-row {
     display: flex;
     justify-content: space-between;
     padding: 8px 0;
     border-bottom: 1px solid #2a2e3e;
+    color: #dddddd;
   }
   .total-row {
     font-weight: bold;
     font-size: 20px;
-    color: #ffaa66;
-    border-top: 2px solid #ffaa66;
+    color: #ffffff;
+    border-top: 2px solid #ffffff;
     margin-top: 8px;
     padding-top: 12px;
+  }
+  #nextToInvoiceBtn {
+    background: #1a1e2a;
+    border: 2px solid white;
+    color: white;
+  }
+  #payFinalBtn {
+    background: #1a1e2a;
+    border: 2px solid white;
+    color: white;
   }
 </style>
 </head>
@@ -328,14 +351,14 @@
   window.nextDay = () => { dayIndex = (dayIndex + 1) % days.length; showAll = false; renderSchedule(); };
   window.toggleAll = () => { showAll = !showAll; renderSchedule(); };
 
-  // ========== РЕКЛАМА С АНИМАЦИЕЙ ==========
+  // ========== РЕКЛАМА С БЕЛЫМИ ЧАСТИЦАМИ ==========
   const adCampaigns = [
     { img: "images/casebattle.png", link: "https://case-battle.red/", alt: "Case Battle" },
     { img: "images/upgrader.png", link: "https://upgrader.pro/ru", alt: "Upgrader Pro" },
     { img: "images/gosuslugi.png", link: "https://contract.gosuslugi.ru/", alt: "Госуслуги" }
   ];
   let adPanels = [];
-  let closedAdsCount = 0;  // счётчик закрытых реклам
+  let closedAdsCount = 0;
   let tariffOverlayActive = false;
 
   function getRandomPosition(adElement) {
@@ -366,7 +389,8 @@
         const pixel = document.createElement('div'); pixel.className = 'pixel';
         pixel.style.left = (left + i * pixelSize) + 'px'; pixel.style.top = (top + j * pixelSize) + 'px';
         pixel.style.width = pixelSize + 'px'; pixel.style.height = pixelSize + 'px';
-        pixel.style.backgroundColor = '#ffffff'; pixel.style.boxShadow = '0 0 4px rgba(255,255,255,0.8)';
+        pixel.style.backgroundColor = '#ffffff';
+        pixel.style.boxShadow = '0 0 4px rgba(255,255,255,0.8)';
         const angle = Math.random() * Math.PI * 2; const distance = 80 + Math.random() * 150;
         pixel.style.setProperty('--dx', Math.cos(angle) * distance + 'px'); pixel.style.setProperty('--dy', Math.sin(angle) * distance + 'px');
         dustContainer.appendChild(pixel);
@@ -411,7 +435,6 @@
     closeBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       if (adObj.isClosing || tariffOverlayActive) return;
-      // увеличиваем счётчик закрытых реклам
       closedAdsCount++;
       closeAdWithAnimation(adObj, () => {
         if (closedAdsCount >= 3 && !tariffOverlayActive) {
@@ -425,7 +448,6 @@
   function showTariffMenu() {
     if (tariffOverlayActive) return;
     tariffOverlayActive = true;
-    // скрываем все рекламные плашки на время
     for (let ad of adPanels) { if (ad && ad.element) ad.element.style.display = 'none'; }
     const overlay = document.createElement('div'); overlay.className = 'tariff-overlay';
     overlay.innerHTML = `
@@ -469,7 +491,6 @@
     `;
     document.body.appendChild(overlay);
     
-    // обработка кнопок "Купить"
     overlay.querySelectorAll('.buy-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const price = parseInt(btn.dataset.price);
@@ -481,35 +502,33 @@
     closeBtnEl.addEventListener('click', () => {
       overlay.remove();
       tariffOverlayActive = false;
-      // возвращаем рекламу обратно
       for (let ad of adPanels) { if (ad && ad.element) ad.element.style.display = ''; }
-      closedAdsCount = 0; // сброс счётчика, чтобы не спамить окном
+      closedAdsCount = 0;
     });
   }
 
   function showOrderForm(overlay, basePrice, tariffName) {
-    // очищаем внутри, показываем форму оформления
     const container = overlay.querySelector('.tariff-container');
     container.innerHTML = `
       <div class="tariff-title">📝 ОФОРМЛЕНИЕ ТАРИФА "${tariffName}"</div>
       <div class="order-form">
-        <input type="text" id="fullName" placeholder="ФИО (как в паспорте)" value="Дима Пьяный Українець">
-        <input type="text" id="passport" placeholder="Серия и номер паспорта" value="УК 123456">
-        <input type="text" id="phone" placeholder="Телефон (обязательно)" value="+380 99 420 6969">
-        <input type="text" id="address" placeholder="Адрес прописки (любой)" value="вул. Гетьмана Мазепи, 666">
+        <input type="text" id="fullName" placeholder="ФИО (как в паспорте)">
+        <input type="text" id="passport" placeholder="Серия и номер паспорта">
+        <input type="text" id="phone" placeholder="Телефон (обязательно)">
+        <input type="text" id="address" placeholder="Адрес прописки">
         <select id="delivery">
-          <option value="Курьером в зубы + 500₴">Курьером в зубы (+500₴)</option>
-          <option value="Почтой Украины + 200₴">Почтой Украины (+200₴)</option>
-          <option value="Телепортация (ещё нет) + 9999₴">Телепортация (+9999₴)</option>
+          <option value="0">Курьером в зубы (+500₴)</option>
+          <option value="1">Почтой Украины (+200₴)</option>
+          <option value="2">Телепортация (ещё нет) (+9999₴)</option>
         </select>
-        <button id="nextToInvoiceBtn" style="background:#ff8844; margin-top:20px;">👉 ПЕРЕЙТИ К ОПЛАТЕ 👈</button>
+        <button id="nextToInvoiceBtn" style="background:#1a1e2a; border:2px solid white; color:white; margin-top:20px;">👉 ПЕРЕЙТИ К ОПЛАТЕ 👈</button>
       </div>
       <div class="close-tariff" id="backToTariffs">◀ Назад к тарифам</div>
     `;
     const backBtn = container.querySelector('#backToTariffs');
     backBtn.addEventListener('click', () => {
       overlay.remove();
-      showTariffMenu();  // заново открываем тарифы (рекурсия)
+      showTariffMenu();
     });
     const nextBtn = container.querySelector('#nextToInvoiceBtn');
     nextBtn.addEventListener('click', () => {
@@ -517,12 +536,11 @@
       let deliveryCost = 0;
       let deliveryText = "";
       switch(deliverySelect.value) {
-        case "Курьером в зубы + 500₴": deliveryCost = 500; deliveryText = "Курьером в зубы"; break;
-        case "Почтой Украины + 200₴": deliveryCost = 200; deliveryText = "Почтой Украины"; break;
-        case "Телепортация (ещё нет) + 9999₴": deliveryCost = 9999; deliveryText = "Телепортация"; break;
-        default: deliveryCost=0;
+        case "0": deliveryCost = 500; deliveryText = "Курьером в зубы"; break;
+        case "1": deliveryCost = 200; deliveryText = "Почтой Украины"; break;
+        case "2": deliveryCost = 9999; deliveryText = "Телепортация"; break;
+        default: deliveryCost = 0;
       }
-      // комиссии за "повод"
       const commissions = [
         { name: "Комиссия за 'заповіт Бандери'", percent: 15 },
         { name: "Сбор за 'причина — просто так'", percent: 12 },
@@ -536,10 +554,8 @@
         commissionRows.push({ name: comm.name, amount: amount, percent: comm.percent });
         total += amount;
       }
-      // итого с учётом всех комиссий
       total = Math.round(total);
       
-      // Формируем чек
       let invoiceHtml = `<div class="invoice"><div class="invoice-row"><span>💰 Тариф "${tariffName}"</span><span>${basePrice.toLocaleString()} ₴</span></div>`;
       invoiceHtml += `<div class="invoice-row"><span>🚚 Доставка: ${deliveryText}</span><span>+${deliveryCost.toLocaleString()} ₴</span></div>`;
       for (let cr of commissionRows) {
@@ -547,7 +563,7 @@
       }
       invoiceHtml += `<div class="invoice-row total-row"><span>🐷 ИТОГО К ОПЛАТЕ</span><span>${total.toLocaleString()} ₴</span></div>`;
       invoiceHtml += `<div style="font-size:12px; opacity:0.6; margin-top:12px;">Комиссия за "просто потому что" уже включена</div></div>`;
-      invoiceHtml += `<button id="payFinalBtn" style="background:#6a3e1a; width:100%; padding:14px; border-radius:40px; font-size:18px;">💳 ОПЛАТИТЬ 💳</button>`;
+      invoiceHtml += `<button id="payFinalBtn" style="background:#1a1e2a; border:2px solid white; color:white; width:100%; padding:14px; border-radius:40px; font-size:18px;">💳 ОПЛАТИТЬ 💳</button>`;
       
       container.innerHTML = `
         <div class="tariff-title">🧾 ЧЕК НА ОПЛАТУ</div>
@@ -559,7 +575,6 @@
       const payBtn = container.querySelector('#payFinalBtn');
       payBtn.addEventListener('click', () => {
         window.open("https://sovcombank.ru/apply/credit/city-spb/", "_blank");
-        // после перехода не закрываем оверлей, просто открываем вкладку
       });
     });
   }
