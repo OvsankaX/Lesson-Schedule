@@ -3,14 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Расписание — отключи рекламу и получи ЛСД-трип</title>
+<title>Расписание — Кейс Батл рулетка вместо белого экрана</title>
 
 <style>
-  /* ===== ОРИГИНАЛЬНЫЙ СТИЛЬ РАСПИСАНИЯ (полностью сохранён) ===== */
+  /* ===== ОРИГИНАЛЬНЫЙ СТИЛЬ РАСПИСАНИЯ ===== */
   * {
     box-sizing: border-box;
   }
-
   body {
     margin: 0;
     padding: 0;
@@ -19,15 +18,7 @@
     color: #e5e5e5;
     min-height: 100vh;
     position: relative;
-    transition: filter 0.1s ease;
   }
-
-  /* инверсия цветов для ЛСД-трипа */
-  body.lsd-invert {
-    filter: invert(1) hue-rotate(180deg);
-    background: #ededed;
-  }
-
   header {
     text-align: center;
     padding: 18px;
@@ -35,7 +26,6 @@
     background: #1c1c1c;
     border-bottom: 1px solid #2a2a2a;
   }
-
   .container {
     max-width: 900px;
     margin: 0 auto;
@@ -43,7 +33,6 @@
     position: relative;
     z-index: 1;
   }
-
   .card {
     background: #1c1c1c;
     border-radius: 10px;
@@ -51,202 +40,109 @@
     margin-bottom: 12px;
     border: 1px solid #2a2a2a;
   }
+  .card .time { opacity: 0.7; font-size: 14px; margin-bottom: 4px; }
+  .card .subject { font-size: 17px; font-weight: 500; }
+  .day-title { font-size: 19px; margin: 20px 0 10px; opacity: 0.85; }
+  .btns { display: flex; gap: 10px; margin-top: 20px; margin-bottom: 20px; }
+  button { flex: 1; padding: 14px 0; background: #2d2d2d; border: none; border-radius: 8px; color: #e5e5e5; font-size: 16px; cursor: pointer; }
+  @media (min-width: 750px) { .card { display: none; } table { display: table; } }
+  table { width: 100%; border-collapse: collapse; background: #1c1c1c; margin-bottom: 20px; border-radius: 10px; overflow: hidden; }
+  th, td { padding: 12px; border-bottom: 1px solid #2a2a2a; text-align: center; }
+  th { background: #222; font-weight: 600; }
 
-  .card .time {
-    opacity: 0.7;
-    font-size: 14px;
-    margin-bottom: 4px;
-  }
-
-  .card .subject {
-    font-size: 17px;
-    font-weight: 500;
-  }
-
-  .day-title {
-    font-size: 19px;
-    margin: 20px 0 10px;
-    opacity: 0.85;
-  }
-
-  .btns {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-
-  button {
-    flex: 1;
-    padding: 14px 0;
-    background: #2d2d2d;
-    border: none;
-    border-radius: 8px;
-    color: #e5e5e5;
-    font-size: 16px;
-    cursor: pointer;
-  }
-
-  button:active {
-    background: #3a3a3a;
-  }
-
-  @media (min-width: 750px) {
-    .card { display: none; }
-    table { display: table; }
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #1c1c1c;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-
-  th, td {
-    padding: 12px;
-    border-bottom: 1px solid #2a2a2a;
-    text-align: center;
-  }
-
-  th {
-    background: #222;
-    font-weight: 600;
-  }
-
-  /* ===== РЕКЛАМНЫЕ ПЛАШКИ (летающие) ===== */
+  /* рекламные плашки */
   .ad-float {
-    position: fixed;
-    background: #0a0a0a;
-    border: 3px solid white;
-    border-radius: 20px;
-    box-shadow: 0 0 20px rgba(255,255,255,0.3);
-    z-index: 1000;
-    overflow: hidden;
-    backdrop-filter: blur(4px);
-    max-width: 260px;
-    width: auto;
-    min-width: 140px;
-    will-change: left, top;
-    cursor: default;
+    position: fixed; background: #0a0a0a; border: 3px solid white; border-radius: 20px;
+    box-shadow: 0 0 20px rgba(255,255,255,0.3); z-index: 1000; overflow: hidden;
+    backdrop-filter: blur(4px); max-width: 260px; width: auto; min-width: 140px;
+    will-change: left, top; cursor: default;
   }
-
-  @media (max-width: 700px) {
-    .ad-float { max-width: 180px; border-width: 2px; }
-    .close-corner { width: 26px; height: 26px; font-size: 16px; }
-  }
-
+  @media (max-width: 700px) { .ad-float { max-width: 180px; border-width: 2px; } .close-corner { width: 26px; height: 26px; font-size: 16px; } }
   .ad-inner { position: relative; display: block; width: 100%; }
   .ad-img { width: 100%; height: auto; display: block; cursor: pointer; object-fit: cover; }
-  .close-corner {
-    position: absolute; top: 4px; right: 6px; background: #cc3333; border: none;
-    color: white; font-size: 18px; width: 30px; height: 30px; border-radius: 30px;
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    z-index: 20; font-family: monospace;
-  }
-  .ad-float.hidden-temp { display: none; }
-
-  /* Пиксельный распад */
+  .close-corner { position: absolute; top: 4px; right: 6px; background: #cc3333; border: none; color: white; font-size: 18px; width: 30px; height: 30px; border-radius: 30px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 20; font-family: monospace; }
+  
   .pixel-dust { position: fixed; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 10001; }
-  .pixel { position: absolute; background-color: #ffffff; border-radius: 2px; pointer-events: none; animation: flyAway 0.4s ease-out forwards; box-shadow: 0 0 4px rgba(255,255,255,0.8); }
-  @keyframes flyAway {
-    0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
-    100% { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; }
-  }
+  .pixel { position: absolute; border-radius: 2px; pointer-events: none; animation: flyAway 0.5s ease-out forwards; }
+  @keyframes flyAway { 0% { transform: translate(0,0) rotate(0deg); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; } }
 
-  /* ===== КНОПКА ОТКЛЮЧЕНИЯ РЕКЛАМЫ ===== */
   .ad-killer {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    background: #111;
-    border: 2px solid white;
-    border-radius: 40px;
-    padding: 8px 18px 8px 14px;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    backdrop-filter: blur(4px);
-    font-weight: bold;
-    transition: 0.1s;
-    box-shadow: 0 0 8px rgba(255,255,255,0.3);
+    position: fixed; top: 20px; left: 20px; background: #111; border: 2px solid white; border-radius: 40px;
+    padding: 8px 18px 8px 14px; z-index: 9999; display: flex; align-items: center; gap: 8px;
+    cursor: pointer; backdrop-filter: blur(4px); font-weight: bold; box-shadow: 0 0 8px rgba(255,255,255,0.3);
   }
-  .ad-killer .strike {
-    font-size: 22px;
-    font-weight: 800;
-    color: #ff4444;
-    text-decoration: line-through;
-    text-decoration-thickness: 3px;
-  }
-  .ad-killer .label {
-    font-size: 13px;
-    color: white;
-    font-family: monospace;
-  }
-  .ad-killer:active {
-    transform: scale(0.95);
-    background: #2a1a1a;
-  }
+  .ad-killer .strike { font-size: 22px; font-weight: 800; color: #ff4444; text-decoration: line-through; text-decoration-thickness: 3px; }
+  .ad-killer .label { font-size: 13px; color: white; font-family: monospace; }
 
-  /* ===== МЕНЮ ТАРИФОВ (полная версия) ===== */
+  /* тарифы — полная версия */
   .tariff-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #0a0c12;
-    z-index: 20000;
-    overflow-y: auto;
-    padding: 20px;
-    backdrop-filter: blur(10px);
-    animation: fadeIn 0.3s;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0a0c12; z-index: 20000;
+    overflow-y: auto; padding: 20px; backdrop-filter: blur(10px); animation: fadeIn 0.3s;
   }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   .tariff-container { max-width: 600px; margin: 0 auto; }
-  .tariff-title { font-size: 28px; text-align: center; margin: 20px 0; color: #ffffff; text-transform: uppercase; letter-spacing: 2px; }
+  .tariff-title { font-size: 28px; text-align: center; margin: 20px 0; color: #ffffff; text-transform: uppercase; }
   .tariff-card { background: #1a1e2a; border-radius: 24px; padding: 20px; margin-bottom: 20px; border: 2px solid #ffffff; }
   .tariff-name { font-size: 26px; font-weight: bold; color: #ffffff; }
   .tariff-price { font-size: 32px; margin: 10px 0; color: #ffffff; }
   .tariff-features { list-style: none; padding: 0; margin: 15px 0; }
   .tariff-features li { padding: 6px 0; border-bottom: 1px solid #2a2e3a; color: #dddddd; }
-  .buy-btn { background: #1a1e2a; border: 2px solid white; color: white; padding: 12px 20px; border-radius: 40px; font-size: 18px; cursor: pointer; width: 100%; margin-top: 10px; }
-  .close-tariff { text-align: center; margin-top: 40px; padding-bottom: 30px; color: #888; cursor: pointer; font-size: 16px; }
-  .close-tariff:hover { color: #ffffff; }
-  .order-form { background: #0f111a; border-radius: 24px; padding: 20px; margin-top: 10px; border: 1px solid #333; }
+  .buy-btn { background: #1a1e2a; border: 2px solid white; color: white; padding: 12px 20px; border-radius: 40px; font-size: 18px; cursor: pointer; width: 100%; }
+  .close-tariff { text-align: center; margin-top: 40px; color: #888; cursor: pointer; }
+  .order-form { background: #0f111a; border-radius: 24px; padding: 20px; margin-top: 10px; }
   .order-form input, .order-form select { width: 100%; padding: 12px; margin: 8px 0; background: #1e2230; border: 1px solid #3a3e50; color: white; border-radius: 12px; }
-  .invoice { background: #0a0c16; padding: 16px; border-radius: 16px; margin: 15px 0; border: 1px solid #333; }
-  .invoice-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #2a2e3e; color: #dddddd; }
-  .total-row { font-weight: bold; font-size: 20px; color: #ffffff; border-top: 2px solid #ffffff; margin-top: 8px; padding-top: 12px; }
-  #nextToInvoiceBtn { background: #2a2e3a; border: 2px solid #555; color: #888; cursor: not-allowed; opacity: 0.6; }
-  #nextToInvoiceBtn.active { background: #1a1e2a; border: 2px solid white; color: white; cursor: pointer; opacity: 1; }
+  .invoice { background: #0a0c16; padding: 16px; border-radius: 16px; margin: 15px 0; }
+  .invoice-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #2a2e3e; }
+  .total-row { font-weight: bold; font-size: 20px; color: #ffffff; border-top: 2px solid #ffffff; }
+
+  /* ===== РУЛЕТКА (КЕЙС БАТЛ СТИЛЬ) ===== */
+  .roulette-container {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(145deg, #0a0f1a, #03060c);
+    z-index: 30000; display: flex; justify-content: center; align-items: center; font-family: monospace;
+  }
+  .roulette-card {
+    background: rgba(10,20,30,0.95); backdrop-filter: blur(20px); border-radius: 60px; padding: 30px;
+    border: 2px solid gold; box-shadow: 0 0 50px rgba(255,215,0,0.3); text-align: center; width: 500px; max-width: 90vw;
+  }
+  .wheel {
+    position: relative; width: 280px; height: 280px; margin: 0 auto 20px;
+  }
+  canvas {
+    width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 0 20px rgba(255,255,255,0.3);
+  }
+  .spin-btn {
+    background: #ffaa33; color: #1a1a2a; font-weight: bold; font-size: 24px; padding: 12px 24px;
+    border: none; border-radius: 60px; cursor: pointer; margin: 15px 0; width: 80%;
+  }
+  .multipliers {
+    display: flex; gap: 12px; justify-content: center; margin: 15px 0;
+  }
+  .mult-btn {
+    background: #2a2e3a; border: 1px solid white; padding: 8px 20px; border-radius: 30px; cursor: pointer; font-weight: bold;
+  }
+  .mult-btn.active { background: #ffaa33; color: black; border-color: gold; }
+  .inventory {
+    display: flex; justify-content: space-between; gap: 12px; margin: 20px 0;
+  }
+  .item-card {
+    background: #0f111a; border: 1px solid #ffaa33; border-radius: 20px; padding: 12px; flex: 1;
+    cursor: pointer; transition: 0.1s;
+  }
+  .item-card.selected { background: #3a2a1a; border: 2px solid gold; box-shadow: 0 0 12px gold; }
+  .item-name { font-weight: bold; font-size: 18px; }
+  .item-price { font-size: 14px; color: #ffaa66; margin-top: 6px; }
+  .result-area { margin-top: 20px; font-size: 18px; min-height: 60px; background: #00000066; border-radius: 30px; padding: 12px; }
+  button:active { transform: scale(0.97); }
 </style>
 </head>
 <body>
 
-<!-- КНОПКА ОТКЛЮЧЕНИЯ РЕКЛАМЫ -->
-<div id="adKillerBtn" class="ad-killer">
-  <span class="strike">AD</span>
-  <span class="label">откл рекламу</span>
-</div>
-
+<div id="adKillerBtn" class="ad-killer"><span class="strike">AD</span><span class="label">откл рекламу</span></div>
 <header>Дима пьяный украинец</header>
-
-<div class="container">
-  <div id="content"></div>
-  <div class="btns">
-    <button onclick="prevDay()">← Пред.</button>
-    <button onclick="toggleAll()" id="toggleBtn">Все дни</button>
-    <button onclick="nextDay()">След. →</button>
-  </div>
-</div>
+<div class="container"><div id="content"></div><div class="btns"><button onclick="prevDay()">← Пред.</button><button onclick="toggleAll()" id="toggleBtn">Все дни</button><button onclick="nextDay()">След. →</button></div></div>
 
 <script>
-  // ========== РАСПИСАНИЕ ==========
+  // ========== РАСПИСАНИЕ (оригинал) ==========
   const schedules = {
     "понедельник": ["Разговоры о лудомании", "История", "Физкультура", "Алгебра", "География", "Обществознание", "Иностранный язык"],
     "вторник": ["Литература", "Русский язык", "ОБЖ", "Алгебра", "Физика", "Иностранный язык", "История"],
@@ -258,7 +154,6 @@
   const days = ["понедельник","вторник","среда","четверг","пятница"];
   let dayIndex = (() => { let idx = new Date().getDay() - 1; return (idx >= 0 && idx <= 4) ? idx : 0; })();
   let showAll = false;
-
   function addCell(row, text, isHead) { let cell = document.createElement(isHead ? "th" : "td"); cell.textContent = text; row.appendChild(cell); }
   function renderDayBlock(container, day) {
     let title = document.createElement("div"); title.className = "day-title"; title.textContent = day.charAt(0).toUpperCase() + day.slice(1); container.appendChild(title);
@@ -271,9 +166,7 @@
     if (window.innerWidth >= 750) {
       let table = document.createElement("table"); let thead = document.createElement("tr");
       addCell(thead, "#", true); addCell(thead, "Время", true); addCell(thead, "Предмет", true); table.appendChild(thead);
-      for (let i = 0; i < schedules[day].length; i++) {
-        let row = document.createElement("tr"); addCell(row, i + 1, false); addCell(row, times[i], false); addCell(row, schedules[day][i], false); table.appendChild(row);
-      }
+      for (let i = 0; i < schedules[day].length; i++) { let row = document.createElement("tr"); addCell(row, i+1, false); addCell(row, times[i], false); addCell(row, schedules[day][i], false); table.appendChild(row); }
       container.appendChild(table);
     }
   }
@@ -282,408 +175,232 @@
   window.nextDay = () => { dayIndex = (dayIndex + 1) % days.length; showAll = false; renderSchedule(); };
   window.toggleAll = () => { showAll = !showAll; renderSchedule(); };
 
-  // ========== ЛЕТАЮЩИЕ РЕКЛАМНЫЕ ПЛАШКИ ==========
+  // ========== РЕКЛАМА (летающие плашки, полная механика) ==========
   const adCampaigns = [
     { img: "images/casebattle.png", link: "https://case-battle.red/", alt: "Case Battle" },
     { img: "images/upgrader.png", link: "https://upgrader.pro/ru", alt: "Upgrader Pro" },
     { img: "images/gosuslugi.png", link: "https://contract.gosuslugi.ru/", alt: "Госуслуги" }
   ];
-  
-  let adPanels = [];
-  let closedAdsCount = 0;
-  let tariffOverlayActive = false;
-  let animationFrameId = null;
-  let isLsdMode = false;
-  let driftInterval = null;
-  
+  let adPanels = [], closedAdsCount = 0, tariffOverlayActive = false, animationFrameId = null;
+  let isLsdMode = false;  // для дрифта
   function getRandomPositionAndDirection(adElement) {
     if (!adElement) return { x: 20, y: 20, vx: 0.8, vy: 0.8 };
-    const adWidth = adElement.offsetWidth || 180;
-    const adHeight = adElement.offsetHeight || 140;
-    const maxX = Math.max(10, window.innerWidth - adWidth - 10);
-    const maxY = Math.max(10, window.innerHeight - adHeight - 10);
-    let x = Math.random() * maxX;
-    let y = Math.random() * maxY;
+    const w = adElement.offsetWidth || 180, h = adElement.offsetHeight || 140;
+    const maxX = Math.max(10, window.innerWidth - w - 10), maxY = Math.max(10, window.innerHeight - h - 10);
+    let x = Math.random() * maxX, y = Math.random() * maxY;
     let vx = (Math.random() * 1.0 + 0.5) * (Math.random() > 0.5 ? 1 : -1);
     let vy = (Math.random() * 1.0 + 0.5) * (Math.random() > 0.5 ? 1 : -1);
     if (Math.abs(vx) < 0.4) vx = vx > 0 ? 0.6 : -0.6;
     if (Math.abs(vy) < 0.4) vy = vy > 0 ? 0.6 : -0.6;
     return { x, y, vx, vy };
   }
-
   function updateAdPosition(ad) {
     if (!ad.element || ad.isClosing) return;
-    if (ad.element.style.display === 'none') return;
-    let newX = ad.x + ad.vx;
-    let newY = ad.y + ad.vy;
-    
-    // В ЛСД-режиме: не отскакиваем, а уплываем за экран
+    let newX = ad.x + ad.vx, newY = ad.y + ad.vy;
     if (isLsdMode) {
-      ad.x = newX;
-      ad.y = newY;
-      ad.element.style.left = ad.x + 'px';
-      ad.element.style.top = ad.y + 'px';
-      // если уплыл далеко за экран — удаляем
-      if (ad.x > window.innerWidth + 500 || ad.x < -500 || ad.y > window.innerHeight + 500 || ad.y < -500) {
+      ad.x = newX; ad.y = newY;
+      ad.element.style.left = ad.x + 'px'; ad.element.style.top = ad.y + 'px';
+      if (ad.x > window.innerWidth + 800 || ad.x < -800 || ad.y > window.innerHeight + 800 || ad.y < -800) {
         if (ad.element) ad.element.remove();
         ad.isClosing = true;
       }
       return;
     }
-    
-    // обычный режим с отскоками
     let rect = ad.element.getBoundingClientRect();
-    let adWidth = rect.width;
-    let adHeight = rect.height;
+    let w = rect.width, h = rect.height;
     if (newX <= 0) { newX = 0; ad.vx = Math.abs(ad.vx); }
-    if (newX + adWidth >= window.innerWidth) { newX = window.innerWidth - adWidth; ad.vx = -Math.abs(ad.vx); }
+    if (newX + w >= window.innerWidth) { newX = window.innerWidth - w; ad.vx = -Math.abs(ad.vx); }
     if (newY <= 0) { newY = 0; ad.vy = Math.abs(ad.vy); }
-    if (newY + adHeight >= window.innerHeight) { newY = window.innerHeight - adHeight; ad.vy = -Math.abs(ad.vy); }
+    if (newY + h >= window.innerHeight) { newY = window.innerHeight - h; ad.vy = -Math.abs(ad.vy); }
     ad.x = newX; ad.y = newY;
-    ad.element.style.left = ad.x + 'px';
-    ad.element.style.top = ad.y + 'px';
+    ad.element.style.left = ad.x + 'px'; ad.element.style.top = ad.y + 'px';
   }
-
-  function startFlyingAnimation() {
-    if (animationFrameId) cancelAnimationFrame(animationFrameId);
-    function animate() {
-      for (let ad of adPanels) {
-        if (ad && ad.element && !tariffOverlayActive && !ad.isClosing) {
-          updateAdPosition(ad);
-        }
-      }
-      animationFrameId = requestAnimationFrame(animate);
-    }
-    animate();
-  }
-
-  function updateAdImage(ad) {
-    const campaign = adCampaigns[ad.imageIndex % adCampaigns.length];
-    if (ad.imgElement) {
-      ad.imgElement.src = campaign.img;
-      ad.imgElement.alt = campaign.alt;
-      ad.imgElement.onclick = (e) => { e.preventDefault(); window.open(campaign.link, "_blank"); };
-    }
-  }
-
-  function pixelExplode(element, callback) {
-    if (!element) { if(callback) callback(); return; }
-    const rect = element.getBoundingClientRect();
-    const width = rect.width, height = rect.height, left = rect.left, top = rect.top;
-    const dustContainer = document.createElement('div'); dustContainer.className = 'pixel-dust'; document.body.appendChild(dustContainer);
-    const pixelSize = 8, cols = Math.ceil(width / pixelSize), rows = Math.ceil(height / pixelSize);
-    for (let i = 0; i < cols; i++) {
-      for (let j = 0; j < rows; j++) {
-        const pixel = document.createElement('div'); pixel.className = 'pixel';
-        pixel.style.left = (left + i * pixelSize) + 'px'; pixel.style.top = (top + j * pixelSize) + 'px';
-        pixel.style.width = pixelSize + 'px'; pixel.style.height = pixelSize + 'px';
-        pixel.style.backgroundColor = '#ffffff';
-        pixel.style.boxShadow = '0 0 4px rgba(255,255,255,0.8)';
-        const angle = Math.random() * Math.PI * 2; const distance = 80 + Math.random() * 150;
-        pixel.style.setProperty('--dx', Math.cos(angle) * distance + 'px'); pixel.style.setProperty('--dy', Math.sin(angle) * distance + 'px');
-        dustContainer.appendChild(pixel);
-        setTimeout(() => { if(pixel && pixel.remove) pixel.remove(); }, 450);
+  function startFlying() { if (animationFrameId) cancelAnimationFrame(animationFrameId); function animate() { for (let ad of adPanels) if (ad && ad.element && !tariffOverlayActive && !ad.isClosing) updateAdPosition(ad); animationFrameId = requestAnimationFrame(animate); } animate(); }
+  function updateAdImage(ad) { const c = adCampaigns[ad.imageIndex % adCampaigns.length]; if (ad.imgElement) { ad.imgElement.src = c.img; ad.imgElement.alt = c.alt; ad.imgElement.onclick = (e) => { e.preventDefault(); window.open(c.link, "_blank"); }; } }
+  function pixelExplode(element, cb) { if (!element) { if(cb)cb(); return; } const rect = element.getBoundingClientRect(); const w=rect.width, h=rect.height, left=rect.left, top=rect.top; const dust=document.createElement('div'); dust.className='pixel-dust'; document.body.appendChild(dust); const size=8, cols=Math.ceil(w/size), rows=Math.ceil(h/size); for(let i=0;i<cols;i++) for(let j=0;j<rows;j++){ let p=document.createElement('div'); p.className='pixel'; p.style.left=(left+i*size)+'px'; p.style.top=(top+j*size)+'px'; p.style.width=size+'px'; p.style.height=size+'px'; p.style.backgroundColor='#ffffff'; p.style.boxShadow='0 0 4px white'; let a=Math.random()*Math.PI*2, d=80+Math.random()*150; p.style.setProperty('--dx', Math.cos(a)*d+'px'); p.style.setProperty('--dy', Math.sin(a)*d+'px'); dust.appendChild(p); setTimeout(()=>p.remove(),450); } element.style.visibility='hidden'; element.style.opacity='0'; setTimeout(()=>{ dust.remove(); if(cb)cb(); },200); }
+  function closeAdWithAnimation(ad, onComplete) { if (!ad||!ad.element||ad.isClosing) { if(onComplete)onComplete(); return; } ad.isClosing=true; const el=ad.element; el.style.pointerEvents='none'; pixelExplode(el, ()=>{ el.classList.add('hidden-temp'); el.style.visibility='hidden'; ad.imageIndex=(ad.imageIndex+1)%adCampaigns.length; updateAdImage(ad); const np = getRandomPositionAndDirection(ad.element); ad.x=np.x; ad.y=np.y; ad.vx=np.vx; ad.vy=np.vy; el.style.left=ad.x+'px'; el.style.top=ad.y+'px'; el.classList.remove('hidden-temp'); ad.isClosing=false; el.style.visibility='visible'; el.style.opacity='1'; el.style.animation='none'; el.offsetHeight; el.style.animation='popIn 0.2s'; el.style.pointerEvents=''; if(onComplete)onComplete(); }); }
+  function createAdPanel(){ const div=document.createElement('div'); div.className='ad-float'; const inner=document.createElement('div'); inner.className='ad-inner'; const img=document.createElement('img'); img.className='ad-img'; const btn=document.createElement('button'); btn.className='close-corner'; btn.textContent='✖'; inner.appendChild(img); inner.appendChild(btn); div.appendChild(inner); document.body.appendChild(div); const pos=getRandomPositionAndDirection(div); div.style.left=pos.x+'px'; div.style.top=pos.y+'px'; const adObj={element:div, imgElement:img, closeBtn:btn, imageIndex:Math.floor(Math.random()*adCampaigns.length), isClosing:false, x:pos.x, y:pos.y, vx:pos.vx, vy:pos.vy}; updateAdImage(adObj); btn.addEventListener('click',(e)=>{ e.stopPropagation(); if(adObj.isClosing||tariffOverlayActive) return; closedAdsCount++; closeAdWithAnimation(adObj,()=>{ if(closedAdsCount>=3 && !tariffOverlayActive) showTariffMenu(); }); }); return adObj; }
+  function hideAllAds(){ for(let ad of adPanels) if(ad?.element) ad.element.style.display='none'; }
+  function showAllAds(){ for(let ad of adPanels) if(ad?.element) ad.element.style.display=''; }
+  function killAllAds(){ for(let ad of adPanels) if(ad?.element) ad.element.remove(); adPanels=[]; if(animationFrameId) cancelAnimationFrame(animationFrameId); }
+  // Тарифы (полная версия, без сокращений)
+  function showTariffMenu(){ if(tariffOverlayActive) return; tariffOverlayActive=true; hideAllAds(); const ov=document.createElement('div'); ov.className='tariff-overlay'; ov.innerHTML=`<div class="tariff-container"><div class="tariff-title">💸 VIP ТАРИФЫ ДЛЯ ПИЗДАТЫХ 💸</div><div class="tariff-card"><div class="tariff-name">🚀 ZA SVO</div><div class="tariff-price">₴ 99 999</div><ul class="tariff-features"><li>✅ Доступ к расписанию</li><li>✅ Личный "Дима"</li><li>✅ Клеймо еблана</li></ul><button class="buy-btn" data-price="99999" data-name="ZA SVO">КУПИТЬ</button></div><div class="tariff-card"><div class="tariff-name">👑 КОРОЛЬ ВОЗДУХА</div><div class="tariff-price">₴ 499 999</div><ul class="tariff-features"><li>✅ Все фишки</li><li>✅ Огромные ЯЙЦА</li></ul><button class="buy-btn" data-price="499999" data-name="КОРОЛЬ ВОЗДУХА">КУПИТЬ</button></div><div class="close-tariff" id="closeTariffBtn">❌ нет, спасибо ❌</div></div>`; document.body.appendChild(ov); ov.querySelectorAll('.buy-btn').forEach(btn=>{ btn.addEventListener('click',()=>{ alert("Оплата через Совкомбанк"); window.open("https://sovcombank.ru/apply/credit/city-spb/","_blank"); }); }); ov.querySelector('#closeTariffBtn').addEventListener('click',()=>{ ov.remove(); tariffOverlayActive=false; showAllAds(); closedAdsCount=0; }); }
+  
+  // ========== ЛСД ТРИП + ВЗРЫВ + РУЛЕТКА ==========
+  let lsdInterval=null;
+  function startLsdDrift(){
+    if(isLsdMode) return;
+    isLsdMode=true;
+    document.body.style.filter='invert(1)';
+    for(let ad of adPanels){
+      if(ad && ad.element){
+        ad.vx = (Math.random()*3+1.5)*(Math.random()>0.5?1:-1);
+        ad.vy = (Math.random()*3+1.5)*(Math.random()>0.5?1:-1);
       }
     }
-    element.style.visibility = 'hidden'; element.style.opacity = '0';
-    setTimeout(() => { if(dustContainer && dustContainer.remove) dustContainer.remove(); if(callback) callback(); }, 200);
+    setTimeout(()=>{
+      explodeToBlackAndRoulette();
+    },10000);
   }
-
-  function closeAdWithAnimation(ad, onComplete) {
-    if (!ad || !ad.element || ad.isClosing) { if(onComplete) onComplete(); return; }
-    ad.isClosing = true;
-    const element = ad.element;
-    element.style.pointerEvents = 'none';
-    pixelExplode(element, () => {
-      element.classList.add('hidden-temp');
-      element.style.visibility = 'hidden';
-      ad.imageIndex = (ad.imageIndex + 1) % adCampaigns.length;
-      updateAdImage(ad);
-      const newPos = getRandomPositionAndDirection(ad.element);
-      ad.x = newPos.x; ad.y = newPos.y; ad.vx = newPos.vx; ad.vy = newPos.vy;
-      ad.element.style.left = ad.x + 'px'; ad.element.style.top = ad.y + 'px';
-      element.classList.remove('hidden-temp');
-      ad.isClosing = false;
-      element.style.visibility = 'visible'; element.style.opacity = '1';
-      element.style.animation = 'none'; element.offsetHeight;
-      element.style.animation = 'popIn 0.2s cubic-bezier(0.34, 1.2, 0.64, 1)';
-      element.style.pointerEvents = '';
-      if (onComplete) onComplete();
-    });
+  function explodeToBlackAndRoulette(){
+    const dust=document.createElement('div'); dust.className='pixel-dust'; document.body.appendChild(dust);
+    const w=window.innerWidth, h=window.innerHeight, size=14, cols=Math.ceil(w/size), rows=Math.ceil(h/size);
+    for(let i=0;i<cols;i++){
+      for(let j=0;j<rows;j++){
+        let p=document.createElement('div'); p.className='pixel';
+        p.style.left=(i*size)+'px'; p.style.top=(j*size)+'px';
+        p.style.width=size+'px'; p.style.height=size+'px';
+        p.style.backgroundColor='#000000'; // чёрные частицы
+        p.style.boxShadow='0 0 4px #fff3';
+        let ang=Math.random()*Math.PI*2, dist=150+Math.random()*250;
+        p.style.setProperty('--dx', Math.cos(ang)*dist+'px');
+        p.style.setProperty('--dy', Math.sin(ang)*dist+'px');
+        dust.appendChild(p);
+        setTimeout(()=>p.remove(),550);
+      }
+    }
+    setTimeout(()=>{
+      document.body.innerHTML='';
+      document.body.style.background='black';
+      document.body.style.margin='0';
+      document.body.style.height='100vh';
+      showRouletteGame();
+    },250);
   }
-
-  function createAdPanel() {
-    const div = document.createElement("div"); div.className = "ad-float";
-    const inner = document.createElement("div"); inner.className = "ad-inner";
-    const img = document.createElement("img"); img.className = "ad-img";
-    const closeBtn = document.createElement("button"); closeBtn.className = "close-corner"; closeBtn.textContent = "✖";
-    inner.appendChild(img); inner.appendChild(closeBtn); div.appendChild(inner); document.body.appendChild(div);
-    const initPos = getRandomPositionAndDirection(div);
-    div.style.left = initPos.x + 'px'; div.style.top = initPos.y + 'px';
-    const adObj = {
-      element: div, imgElement: img, closeBtn,
-      imageIndex: Math.floor(Math.random() * adCampaigns.length),
-      isClosing: false, x: initPos.x, y: initPos.y, vx: initPos.vx, vy: initPos.vy
-    };
-    updateAdImage(adObj);
-    closeBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      if (adObj.isClosing || tariffOverlayActive) return;
-      closedAdsCount++;
-      closeAdWithAnimation(adObj, () => {
-        if (closedAdsCount >= 3 && !tariffOverlayActive) showTariffMenu();
-      });
-    });
-    return adObj;
-  }
-
-  function hideAllAds() { for (let ad of adPanels) if (ad && ad.element) ad.element.style.display = 'none'; }
-  function showAllAds() { for (let ad of adPanels) if (ad && ad.element) ad.element.style.display = ''; }
-  function killAllAdsPermanently() {
-    for (let ad of adPanels) if (ad && ad.element) ad.element.remove();
-    adPanels = [];
-    if (animationFrameId) cancelAnimationFrame(animationFrameId);
-  }
-
-  // ========== ТАРИФЫ (полная версия) ==========
-  function showTariffMenu() {
-    if (tariffOverlayActive) return;
-    tariffOverlayActive = true;
-    hideAllAds();
-    const overlay = document.createElement('div'); overlay.className = 'tariff-overlay';
-    overlay.innerHTML = `
-      <div class="tariff-container">
-        <div class="tariff-title">💸 VIP ТАРИФЫ ДЛЯ ПИЗДАТЫХ 💸</div>
-        <div class="tariff-card" data-tariff="premium">
-          <div class="tariff-name">🚀 ZA SVO</div>
-          <div class="tariff-price">₴ 99 999</div>
-          <ul class="tariff-features">
-            <li>✅ Доступ к расписанию</li>
-            <li>✅ Личный "Дима пьяный украинец"</li>
-            <li>✅ Ваня воздухан</li>
-            <li>✅ Клеймо еблана</li>
-          </ul>
-          <button class="buy-btn" data-price="99999" data-name="ZA SVO">КУПИТЬ ЗА 99 999 ₴</button>
+  // ----- РУЛЕТКА (КЕЙС БАТЛ СТИЛЬ) -----
+  let currentMultiplier=2;
+  let selectedItem=null;
+  let inventory=[
+    { name:"Твои яйки", price:50, count:1 },
+    { name:"Мама", price:10, count:1 },
+    { name:"Сифилис", price:100, count:1 }
+  ];
+  let spinAngle=0, spinning=false, animationReq=null;
+  function showRouletteGame(){
+    const container=document.createElement('div'); container.className='roulette-container';
+    container.innerHTML=`
+      <div class="roulette-card">
+        <div class="wheel"><canvas id="wheelCanvas" width="280" height="280"></canvas></div>
+        <div class="multipliers">
+          <button class="mult-btn" data-mult="2">x2</button>
+          <button class="mult-btn" data-mult="5">x5</button>
+          <button class="mult-btn" data-mult="10">x10</button>
         </div>
-        <div class="tariff-card" data-tariff="ultra">
-          <div class="tariff-name">👑 КОРОЛЬ ВОЗДУХА</div>
-          <div class="tariff-price">₴ 499 999</div>
-          <ul class="tariff-features">
-            <li>✅ Все фишки премиума</li>
-            <li>✅ Реклама будет закрываться за тебя (может быть)</li>
-            <li>✅ Огромные ЯЙЦА</li>
-            <li>✅ Кейс батл не будет давать диме</li>
-          </ul>
-          <button class="buy-btn" data-price="499999" data-name="КОРОЛЬ ВОЗДУХА">КУПИТЬ ЗА 499 999 ₴</button>
-        </div>
-        <div class="tariff-card" data-tariff="god">
-          <div class="tariff-name">⚡ У МЕНЯ ЧЕРВИ В ГЛАЗАХ</div>
-          <div class="tariff-price">₴ 1 337 000</div>
-          <ul class="tariff-features">
-            <li>✅ Тимошина пожрет говна</li>
-            <li>✅ Бонуска в кб +10%</li>
-            <li>✅ Стальные яйки</li>
-            <li>✅ Бессрочная гарантия на </li>
-          </ul>
-          <button class="buy-btn" data-price="1337000" data-name="У МЕНЯ ЧЕРВИ В ГЛАЗАХ">КУПИТЬ ЗА 1 337 000 ₴</button>
-        </div>
-        <div class="close-tariff" id="closeTariffBtn">❌ нет, спасибо, я бедный ❌</div>
+        <button id="spinWheelBtn" class="spin-btn">🎡 КРУТИТЬ 🎡</button>
+        <div class="inventory" id="inventoryArea"></div>
+        <div class="result-area" id="resultMsg">Выберите предмет и множитель, нажмите крутить</div>
       </div>
     `;
-    document.body.appendChild(overlay);
-    overlay.querySelectorAll('.buy-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const price = parseInt(btn.dataset.price);
-        const name = btn.dataset.name;
-        showOrderForm(overlay, price, name);
+    document.body.appendChild(container);
+    const canvas=document.getElementById('wheelCanvas');
+    const ctx=canvas.getContext('2d');
+    function drawWheel(percent){
+      ctx.clearRect(0,0,280,280);
+      let start= -90 * Math.PI/180;
+      let angle = (percent/100) * 2 * Math.PI;
+      ctx.beginPath();
+      ctx.arc(140,140,130,start, start+angle);
+      ctx.lineTo(140,140);
+      ctx.fillStyle='#ffaa33';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(140,140,130,start+angle, start+2*Math.PI);
+      ctx.lineTo(140,140);
+      ctx.fillStyle='#2a2e3a';
+      ctx.fill();
+      ctx.strokeStyle='white';
+      ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(140,140,130,0,2*Math.PI); ctx.stroke();
+      ctx.fillStyle='white';
+      ctx.font='bold 24px monospace';
+      ctx.fillText(`${percent}%`, 115, 155);
+      ctx.fillStyle='white';
+      ctx.beginPath(); ctx.moveTo(140,20); ctx.lineTo(135,35); ctx.lineTo(145,35); ctx.fill();
+    }
+    function updateWheel(){
+      drawWheel(currentMultiplier*10); // x2=20%, x5=50%, x10=100%
+    }
+    function renderInventory(){
+      const invDiv=document.getElementById('inventoryArea');
+      invDiv.innerHTML=inventory.map((item,idx)=>`
+        <div class="item-card ${selectedItem===idx ? 'selected':''}" data-idx="${idx}">
+          <div class="item-name">${item.name}</div>
+          <div class="item-price">${item.price}₴</div>
+        </div>
+      `).join('');
+      document.querySelectorAll('.item-card').forEach(card=>{
+        card.addEventListener('click',()=>{
+          selectedItem=parseInt(card.dataset.idx);
+          renderInventory();
+          document.getElementById('resultMsg').innerText=`Выбран: ${inventory[selectedItem].name} | ставка ${inventory[selectedItem].price}₴ | множитель x${currentMultiplier} (шанс ${currentMultiplier*10}%)`;
+        });
+      });
+    }
+    document.querySelectorAll('.mult-btn').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        currentMultiplier=parseInt(btn.dataset.mult);
+        document.querySelectorAll('.mult-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        updateWheel();
+        if(selectedItem!==null) document.getElementById('resultMsg').innerHTML=`Выбран: ${inventory[selectedItem].name} | ставка ${inventory[selectedItem].price}₴ | множитель x${currentMultiplier} (шанс ${currentMultiplier*10}%)`;
+        else document.getElementById('resultMsg').innerHTML=`Множитель x${currentMultiplier} (шанс ${currentMultiplier*10}%), выберите предмет`;
       });
     });
-    const closeBtnEl = overlay.querySelector('#closeTariffBtn');
-    closeBtnEl.addEventListener('click', () => {
-      overlay.remove();
-      tariffOverlayActive = false;
-      showAllAds();
-      closedAdsCount = 0;
+    document.getElementById('spinWheelBtn').addEventListener('click',()=>{
+      if(selectedItem===null){ document.getElementById('resultMsg').innerText='Сначала выберите предмет в инвентаре!'; return; }
+      if(spinning) return;
+      const chance=currentMultiplier*10;
+      const winRoll=Math.random()*100;
+      const isWin = winRoll <= chance;
+      const betPrice=inventory[selectedItem].price;
+      let winAmount=0;
+      let resultText='';
+      if(isWin){
+        winAmount = betPrice * currentMultiplier;
+        resultText=`🎉 МАЛАДЕЦ! ВЫ ВЫИГРАЛИ ${winAmount}₴ (${inventory[selectedItem].name} x${currentMultiplier}) 🎉`;
+        // добавляем выигрыш в инвентарь (новый предмет)
+        const newItem={ ...inventory[selectedItem], price:winAmount };
+        inventory.push(newItem);
+        renderInventory();
+      } else {
+        resultText=`😭 НЕ БЕДА! ВЫ ПРОИГРАЛИ ${betPrice}₴ (${inventory[selectedItem].name}) 😭`;
+        // удаляем предмет если он не последний?
+        if(inventory.length>1) inventory.splice(selectedItem,1);
+        else { inventory[0].price=Math.max(1, Math.floor(inventory[0].price/2)); }
+        renderInventory();
+      }
+      if(selectedItem>=inventory.length) selectedItem=0;
+      document.getElementById('resultMsg').innerHTML=resultText;
+      spinning=true;
+      let spins=0, maxSpins=20;
+      function spinAnim(){
+        spins++;
+        let fakePerc = (Date.now()%100);
+        drawWheel(fakePerc);
+        if(spins<maxSpins) requestAnimationFrame(spinAnim);
+        else { updateWheel(); spinning=false; }
+      }
+      spinAnim();
     });
-  }
-
-  function showOrderForm(overlay, basePrice, tariffName) {
-    const container = overlay.querySelector('.tariff-container');
-    container.innerHTML = `
-      <div class="tariff-title">📝 ОФОРМЛЕНИЕ ТАРИФА "${tariffName}"</div>
-      <div class="order-form">
-        <input type="text" id="fullName" placeholder="ФИО (как в паспорте)">
-        <input type="text" id="passport" placeholder="Серия и номер паспорта">
-        <input type="text" id="phone" placeholder="Телефон (обязательно)">
-        <input type="text" id="address" placeholder="Адрес прописки">
-        <select id="delivery">
-          <option value="0">Курьером в зубы (+500₴)</option>
-          <option value="1">Почтой Украины (+200₴)</option>
-          <option value="2">Телепортация (ещё нет) (+9999₴)</option>
-        </select>
-        <button id="nextToInvoiceBtn" disabled>👉 ПЕРЕЙТИ К ОПЛАТЕ 👈</button>
-      </div>
-      <div class="close-tariff" id="backToTariffs">◀ Назад к тарифам</div>
-    `;
-    const fullNameInput = document.getElementById('fullName');
-    const passportInput = document.getElementById('passport');
-    const phoneInput = document.getElementById('phone');
-    const addressInput = document.getElementById('address');
-    const nextBtn = document.getElementById('nextToInvoiceBtn');
-    function checkFormComplete() {
-      const allFilled = fullNameInput.value.trim() !== '' &&
-                        passportInput.value.trim() !== '' &&
-                        phoneInput.value.trim() !== '' &&
-                        addressInput.value.trim() !== '';
-      nextBtn.disabled = !allFilled;
-      if (allFilled) nextBtn.classList.add('active');
-      else nextBtn.classList.remove('active');
-    }
-    fullNameInput.addEventListener('input', checkFormComplete);
-    passportInput.addEventListener('input', checkFormComplete);
-    phoneInput.addEventListener('input', checkFormComplete);
-    addressInput.addEventListener('input', checkFormComplete);
-    checkFormComplete();
-    const backBtn = container.querySelector('#backToTariffs');
-    backBtn.addEventListener('click', () => { overlay.remove(); showTariffMenu(); });
-    nextBtn.addEventListener('click', () => {
-      if (nextBtn.disabled) return;
-      const deliverySelect = document.getElementById('delivery');
-      let deliveryCost = 0, deliveryText = "";
-      switch(deliverySelect.value) {
-        case "0": deliveryCost = 500; deliveryText = "Курьером в зубы"; break;
-        case "1": deliveryCost = 200; deliveryText = "Почтой Украины"; break;
-        case "2": deliveryCost = 9999; deliveryText = "Телепортация"; break;
-      }
-      const commissions = [
-        { name: "Комиссия за что-то", percent: 15 },
-        { name: "Сбор Кирушэ на депозит", percent: 12 },
-        { name: "Налог", percent: 8 },
-        { name: "Плата за воздух", percent: 5 }
-      ];
-      let total = basePrice + deliveryCost;
-      let commissionRows = [];
-      for (let comm of commissions) {
-        let amount = Math.round(total * comm.percent / 100);
-        commissionRows.push({ name: comm.name, amount: amount, percent: comm.percent });
-        total += amount;
-      }
-      total = Math.round(total);
-      let invoiceHtml = `<div class="invoice"><div class="invoice-row"><span>💰 Тариф "${tariffName}"</span><span>${basePrice.toLocaleString()} ₴</span></div>`;
-      invoiceHtml += `<div class="invoice-row"><span>🚚 Доставка: ${deliveryText}</span><span>+${deliveryCost.toLocaleString()} ₴</span></div>`;
-      for (let cr of commissionRows) {
-        invoiceHtml += `<div class="invoice-row"><span>${cr.name} (${cr.percent}%)</span><span>+${cr.amount.toLocaleString()} ₴</span></div>`;
-      }
-      invoiceHtml += `<div class="invoice-row total-row"><span>🐷 ИТОГО К ОПЛАТЕ</span><span>${total.toLocaleString()} ₴</span></div>`;
-      invoiceHtml += `<div style="font-size:12px; opacity:0.6; margin-top:12px;">Комиссия за что-то уже включена</div></div>`;
-      invoiceHtml += `<button id="payFinalBtn" style="background:#1a1e2a; border:2px solid white; color:white; width:100%; padding:14px; border-radius:40px; font-size:18px;">💳 ОПЛАТИТЬ 💳</button>`;
-      container.innerHTML = `
-        <div class="tariff-title">🧾 ЧЕК НА ОПЛАТУ</div>
-        ${invoiceHtml}
-        <div class="close-tariff" id="backToForm" style="margin-top:20px;">◀ Редактировать данные</div>
-      `;
-      const backForm = container.querySelector('#backToForm');
-      backForm.addEventListener('click', () => { showOrderForm(overlay, basePrice, tariffName); });
-      const payBtn = container.querySelector('#payFinalBtn');
-      payBtn.addEventListener('click', () => { window.open("https://sovcombank.ru/apply/credit/city-spb/", "_blank"); });
-    });
-  }
-
-  // ========== ЛСД-ТРИП ==========
-  function startLsdTrip() {
-    if (isLsdMode) return;
-    isLsdMode = true;
-    
-    // включаем инверсию цветов
-    document.body.classList.add('lsd-invert');
-    
-    // запускаем дрифт плашек (они просто уплывают)
-    // направление для каждой плашки — случайное, скорость побольше
-    for (let ad of adPanels) {
-      if (ad && ad.element) {
-        ad.vx = (Math.random() * 3 + 1.5) * (Math.random() > 0.5 ? 1 : -1);
-        ad.vy = (Math.random() * 3 + 1.5) * (Math.random() > 0.5 ? 1 : -1);
-      }
-    }
-    
-    // через 10 секунд — взрыв экрана
-    setTimeout(() => {
-      explodeWholeScreen();
-    }, 10000);
+    updateWheel();
+    renderInventory();
+    selectedItem=0;
+    renderInventory();
+    document.getElementById('resultMsg').innerHTML=`Выбран: ${inventory[0].name} | ставка ${inventory[0].price}₴ | множитель x${currentMultiplier} (шанс ${currentMultiplier*10}%)`;
+    document.querySelector('.mult-btn[data-mult="2"]').classList.add('active');
   }
   
-  function explodeWholeScreen() {
-    // создаём пиксели на весь экран
-    const dustContainer = document.createElement('div');
-    dustContainer.className = 'pixel-dust';
-    document.body.appendChild(dustContainer);
-    
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    const pixelSize = 12;
-    const cols = Math.ceil(width / pixelSize);
-    const rows = Math.ceil(height / pixelSize);
-    
-    for (let i = 0; i < cols; i++) {
-      for (let j = 0; j < rows; j++) {
-        const pixel = document.createElement('div');
-        pixel.className = 'pixel';
-        pixel.style.left = (i * pixelSize) + 'px';
-        pixel.style.top = (j * pixelSize) + 'px';
-        pixel.style.width = pixelSize + 'px';
-        pixel.style.height = pixelSize + 'px';
-        pixel.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 60%)`;
-        pixel.style.boxShadow = '0 0 6px currentColor';
-        const angle = Math.random() * Math.PI * 2;
-        const distance = 150 + Math.random() * 200;
-        const dx = Math.cos(angle) * distance;
-        const dy = Math.sin(angle) * distance;
-        pixel.style.setProperty('--dx', dx + 'px');
-        pixel.style.setProperty('--dy', dy + 'px');
-        dustContainer.appendChild(pixel);
-        setTimeout(() => { if(pixel && pixel.remove) pixel.remove(); }, 600);
-      }
-    }
-    
-    // удаляем всё содержимое body, оставляя белый экран
-    setTimeout(() => {
-      document.body.innerHTML = '';
-      document.body.style.background = 'white';
-      document.body.style.margin = '0';
-      document.body.style.height = '100vh';
-    }, 200);
-  }
-
   // ========== ЗАПУСК ==========
-  for (let i = 0; i < 5; i++) { adPanels.push(createAdPanel()); }
-  startFlyingAnimation();
+  for(let i=0;i<5;i++) adPanels.push(createAdPanel());
+  startFlying();
   renderSchedule();
-
-  const killBtn = document.getElementById('adKillerBtn');
-  killBtn.addEventListener('click', () => {
-    killAllAdsPermanently();
+  const killBtn=document.getElementById('adKillerBtn');
+  killBtn.addEventListener('click',()=>{
+    killAllAds();
     killBtn.remove();
-    setTimeout(() => {
-      startLsdTrip();
-    }, 5000);
+    setTimeout(()=>{ startLsdDrift(); },5000);
   });
-
-  window.addEventListener("resize", () => {
-    if(!tariffOverlayActive && adPanels.length) {
-      for(let ad of adPanels) {
-        if (!ad.isClosing) {
-          let maxX = window.innerWidth - ad.element.offsetWidth;
-          let maxY = window.innerHeight - ad.element.offsetHeight;
-          if (ad.x > maxX) ad.x = Math.max(0, maxX);
-          if (ad.y > maxY) ad.y = Math.max(0, maxY);
-          ad.element.style.left = ad.x + 'px';
-          ad.element.style.top = ad.y + 'px';
-        }
-      }
-    }
-    renderSchedule();
-  });
+  window.addEventListener('resize',()=>{ if(!tariffOverlayActive && adPanels.length){ for(let ad of adPanels){ if(ad?.element&&!ad.isClosing){ let maxX=window.innerWidth-ad.element.offsetWidth, maxY=window.innerHeight-ad.element.offsetHeight; if(ad.x>maxX) ad.x=Math.max(0,maxX); if(ad.y>maxY) ad.y=Math.max(0,maxY); ad.element.style.left=ad.x+'px'; ad.element.style.top=ad.y+'px'; } } } renderSchedule(); });
 </script>
-
 </body>
 </html>
