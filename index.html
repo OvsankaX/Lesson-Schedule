@@ -1,18 +1,14 @@
-Добавил кнопку отключения рекламы в левом верхнем углу. Первые 5 секунд рекламы вообще нет, спокойно. Через 5 секунд начинается ЛСД-эффект: экран плывёт, расписание дёргается, цвета меняются, всё глючит и трясётся по-наркомански. Кнопка с зачёркнутой надписью «AD» и текстом «откл рекламу». Нажал — всё возвращается в норму (реклама снова исчезает навсегда либо эффект отключается — сделал полное отключение глитчей). Ниже привожу финальный готовый код.
-
-```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Расписание — LSD-режим (отключаемая реклама)</title>
+<title>Расписание — отключи рекламу и получи ЛСД</title>
 
 <style>
   /* ===== ОРИГИНАЛЬНЫЙ СТИЛЬ РАСПИСАНИЯ ===== */
   * {
     box-sizing: border-box;
-    user-select: none; /* для эффекта глюков */
   }
 
   body {
@@ -23,17 +19,51 @@
     color: #e5e5e5;
     min-height: 100vh;
     position: relative;
-    transition: background 0.05s linear, transform 0.02s linear;
   }
 
-  /* эффект дрожания / глитча */
-  body.glitch-active {
-    animation: glitchShake 0.08s infinite alternate;
+  /* ЛСД-эффекты (включаются только после кнопки) */
+  body.lsd-active {
+    animation: globalShake 0.06s infinite alternate;
   }
 
-  @keyframes glitchShake {
-    0% { transform: translate(1px, -1px) skew(0.2deg); }
-    100% { transform: translate(-1px, 1px) skew(-0.3deg); }
+  @keyframes globalShake {
+    0% { transform: translate(1px, -1px); }
+    100% { transform: translate(-1px, 1px); }
+  }
+
+  body.lsd-active .container {
+    animation: danceContainer 0.1s infinite alternate;
+  }
+
+  @keyframes danceContainer {
+    0% { transform: translate(0px, 0px) rotate(0deg); }
+    25% { transform: translate(5px, -3px) rotate(0.8deg); }
+    50% { transform: translate(-4px, 4px) rotate(-0.5deg); }
+    75% { transform: translate(3px, 5px) rotate(0.3deg); }
+    100% { transform: translate(-3px, -2px) rotate(-0.7deg); }
+  }
+
+  body.lsd-active .card,
+  body.lsd-active table,
+  body.lsd-active .day-title {
+    animation: colorCycle 0.15s infinite alternate;
+  }
+
+  @keyframes colorCycle {
+    0% { background: #1c1c1c; color: #e5e5e5; border-color: #2a2a2a; }
+    25% { background: #2a1a2a; color: #ff99cc; border-color: #ff66aa; }
+    50% { background: #1a2a2a; color: #99ffcc; border-color: #66ffaa; }
+    75% { background: #2a2a1a; color: #ffff99; border-color: #ffff66; }
+    100% { background: #1c1c2a; color: #cc99ff; border-color: #aa66ff; }
+  }
+
+  body.lsd-active .btns button {
+    animation: btnShake 0.1s infinite alternate;
+  }
+
+  @keyframes btnShake {
+    0% { transform: scale(1); background: #2d2d2d; }
+    100% { transform: scale(0.96); background: #6a1a6a; color: #ffccff; }
   }
 
   header {
@@ -42,7 +72,6 @@
     font-size: 22px;
     background: #1c1c1c;
     border-bottom: 1px solid #2a2a2a;
-    transition: all 0.05s ease;
   }
 
   .container {
@@ -51,44 +80,6 @@
     padding: 14px;
     position: relative;
     z-index: 1;
-    transition: all 0.03s cubic-bezier(0.4, 1.3, 0.6, 1);
-  }
-
-  /* лсд-прыжки расписания */
-  .glitch-active .container {
-    animation: danceContainer 0.12s infinite alternate;
-  }
-
-  @keyframes danceContainer {
-    0% { transform: translate(0px, 0px) rotate(0deg); }
-    25% { transform: translate(4px, -3px) rotate(0.5deg); }
-    50% { transform: translate(-3px, 2px) rotate(-0.3deg); }
-    75% { transform: translate(2px, 4px) rotate(0.2deg); }
-    100% { transform: translate(-2px, -2px) rotate(-0.6deg); }
-  }
-
-  /* цветные блики на карточках */
-  .glitch-active .card,
-  .glitch-active table,
-  .glitch-active .day-title {
-    animation: colorCycle 0.2s infinite alternate;
-  }
-
-  @keyframes colorCycle {
-    0% { background: #1c1c1c; color: #e5e5e5; border-color: #2a2a2a; }
-    25% { background: #2a1a2a; color: #ff99cc; border-color: #ff66aa; text-shadow: 0 0 2px magenta; }
-    50% { background: #1a2a2a; color: #99ffcc; border-color: #66ffaa; text-shadow: 0 0 2px cyan; }
-    75% { background: #2a2a1a; color: #ffff99; border-color: #ffff66; text-shadow: 0 0 2px yellow; }
-    100% { background: #1c1c2a; color: #cc99ff; border-color: #aa66ff; text-shadow: 0 0 3px violet; }
-  }
-
-  .glitch-active .btns button {
-    animation: btnColorShift 0.15s infinite alternate;
-  }
-
-  @keyframes btnColorShift {
-    0% { background: #2d2d2d; color: white; }
-    100% { background: #6a1a6a; color: #ffccff; transform: scale(0.98); }
   }
 
   .card {
@@ -97,7 +88,6 @@
     padding: 14px 16px;
     margin-bottom: 12px;
     border: 1px solid #2a2a2a;
-    transition: all 0.05s;
   }
 
   .card .time {
@@ -160,47 +150,7 @@
     font-weight: 600;
   }
 
-  /* ===== КНОПКА ОТКЛЮЧЕНИЯ РЕКЛАМЫ (ЛЕВЫЙ ВЕРХНИЙ УГОЛ) ===== */
-  .ad-toggle-btn {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    background: #111;
-    border: 2px solid white;
-    border-radius: 40px;
-    padding: 6px 16px 6px 12px;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    backdrop-filter: blur(4px);
-    font-weight: bold;
-    transition: 0.1s linear;
-    box-shadow: 0 0 8px rgba(255,255,255,0.3);
-  }
-
-  .ad-toggle-btn span.ad-strike {
-    font-size: 20px;
-    font-weight: 800;
-    color: #ff4444;
-    text-decoration: line-through;
-    text-decoration-thickness: 3px;
-    letter-spacing: 1px;
-  }
-
-  .ad-toggle-btn span.label {
-    font-size: 13px;
-    color: white;
-    font-family: monospace;
-  }
-
-  .ad-toggle-btn:active {
-    transform: scale(0.96);
-    background: #2a1a1a;
-  }
-
-  /* Рекламные плашки (изначально скрыты, появятся через 5 сек) */
+  /* ===== РЕКЛАМНЫЕ ПЛАШКИ ===== */
   .ad-float {
     position: fixed;
     background: #0a0a0a;
@@ -214,7 +164,6 @@
     width: auto;
     min-width: 140px;
     will-change: left, top;
-    display: none; /* стартово скрыты */
   }
 
   @media (max-width: 700px) {
@@ -239,7 +188,46 @@
     100% { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; }
   }
 
-  /* меню тарифов (оставим как было) */
+  /* КНОПКА ОТКЛЮЧЕНИЯ РЕКЛАМЫ */
+  .ad-killer {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: #111;
+    border: 2px solid white;
+    border-radius: 40px;
+    padding: 8px 18px 8px 14px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    font-weight: bold;
+    transition: 0.1s;
+    box-shadow: 0 0 8px rgba(255,255,255,0.3);
+  }
+
+  .ad-killer .strike {
+    font-size: 22px;
+    font-weight: 800;
+    color: #ff4444;
+    text-decoration: line-through;
+    text-decoration-thickness: 3px;
+  }
+
+  .ad-killer .label {
+    font-size: 13px;
+    color: white;
+    font-family: monospace;
+  }
+
+  .ad-killer:active {
+    transform: scale(0.95);
+    background: #2a1a1a;
+  }
+
+  /* тарифы (сокращённо) */
   .tariff-overlay {
     position: fixed;
     top: 0;
@@ -251,36 +239,28 @@
     overflow-y: auto;
     padding: 20px;
     backdrop-filter: blur(10px);
-    animation: fadeIn 0.3s;
   }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   .tariff-container { max-width: 600px; margin: 0 auto; }
-  .tariff-title { font-size: 28px; text-align: center; margin: 20px 0; color: #ffffff; text-transform: uppercase; letter-spacing: 2px; }
+  .tariff-title { font-size: 28px; text-align: center; margin: 20px 0; color: #ffffff; }
   .tariff-card { background: #1a1e2a; border-radius: 24px; padding: 20px; margin-bottom: 20px; border: 2px solid #ffffff; }
   .tariff-name { font-size: 26px; font-weight: bold; color: #ffffff; }
   .tariff-price { font-size: 32px; margin: 10px 0; color: #ffffff; }
   .tariff-features { list-style: none; padding: 0; margin: 15px 0; }
   .tariff-features li { padding: 6px 0; border-bottom: 1px solid #2a2e3a; color: #dddddd; }
-  .buy-btn {
-    background: #1a1e2a; border: 2px solid white; color: white; padding: 12px 20px;
-    border-radius: 40px; font-size: 18px; cursor: pointer; width: 100%; margin-top: 10px;
-  }
-  .close-tariff { text-align: center; margin-top: 40px; padding-bottom: 30px; color: #888; cursor: pointer; font-size: 16px; }
-  .close-tariff:hover { color: #ffffff; }
-  .order-form { background: #0f111a; border-radius: 24px; padding: 20px; margin-top: 10px; border: 1px solid #333; }
+  .buy-btn { background: #1a1e2a; border: 2px solid white; color: white; padding: 12px 20px; border-radius: 40px; width: 100%; margin-top: 10px; cursor: pointer; }
+  .close-tariff { text-align: center; margin-top: 40px; color: #888; cursor: pointer; }
+  .order-form { background: #0f111a; border-radius: 24px; padding: 20px; margin-top: 10px; }
   .order-form input, .order-form select { width: 100%; padding: 12px; margin: 8px 0; background: #1e2230; border: 1px solid #3a3e50; color: white; border-radius: 12px; }
-  .invoice { background: #0a0c16; padding: 16px; border-radius: 16px; margin: 15px 0; border: 1px solid #333; }
-  .invoice-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #2a2e3e; color: #dddddd; }
+  .invoice { background: #0a0c16; padding: 16px; border-radius: 16px; margin: 15px 0; }
+  .invoice-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #2a2e3e; }
   .total-row { font-weight: bold; font-size: 20px; color: #ffffff; border-top: 2px solid #ffffff; margin-top: 8px; padding-top: 12px; }
-  #nextToInvoiceBtn { background: #2a2e3a; border: 2px solid #555; color: #888; cursor: not-allowed; opacity: 0.6; }
-  #nextToInvoiceBtn.active { background: #1a1e2a; border: 2px solid white; color: white; cursor: pointer; opacity: 1; }
 </style>
 </head>
 <body>
 
-<!-- КНОПКА ОТКЛЮЧЕНИЯ РЕКЛАМЫ (с зачёркнутой AD) -->
-<div id="adKillerBtn" class="ad-toggle-btn">
-  <span class="ad-strike">AD</span>
+<!-- КНОПКА ОТКЛЮЧЕНИЯ РЕКЛАМЫ -->
+<div id="adKillerBtn" class="ad-killer">
+  <span class="strike">AD</span>
   <span class="label">откл рекламу</span>
 </div>
 
@@ -332,7 +312,7 @@
   window.nextDay = () => { dayIndex = (dayIndex + 1) % days.length; showAll = false; renderSchedule(); };
   window.toggleAll = () => { showAll = !showAll; renderSchedule(); };
 
-  // ========== РЕКЛАМНЫЕ ПЛАШКИ (DVD-движение) + ВКЛ/ВЫКЛ ==========
+  // ========== РЕКЛАМА (ЛЕТАЮЩИЕ ПЛАШКИ) ==========
   const adCampaigns = [
     { img: "images/casebattle.png", link: "https://case-battle.red/", alt: "Case Battle" },
     { img: "images/upgrader.png", link: "https://upgrader.pro/ru", alt: "Upgrader Pro" },
@@ -343,14 +323,24 @@
   let closedAdsCount = 0;
   let tariffOverlayActive = false;
   let animationFrameId = null;
-  let adsEnabled = false;       // реклама выключена до 5 секунд, потом включится если не нажали кнопку
-  let glitchEnabled = false;    // эффект LSD отключён сначала
-  let disableGlobalFlag = false; // если нажали "откл рекламу" то всё выключается навсегда
+  let adsActive = true;  // реклама активна изначально
 
-  // Функция движения плашек (DVD)
+  function getRandomPositionAndDirection(adElement) {
+    if (!adElement) return { x: 20, y: 20, vx: 0.8, vy: 0.8 };
+    const adWidth = adElement.offsetWidth || 180;
+    const adHeight = adElement.offsetHeight || 140;
+    const maxX = Math.max(10, window.innerWidth - adWidth - 10);
+    const maxY = Math.max(10, window.innerHeight - adHeight - 10);
+    let x = Math.random() * maxX, y = Math.random() * maxY;
+    let vx = (Math.random() * 0.9 + 0.4) * (Math.random() > 0.5 ? 1 : -1);
+    let vy = (Math.random() * 0.9 + 0.4) * (Math.random() > 0.5 ? 1 : -1);
+    if (Math.abs(vx) < 0.4) vx = vx > 0 ? 0.5 : -0.5;
+    if (Math.abs(vy) < 0.4) vy = vy > 0 ? 0.5 : -0.5;
+    return { x, y, vx, vy };
+  }
+
   function updateAdPosition(ad) {
     if (!ad.element || ad.isClosing) return;
-    if (ad.element.style.display === 'none') return;
     let rect = ad.element.getBoundingClientRect();
     let adWidth = rect.width, adHeight = rect.height;
     let newX = ad.x + ad.vx;
@@ -364,31 +354,17 @@
     ad.element.style.top = ad.y + 'px';
   }
 
-  function startFlyingAnimation() {
+  function startFlying() {
     if (animationFrameId) cancelAnimationFrame(animationFrameId);
     function animate() {
       for (let ad of adPanels) {
-        if (ad && ad.element && !tariffOverlayActive && !ad.isClosing && adsEnabled && !disableGlobalFlag) {
+        if (ad && ad.element && !tariffOverlayActive && !ad.isClosing && adsActive) {
           updateAdPosition(ad);
         }
       }
       animationFrameId = requestAnimationFrame(animate);
     }
     animate();
-  }
-
-  function getRandomPositionAndDirection(adElement) {
-    if (!adElement) return { x: 20, y: 20, vx: 0.8, vy: 0.8 };
-    const adWidth = adElement.offsetWidth || 180;
-    const adHeight = adElement.offsetHeight || 140;
-    const maxX = Math.max(10, window.innerWidth - adWidth - 10);
-    const maxY = Math.max(10, window.innerHeight - adHeight - 10);
-    let x = Math.random() * maxX, y = Math.random() * maxY;
-    let vx = (Math.random() * 1.0 + 0.5) * (Math.random() > 0.5 ? 1 : -1);
-    let vy = (Math.random() * 1.0 + 0.5) * (Math.random() > 0.5 ? 1 : -1);
-    if (Math.abs(vx) < 0.4) vx = vx > 0 ? 0.6 : -0.6;
-    if (Math.abs(vy) < 0.4) vy = vy > 0 ? 0.6 : -0.6;
-    return { x, y, vx, vy };
   }
 
   function updateAdImage(ad) {
@@ -462,7 +438,7 @@
     updateAdImage(adObj);
     closeBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      if (adObj.isClosing || tariffOverlayActive || !adsEnabled || disableGlobalFlag) return;
+      if (adObj.isClosing || tariffOverlayActive || !adsActive) return;
       closedAdsCount++;
       closeAdWithAnimation(adObj, () => {
         if (closedAdsCount >= 3 && !tariffOverlayActive) showTariffMenu();
@@ -471,101 +447,52 @@
     return adObj;
   }
 
-  function showAllAds() {
-    if (disableGlobalFlag) return;
-    for (let ad of adPanels) if (ad && ad.element) ad.element.style.display = '';
-  }
-  function hideAllAds() {
-    for (let ad of adPanels) if (ad && ad.element) ad.element.style.display = 'none';
-  }
-
-  // ========== LSD-ЭФФЕКТ (НАРКОМАНИЯ) ==========
-  function enableGlitchEffect() {
-    if (disableGlobalFlag) return;
-    glitchEnabled = true;
-    document.body.classList.add('glitch-active');
-  }
-  function disableGlitchEffect() {
-    glitchEnabled = false;
-    document.body.classList.remove('glitch-active');
-    // сброс дополнительных анимаций на контейнере
-    const container = document.querySelector('.container');
-    if (container) container.style.animation = 'none';
-  }
-
-  // полное отключение рекламы и глитчей по кнопке
-  function disableAllAdsAndGlitches() {
-    if (disableGlobalFlag) return;
-    disableGlobalFlag = true;
-    adsEnabled = false;
-    disableGlitchEffect();
-    // убиваем рекламные плашки навсегда
+  function killAllAds() {
+    adsActive = false;
     for (let ad of adPanels) {
       if (ad && ad.element) ad.element.remove();
     }
     adPanels = [];
     if (animationFrameId) cancelAnimationFrame(animationFrameId);
-    closedAdsCount = 0;
   }
 
-  // Инициализация: ждём 5 секунд, потом включаем рекламу и лсд-глюки (если не отключено)
-  let startTimeout = null;
-  function delayedLsdAndAds() {
-    if (disableGlobalFlag) return;
-    if (!adsEnabled && !disableGlobalFlag) {
-      adsEnabled = true;
-      // создаём рекламные плашки (5 штук)
-      for (let i = 0; i < 5; i++) { adPanels.push(createAdPanel()); }
-      startFlyingAnimation();
-      showAllAds();
-      // запускаем глитч-эффект
-      enableGlitchEffect();
-    }
-  }
-
-  // ========== ТАРИФЫ (упрощённо, без изменений) ==========
+  // ========== ТАРИФЫ ==========
   function showTariffMenu() {
     if (tariffOverlayActive) return;
     tariffOverlayActive = true;
-    hideAllAds();
     const overlay = document.createElement('div'); overlay.className = 'tariff-overlay';
-    overlay.innerHTML = `<div class="tariff-container"><div class="tariff-title">💸 VIP ТАРИФЫ ДЛЯ ПИЗДАТЫХ 💸</div>
+    overlay.innerHTML = `<div class="tariff-container"><div class="tariff-title">💸 ТАРИФЫ ДЛЯ ПИЗДАТЫХ 💸</div>
       <div class="tariff-card"><div class="tariff-name">🚀 ZA SVO</div><div class="tariff-price">₴ 99 999</div><ul class="tariff-features"><li>✅ Доступ к расписанию</li><li>✅ Личный "Дима"</li><li>✅ Клеймо еблана</li></ul><button class="buy-btn" data-price="99999" data-name="ZA SVO">КУПИТЬ</button></div>
       <div class="tariff-card"><div class="tariff-name">👑 КОРОЛЬ ВОЗДУХА</div><div class="tariff-price">₴ 499 999</div><ul class="tariff-features"><li>✅ Все фишки</li><li>✅ Огромные ЯЙЦА</li></ul><button class="buy-btn" data-price="499999" data-name="КОРОЛЬ ВОЗДУХА">КУПИТЬ</button></div>
-      <div class="close-tariff" id="closeTariffBtn">❌ нет, спасибо, я бедный ❌</div></div>`;
+      <div class="tariff-card"><div class="tariff-name">⚡ ЧЕРВИ В ГЛАЗАХ</div><div class="tariff-price">₴ 1 337 000</div><ul class="tariff-features"><li>✅ Тимошина пожрет говна</li><li>✅ Стальные яйки</li></ul><button class="buy-btn" data-price="1337000" data-name="ЧЕРВИ В ГЛАЗАХ">КУПИТЬ</button></div>
+      <div class="close-tariff" id="closeTariffBtn">❌ нет, спасибо ❌</div></div>`;
     document.body.appendChild(overlay);
     overlay.querySelectorAll('.buy-btn').forEach(btn => {
-      btn.addEventListener('click', () => { alert("Демо-режим, оплата через Совкомбанк"); window.open("https://sovcombank.ru/apply/credit/city-spb/", "_blank"); });
+      btn.addEventListener('click', () => { alert("Оплата через Совкомбанк"); window.open("https://sovcombank.ru/apply/credit/city-spb/", "_blank"); });
     });
     overlay.querySelector('#closeTariffBtn').addEventListener('click', () => {
-      overlay.remove(); tariffOverlayActive = false; showAllAds();
+      overlay.remove(); tariffOverlayActive = false;
     });
   }
 
-  // КНОПКА ОТКЛЮЧЕНИЯ
-  document.getElementById('adKillerBtn').addEventListener('click', () => {
-    disableAllAdsAndGlitches();
-  });
-
-  // Запуск: рекламы нет, через 5 секунд начинается трип
+  // ========== ГЛАВНАЯ ЛОГИКА ==========
+  // Запускаем рекламу
+  for (let i = 0; i < 5; i++) { adPanels.push(createAdPanel()); }
+  startFlying();
   renderSchedule();
-  startTimeout = setTimeout(() => {
-    delayedLsdAndAds();
-  }, 5000);
 
-  window.addEventListener("resize", () => {
-    if(adsEnabled && !tariffOverlayActive && !disableGlobalFlag) {
-      for(let ad of adPanels) {
-        let maxX = window.innerWidth - ad.element.offsetWidth;
-        let maxY = window.innerHeight - ad.element.offsetHeight;
-        if (ad.x > maxX) ad.x = Math.max(0, maxX);
-        if (ad.y > maxY) ad.y = Math.max(0, maxY);
-        ad.element.style.left = ad.x + 'px'; ad.element.style.top = ad.y + 'px';
-      }
-    }
-    renderSchedule();
+  // Обработчик кнопки "откл рекламу"
+  const killBtn = document.getElementById('adKillerBtn');
+  killBtn.addEventListener('click', () => {
+    // убиваем рекламу
+    killAllAds();
+    // удаляем кнопку навсегда
+    killBtn.remove();
+    // через 5 секунд включаем ЛСД-эффект
+    setTimeout(() => {
+      document.body.classList.add('lsd-active');
+    }, 5000);
   });
 </script>
 </body>
 </html>
-```
