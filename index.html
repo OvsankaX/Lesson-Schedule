@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Расписание — отключи рекламу и получи ЛСД</title>
+<title>Расписание — летающая реклама + отключаемый ЛСД-трип</title>
 
 <style>
   /* ===== ОРИГИНАЛЬНЫЙ СТИЛЬ РАСПИСАНИЯ ===== */
@@ -19,51 +19,7 @@
     color: #e5e5e5;
     min-height: 100vh;
     position: relative;
-  }
-
-  /* ЛСД-эффекты (включаются только после кнопки) */
-  body.lsd-active {
-    animation: globalShake 0.06s infinite alternate;
-  }
-
-  @keyframes globalShake {
-    0% { transform: translate(1px, -1px); }
-    100% { transform: translate(-1px, 1px); }
-  }
-
-  body.lsd-active .container {
-    animation: danceContainer 0.1s infinite alternate;
-  }
-
-  @keyframes danceContainer {
-    0% { transform: translate(0px, 0px) rotate(0deg); }
-    25% { transform: translate(5px, -3px) rotate(0.8deg); }
-    50% { transform: translate(-4px, 4px) rotate(-0.5deg); }
-    75% { transform: translate(3px, 5px) rotate(0.3deg); }
-    100% { transform: translate(-3px, -2px) rotate(-0.7deg); }
-  }
-
-  body.lsd-active .card,
-  body.lsd-active table,
-  body.lsd-active .day-title {
-    animation: colorCycle 0.15s infinite alternate;
-  }
-
-  @keyframes colorCycle {
-    0% { background: #1c1c1c; color: #e5e5e5; border-color: #2a2a2a; }
-    25% { background: #2a1a2a; color: #ff99cc; border-color: #ff66aa; }
-    50% { background: #1a2a2a; color: #99ffcc; border-color: #66ffaa; }
-    75% { background: #2a2a1a; color: #ffff99; border-color: #ffff66; }
-    100% { background: #1c1c2a; color: #cc99ff; border-color: #aa66ff; }
-  }
-
-  body.lsd-active .btns button {
-    animation: btnShake 0.1s infinite alternate;
-  }
-
-  @keyframes btnShake {
-    0% { transform: scale(1); background: #2d2d2d; }
-    100% { transform: scale(0.96); background: #6a1a6a; color: #ffccff; }
+    transition: all 0.03s linear;
   }
 
   header {
@@ -72,6 +28,7 @@
     font-size: 22px;
     background: #1c1c1c;
     border-bottom: 1px solid #2a2a2a;
+    transition: all 0.05s ease;
   }
 
   .container {
@@ -80,6 +37,7 @@
     padding: 14px;
     position: relative;
     z-index: 1;
+    transition: all 0.05s cubic-bezier(0.4, 1.3, 0.6, 1);
   }
 
   .card {
@@ -88,6 +46,7 @@
     padding: 14px 16px;
     margin-bottom: 12px;
     border: 1px solid #2a2a2a;
+    transition: all 0.05s;
   }
 
   .card .time {
@@ -123,6 +82,7 @@
     color: #e5e5e5;
     font-size: 16px;
     cursor: pointer;
+    transition: all 0.05s;
   }
 
   @media (min-width: 750px) {
@@ -150,7 +110,7 @@
     font-weight: 600;
   }
 
-  /* ===== РЕКЛАМНЫЕ ПЛАШКИ ===== */
+  /* ===== РЕКЛАМНЫЕ ПЛАШКИ (летающие) ===== */
   .ad-float {
     position: fixed;
     background: #0a0a0a;
@@ -164,6 +124,7 @@
     width: auto;
     min-width: 140px;
     will-change: left, top;
+    cursor: default;
   }
 
   @media (max-width: 700px) {
@@ -179,6 +140,7 @@
     cursor: pointer; display: flex; align-items: center; justify-content: center;
     z-index: 20; font-family: monospace;
   }
+  .ad-float.hidden-temp { display: none; }
 
   /* Пиксельный распад */
   .pixel-dust { position: fixed; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 10001; }
@@ -188,7 +150,7 @@
     100% { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; }
   }
 
-  /* КНОПКА ОТКЛЮЧЕНИЯ РЕКЛАМЫ */
+  /* ===== КНОПКА ОТКЛЮЧЕНИЯ РЕКЛАМЫ (ЛЕВЫЙ ВЕРХНИЙ УГОЛ) ===== */
   .ad-killer {
     position: fixed;
     top: 20px;
@@ -207,7 +169,6 @@
     transition: 0.1s;
     box-shadow: 0 0 8px rgba(255,255,255,0.3);
   }
-
   .ad-killer .strike {
     font-size: 22px;
     font-weight: 800;
@@ -215,19 +176,17 @@
     text-decoration: line-through;
     text-decoration-thickness: 3px;
   }
-
   .ad-killer .label {
     font-size: 13px;
     color: white;
     font-family: monospace;
   }
-
   .ad-killer:active {
     transform: scale(0.95);
     background: #2a1a1a;
   }
 
-  /* тарифы (сокращённо) */
+  /* ===== МЕНЮ ТАРИФОВ (оригинал) ===== */
   .tariff-overlay {
     position: fixed;
     top: 0;
@@ -239,21 +198,26 @@
     overflow-y: auto;
     padding: 20px;
     backdrop-filter: blur(10px);
+    animation: fadeIn 0.3s;
   }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   .tariff-container { max-width: 600px; margin: 0 auto; }
-  .tariff-title { font-size: 28px; text-align: center; margin: 20px 0; color: #ffffff; }
+  .tariff-title { font-size: 28px; text-align: center; margin: 20px 0; color: #ffffff; text-transform: uppercase; letter-spacing: 2px; }
   .tariff-card { background: #1a1e2a; border-radius: 24px; padding: 20px; margin-bottom: 20px; border: 2px solid #ffffff; }
   .tariff-name { font-size: 26px; font-weight: bold; color: #ffffff; }
   .tariff-price { font-size: 32px; margin: 10px 0; color: #ffffff; }
   .tariff-features { list-style: none; padding: 0; margin: 15px 0; }
   .tariff-features li { padding: 6px 0; border-bottom: 1px solid #2a2e3a; color: #dddddd; }
-  .buy-btn { background: #1a1e2a; border: 2px solid white; color: white; padding: 12px 20px; border-radius: 40px; width: 100%; margin-top: 10px; cursor: pointer; }
-  .close-tariff { text-align: center; margin-top: 40px; color: #888; cursor: pointer; }
-  .order-form { background: #0f111a; border-radius: 24px; padding: 20px; margin-top: 10px; }
+  .buy-btn { background: #1a1e2a; border: 2px solid white; color: white; padding: 12px 20px; border-radius: 40px; font-size: 18px; cursor: pointer; width: 100%; margin-top: 10px; }
+  .close-tariff { text-align: center; margin-top: 40px; padding-bottom: 30px; color: #888; cursor: pointer; font-size: 16px; }
+  .close-tariff:hover { color: #ffffff; }
+  .order-form { background: #0f111a; border-radius: 24px; padding: 20px; margin-top: 10px; border: 1px solid #333; }
   .order-form input, .order-form select { width: 100%; padding: 12px; margin: 8px 0; background: #1e2230; border: 1px solid #3a3e50; color: white; border-radius: 12px; }
-  .invoice { background: #0a0c16; padding: 16px; border-radius: 16px; margin: 15px 0; }
-  .invoice-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #2a2e3e; }
+  .invoice { background: #0a0c16; padding: 16px; border-radius: 16px; margin: 15px 0; border: 1px solid #333; }
+  .invoice-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #2a2e3e; color: #dddddd; }
   .total-row { font-weight: bold; font-size: 20px; color: #ffffff; border-top: 2px solid #ffffff; margin-top: 8px; padding-top: 12px; }
+  #nextToInvoiceBtn { background: #2a2e3a; border: 2px solid #555; color: #888; cursor: not-allowed; opacity: 0.6; }
+  #nextToInvoiceBtn.active { background: #1a1e2a; border: 2px solid white; color: white; cursor: pointer; opacity: 1; }
 </style>
 </head>
 <body>
@@ -312,7 +276,7 @@
   window.nextDay = () => { dayIndex = (dayIndex + 1) % days.length; showAll = false; renderSchedule(); };
   window.toggleAll = () => { showAll = !showAll; renderSchedule(); };
 
-  // ========== РЕКЛАМА (ЛЕТАЮЩИЕ ПЛАШКИ) ==========
+  // ========== ЛЕТАЮЩИЕ РЕКЛАМНЫЕ ПЛАШКИ (полностью оригинальная механика) ==========
   const adCampaigns = [
     { img: "images/casebattle.png", link: "https://case-battle.red/", alt: "Case Battle" },
     { img: "images/upgrader.png", link: "https://upgrader.pro/ru", alt: "Upgrader Pro" },
@@ -323,26 +287,28 @@
   let closedAdsCount = 0;
   let tariffOverlayActive = false;
   let animationFrameId = null;
-  let adsActive = true;  // реклама активна изначально
-
+  
   function getRandomPositionAndDirection(adElement) {
     if (!adElement) return { x: 20, y: 20, vx: 0.8, vy: 0.8 };
     const adWidth = adElement.offsetWidth || 180;
     const adHeight = adElement.offsetHeight || 140;
     const maxX = Math.max(10, window.innerWidth - adWidth - 10);
     const maxY = Math.max(10, window.innerHeight - adHeight - 10);
-    let x = Math.random() * maxX, y = Math.random() * maxY;
-    let vx = (Math.random() * 0.9 + 0.4) * (Math.random() > 0.5 ? 1 : -1);
-    let vy = (Math.random() * 0.9 + 0.4) * (Math.random() > 0.5 ? 1 : -1);
-    if (Math.abs(vx) < 0.4) vx = vx > 0 ? 0.5 : -0.5;
-    if (Math.abs(vy) < 0.4) vy = vy > 0 ? 0.5 : -0.5;
+    let x = Math.random() * maxX;
+    let y = Math.random() * maxY;
+    let vx = (Math.random() * 1.0 + 0.5) * (Math.random() > 0.5 ? 1 : -1);
+    let vy = (Math.random() * 1.0 + 0.5) * (Math.random() > 0.5 ? 1 : -1);
+    if (Math.abs(vx) < 0.4) vx = vx > 0 ? 0.6 : -0.6;
+    if (Math.abs(vy) < 0.4) vy = vy > 0 ? 0.6 : -0.6;
     return { x, y, vx, vy };
   }
 
   function updateAdPosition(ad) {
     if (!ad.element || ad.isClosing) return;
+    if (ad.element.style.display === 'none') return;
     let rect = ad.element.getBoundingClientRect();
-    let adWidth = rect.width, adHeight = rect.height;
+    let adWidth = rect.width;
+    let adHeight = rect.height;
     let newX = ad.x + ad.vx;
     let newY = ad.y + ad.vy;
     if (newX <= 0) { newX = 0; ad.vx = Math.abs(ad.vx); }
@@ -354,11 +320,11 @@
     ad.element.style.top = ad.y + 'px';
   }
 
-  function startFlying() {
+  function startFlyingAnimation() {
     if (animationFrameId) cancelAnimationFrame(animationFrameId);
     function animate() {
       for (let ad of adPanels) {
-        if (ad && ad.element && !tariffOverlayActive && !ad.isClosing && adsActive) {
+        if (ad && ad.element && !tariffOverlayActive && !ad.isClosing) {
           updateAdPosition(ad);
         }
       }
@@ -438,7 +404,7 @@
     updateAdImage(adObj);
     closeBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      if (adObj.isClosing || tariffOverlayActive || !adsActive) return;
+      if (adObj.isClosing || tariffOverlayActive) return;
       closedAdsCount++;
       closeAdWithAnimation(adObj, () => {
         if (closedAdsCount >= 3 && !tariffOverlayActive) showTariffMenu();
@@ -447,52 +413,140 @@
     return adObj;
   }
 
-  function killAllAds() {
-    adsActive = false;
-    for (let ad of adPanels) {
-      if (ad && ad.element) ad.element.remove();
-    }
+  function hideAllAds() { for (let ad of adPanels) if (ad && ad.element) ad.element.style.display = 'none'; }
+  function showAllAds() { for (let ad of adPanels) if (ad && ad.element) ad.element.style.display = ''; }
+  function killAllAdsPermanently() {
+    for (let ad of adPanels) if (ad && ad.element) ad.element.remove();
     adPanels = [];
     if (animationFrameId) cancelAnimationFrame(animationFrameId);
   }
 
-  // ========== ТАРИФЫ ==========
+  // ========== ТАРИФЫ (оригинал) ==========
   function showTariffMenu() {
     if (tariffOverlayActive) return;
     tariffOverlayActive = true;
+    hideAllAds();
     const overlay = document.createElement('div'); overlay.className = 'tariff-overlay';
-    overlay.innerHTML = `<div class="tariff-container"><div class="tariff-title">💸 ТАРИФЫ ДЛЯ ПИЗДАТЫХ 💸</div>
+    overlay.innerHTML = `<div class="tariff-container"><div class="tariff-title">💸 VIP ТАРИФЫ ДЛЯ ПИЗДАТЫХ 💸</div>
       <div class="tariff-card"><div class="tariff-name">🚀 ZA SVO</div><div class="tariff-price">₴ 99 999</div><ul class="tariff-features"><li>✅ Доступ к расписанию</li><li>✅ Личный "Дима"</li><li>✅ Клеймо еблана</li></ul><button class="buy-btn" data-price="99999" data-name="ZA SVO">КУПИТЬ</button></div>
       <div class="tariff-card"><div class="tariff-name">👑 КОРОЛЬ ВОЗДУХА</div><div class="tariff-price">₴ 499 999</div><ul class="tariff-features"><li>✅ Все фишки</li><li>✅ Огромные ЯЙЦА</li></ul><button class="buy-btn" data-price="499999" data-name="КОРОЛЬ ВОЗДУХА">КУПИТЬ</button></div>
-      <div class="tariff-card"><div class="tariff-name">⚡ ЧЕРВИ В ГЛАЗАХ</div><div class="tariff-price">₴ 1 337 000</div><ul class="tariff-features"><li>✅ Тимошина пожрет говна</li><li>✅ Стальные яйки</li></ul><button class="buy-btn" data-price="1337000" data-name="ЧЕРВИ В ГЛАЗАХ">КУПИТЬ</button></div>
       <div class="close-tariff" id="closeTariffBtn">❌ нет, спасибо ❌</div></div>`;
     document.body.appendChild(overlay);
     overlay.querySelectorAll('.buy-btn').forEach(btn => {
       btn.addEventListener('click', () => { alert("Оплата через Совкомбанк"); window.open("https://sovcombank.ru/apply/credit/city-spb/", "_blank"); });
     });
     overlay.querySelector('#closeTariffBtn').addEventListener('click', () => {
-      overlay.remove(); tariffOverlayActive = false;
+      overlay.remove(); tariffOverlayActive = false; showAllAds(); closedAdsCount = 0;
     });
   }
 
-  // ========== ГЛАВНАЯ ЛОГИКА ==========
-  // Запускаем рекламу
+  // ========== ЛСД-БЕСПРЕДЕЛ (после нажатия на кнопку) ==========
+  let lsdInterval = null;
+  function startLsdMadness() {
+    if (lsdInterval) clearInterval(lsdInterval);
+    // добавляем класс для тряски и цвета
+    document.body.classList.add('lsd-active');
+    
+    // Стили для ЛСД-эффектов (добавляем динамически, чтобы не засорять CSS)
+    const style = document.createElement('style');
+    style.id = 'lsd-styles';
+    style.textContent = `
+      body.lsd-active { animation: lsdShake 0.05s infinite alternate; }
+      @keyframes lsdShake { 0% { transform: translate(2px, -2px); } 100% { transform: translate(-2px, 2px); } }
+      body.lsd-active .container { animation: lsdFloat 0.15s infinite alternate; }
+      @keyframes lsdFloat { 0% { transform: translate(0px, 0px) rotate(0deg); } 100% { transform: translate(12px, -8px) rotate(3deg); } }
+      body.lsd-active .card, body.lsd-active table, body.lsd-active .day-title { animation: lsdColor 0.08s infinite alternate; }
+      @keyframes lsdColor { 0% { background: #1c1c1c; color: white; border-color: #2a2a2a; } 25% { background: #2a1a2a; color: #ff66aa; border-color: #ff3366; text-shadow: 2px 2px magenta; } 50% { background: #1a2a2a; color: #66ffcc; border-color: #33ffaa; text-shadow: -2px -1px cyan; } 75% { background: #2a2a1a; color: #ffff99; border-color: #ffcc33; text-shadow: 3px -1px yellow; } 100% { background: #1a1a3a; color: #cc66ff; border-color: #aa44ff; text-shadow: -2px 2px violet; } }
+      body.lsd-active .btns button { animation: lsdButton 0.1s infinite alternate; }
+      @keyframes lsdButton { 0% { transform: scale(1); background: #2d2d2d; } 100% { transform: scale(0.92) rotate(-2deg); background: #8a2a6a; color: #ffcccc; } }
+      body.lsd-active header { animation: lsdHeader 0.12s infinite alternate; }
+      @keyframes lsdHeader { 0% { transform: translateX(0); letter-spacing: normal; } 100% { transform: translateX(15px); letter-spacing: 5px; background: #2a1a2a; } }
+    `;
+    document.head.appendChild(style);
+    
+    // Дополнительно: каждые 100-200 мс меняем параметры элементов (масштаб, поворот, съезжание)
+    lsdInterval = setInterval(() => {
+      if (!document.body.classList.contains('lsd-active')) return;
+      // случайные трансформации для контейнера
+      const container = document.querySelector('.container');
+      if (container) {
+        const randomRot = (Math.random() - 0.5) * 6;
+        const randomX = (Math.random() - 0.5) * 20;
+        const randomY = (Math.random() - 0.5) * 15;
+        container.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${randomRot}deg)`;
+      }
+      // случайные трансформации для заголовков дней
+      document.querySelectorAll('.day-title').forEach(el => {
+        const scale = 0.8 + Math.random() * 0.8;
+        const rot = (Math.random() - 0.5) * 12;
+        el.style.transform = `scale(${scale}) rotate(${rot}deg)`;
+        el.style.display = 'inline-block';
+      });
+      // карточки разъезжаются
+      document.querySelectorAll('.card, table').forEach(el => {
+        const shiftX = (Math.random() - 0.5) * 25;
+        const shiftY = (Math.random() - 0.5) * 20;
+        const rotSmall = (Math.random() - 0.5) * 8;
+        el.style.transform = `translate(${shiftX}px, ${shiftY}px) rotate(${rotSmall}deg)`;
+      });
+      // кнопки дрожат
+      document.querySelectorAll('.btns button').forEach(btn => {
+        btn.style.transform = `scale(${0.85 + Math.random() * 0.4}) rotate(${(Math.random() - 0.5) * 8}deg)`;
+      });
+    }, 100);
+  }
+
+  function stopLsdMadness() {
+    if (lsdInterval) clearInterval(lsdInterval);
+    document.body.classList.remove('lsd-active');
+    const lsdStyle = document.getElementById('lsd-styles');
+    if (lsdStyle) lsdStyle.remove();
+    // сброс трансформаций
+    const container = document.querySelector('.container');
+    if (container) container.style.transform = '';
+    document.querySelectorAll('.day-title, .card, table, .btns button').forEach(el => {
+      el.style.transform = '';
+      el.style.display = '';
+    });
+  }
+
+  // ========== ЗАПУСК ==========
+  // Инициализация рекламы
   for (let i = 0; i < 5; i++) { adPanels.push(createAdPanel()); }
-  startFlying();
+  startFlyingAnimation();
   renderSchedule();
 
   // Обработчик кнопки "откл рекламу"
   const killBtn = document.getElementById('adKillerBtn');
   killBtn.addEventListener('click', () => {
-    // убиваем рекламу
-    killAllAds();
-    // удаляем кнопку навсегда
+    // убиваем рекламу навсегда
+    killAllAdsPermanently();
+    // удаляем кнопку
     killBtn.remove();
-    // через 5 секунд включаем ЛСД-эффект
+    // через 5 секунд включаем ЛСД-беспредел
     setTimeout(() => {
-      document.body.classList.add('lsd-active');
+      startLsdMadness();
     }, 5000);
   });
+
+  window.addEventListener("resize", () => {
+    if(!tariffOverlayActive && adPanels.length) {
+      for(let ad of adPanels) {
+        let maxX = window.innerWidth - ad.element.offsetWidth;
+        let maxY = window.innerHeight - ad.element.offsetHeight;
+        if (ad.x > maxX) ad.x = Math.max(0, maxX);
+        if (ad.y > maxY) ad.y = Math.max(0, maxY);
+        ad.element.style.left = ad.x + 'px';
+        ad.element.style.top = ad.y + 'px';
+        if (ad.x <= 0) ad.vx = Math.abs(ad.vx);
+        if (ad.x + ad.element.offsetWidth >= window.innerWidth) ad.vx = -Math.abs(ad.vx);
+        if (ad.y <= 0) ad.vy = Math.abs(ad.vy);
+        if (ad.y + ad.element.offsetHeight >= window.innerHeight) ad.vy = -Math.abs(ad.vy);
+      }
+    }
+    renderSchedule();
+  });
 </script>
+
 </body>
 </html>
