@@ -3,266 +3,195 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Расписание Уроков — Обновлённый стиль</title>
+<title>Расписание — старый дизайн</title>
 
 <style>
-  * {
+  /* оригинальный стиль из первого сообщения с минимальными правками */
+  body {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    font-family: system-ui, Arial, sans-serif;
+    background: #121212;
+    color: #e5e5e5;
   }
 
-  body {
-    background: radial-gradient(circle at 20% 30%, #0a0f1a, #03060c);
-    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-    color: #f0f3fa;
-    min-height: 100vh;
-    position: relative;
-    transition: background 0.2s;
-  }
-
-  /* основной контент — гибкий */
-  .main-layout {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 20px 24px 40px 24px;
-    transition: all 0.2s;
-  }
-
-  /* шапка с перламутровым отливом */
-  .neon-header {
-    background: rgba(18, 25, 40, 0.75);
-    backdrop-filter: blur(12px);
-    border-radius: 2rem;
-    margin-bottom: 2rem;
-    padding: 1rem 1.8rem;
+  header {
     text-align: center;
-    border: 1px solid rgba(72, 187, 255, 0.3);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    padding: 18px;
+    font-size: 22px;
+    background: #1c1c1c;
+    border-bottom: 1px solid #2a2a2a;
   }
 
-  .neon-header h1 {
-    font-size: 2rem;
-    letter-spacing: -0.5px;
-    background: linear-gradient(135deg, #FFD966, #FFB347, #FF6B6B);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: 0 0 6px rgba(255,100,50,0.3);
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 14px;
   }
 
-  .neon-header p {
-    font-size: 0.85rem;
+  /* карточки (мобильный стиль) */
+  .card {
+    background: #1c1c1c;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    border: 1px solid #2a2a2a;
+  }
+
+  .card .time {
     opacity: 0.7;
-    margin-top: 6px;
+    font-size: 14px;
+    margin-bottom: 4px;
   }
 
-  /* контейнер с расписанием - карточки modern */
-  .schedule-container {
+  .card .subject {
+    font-size: 17px;
+    font-weight: 500;
+  }
+
+  .day-title {
+    font-size: 19px;
+    margin: 20px 0 10px;
+    opacity: 0.85;
+  }
+
+  /* кнопки навигации */
+  .btns {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
     margin-bottom: 20px;
   }
 
-  /* стили для мобильных карточек */
-  .card-modern {
-    background: rgba(20, 28, 40, 0.85);
-    backdrop-filter: blur(4px);
-    border-radius: 1.5rem;
-    padding: 1rem 1.2rem;
-    margin-bottom: 12px;
-    border: 1px solid rgba(66, 153, 225, 0.3);
-    transition: 0.2s ease;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  }
-
-  .card-modern .time {
-    font-size: 0.75rem;
-    font-family: monospace;
-    letter-spacing: 0.5px;
-    background: #2a3a55;
-    display: inline-block;
-    padding: 0.2rem 0.7rem;
-    border-radius: 20px;
-    margin-bottom: 8px;
-    color: #bbd9ff;
-  }
-
-  .card-modern .subject {
-    font-size: 1.2rem;
-    font-weight: 600;
-    word-break: break-word;
-    color: #f5e7d9;
-  }
-
-  /* заголовки дней */
-  .day-title-modern {
-    font-size: 1.6rem;
-    font-weight: 700;
-    margin: 1.6rem 0 0.8rem 0;
-    background: linear-gradient(120deg, #c0e0ff, #9ac5f0);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    display: inline-block;
-    border-left: 4px solid #ffa270;
-    padding-left: 16px;
-  }
-
-  /* таблица для ПК */
-  .cool-table {
-    width: 100%;
-    background: rgba(12, 18, 28, 0.8);
-    backdrop-filter: blur(4px);
-    border-radius: 1.5rem;
-    overflow: hidden;
-    border-collapse: collapse;
-    margin: 20px 0;
-    box-shadow: 0 8px 18px rgba(0,0,0,0.3);
-  }
-
-  .cool-table th, .cool-table td {
-    padding: 12px 10px;
-    text-align: center;
-    border-bottom: 1px solid rgba(72, 120, 184, 0.3);
-  }
-
-  .cool-table th {
-    background: #111a28;
-    font-weight: 600;
-    color: #ffcf9a;
-    font-size: 0.9rem;
-  }
-
-  .cool-table td {
-    color: #e2e8f0;
-  }
-
-  /* кнопки панель */
-  .button-panel {
-    display: flex;
-    gap: 14px;
-    margin: 28px 0 20px;
-    flex-wrap: wrap;
-  }
-
-  .glow-btn {
+  button {
     flex: 1;
-    background: linear-gradient(95deg, #1f2a3e, #141e2c);
+    padding: 14px 0;
+    background: #2d2d2d;
     border: none;
-    padding: 12px 0;
-    border-radius: 40px;
-    color: #f0f3fa;
-    font-weight: 600;
-    font-size: 1rem;
+    border-radius: 8px;
+    color: #e5e5e5;
+    font-size: 16px;
     cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-    border: 1px solid rgba(255, 170, 100, 0.4);
   }
 
-  .glow-btn:active {
-    transform: scale(0.97);
+  button:active {
+    background: #3a3a3a;
   }
 
-  /* ----- РЕКЛАМНЫЕ БЛОКИ (гибкие) ----- */
-  /* Реклама для ПК: сбоку (фиксированный сайдбар) */
+  /* таблица для ПК (как в оригинале) */
+  @media (min-width: 750px) {
+    .card {
+      display: none;
+    }
+    table {
+      display: table;
+    }
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #1c1c1c;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  th, td {
+    padding: 12px;
+    border-bottom: 1px solid #2a2a2a;
+    text-align: center;
+  }
+
+  th {
+    background: #222;
+    font-weight: 600;
+  }
+
+  /* ======= РЕКЛАМНЫЕ БЛОКИ (как просили) ======= */
+  /* Для ПК — сбоку, фиксированный */
   .ad-sidebar {
     position: fixed;
-    right: 20px;
+    right: 16px;
     top: 50%;
     transform: translateY(-50%);
-    width: 220px;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(12px);
-    border-radius: 24px;
-    padding: 14px 12px;
-    border: 1px solid rgba(255, 200, 100, 0.5);
-    transition: all 0.25s;
-    z-index: 1000;
+    width: 200px;
+    background: #1c1c1c;
+    border: 1px solid #3a3a3a;
+    border-radius: 16px;
+    padding: 12px;
     text-align: center;
-    box-shadow: 0 12px 28px black;
+    z-index: 1000;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
   }
 
   .ad-sidebar .ad-img {
     width: 100%;
-    border-radius: 18px;
+    border-radius: 12px;
     cursor: pointer;
-    transition: transform 0.1s ease;
     display: block;
     margin-bottom: 10px;
-    border: 1px solid rgba(255,255,200,0.4);
-  }
-
-  .ad-sidebar .ad-img:hover {
-    transform: scale(1.02);
+    background: #2a2a2a;
   }
 
   .ad-sidebar .close-ad-btn {
-    background: #ff4d4d;
+    background: #4a4a4a;
     border: none;
     color: white;
-    font-weight: bold;
-    padding: 5px 12px;
-    border-radius: 40px;
-    font-size: 12px;
+    padding: 6px 0;
+    width: 100%;
+    border-radius: 30px;
+    font-size: 13px;
     cursor: pointer;
-    width: 80%;
-    margin-top: 8px;
-    transition: 0.1s linear;
   }
 
-  /* Реклама для телефонов: снизу плашка */
+  /* мобильная реклама — снизу */
   .ad-bottom {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(16px);
+    background: #0f0f0f;
+    border-top: 2px solid #ff8c42;
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 12px;
     padding: 10px 16px;
     z-index: 1100;
-    border-top: 2px solid #ff9f4a;
-    gap: 10px;
-    align-items: center;
     flex-wrap: wrap;
-    transition: 0.2s;
   }
 
   .ad-bottom .ad-img {
     height: 60px;
     width: auto;
     max-width: 160px;
-    border-radius: 16px;
+    border-radius: 12px;
     cursor: pointer;
-    box-shadow: 0 2px 8px black;
-    object-fit: cover;
+    border: 1px solid #3a3a3a;
   }
 
   .ad-bottom .close-ad-btn {
-    background: #c2410c;
+    background: #aa2e2e;
     border: none;
     color: white;
+    padding: 6px 18px;
+    border-radius: 40px;
     font-weight: bold;
-    padding: 4px 16px;
-    border-radius: 50px;
-    font-size: 14px;
+    font-size: 13px;
     cursor: pointer;
   }
 
-  /* Адаптивность: на широких экранах скрываем нижнюю рекламу, показываем боковую */
+  /* Адаптивность: на широких экранах прячем нижнюю рекламу, на узких — боковую */
   @media (min-width: 1000px) {
     .ad-bottom {
       display: none;
     }
     .ad-sidebar {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      display: block;
     }
   }
 
-  /* на планшетах и телефонах боковая реклама скрыта */
   @media (max-width: 999px) {
     .ad-sidebar {
       display: none;
@@ -270,77 +199,47 @@
     .ad-bottom {
       display: flex;
     }
-  }
-
-  /* маленькие телефоны: картинка адаптивная */
-  @media (max-width: 550px) {
-    .ad-bottom .ad-img {
-      height: 50px;
-      max-width: 120px;
-    }
-    .glow-btn {
-      font-size: 0.85rem;
-      padding: 10px 0;
-    }
-    .neon-header h1 {
-      font-size: 1.5rem;
-    }
-  }
-
-  /* скролл плюс отступы */
-  body {
-    padding-bottom: 0px;
-  }
-
-  /* дополнительно, чтобы контент не залезал под рекламу снизу */
-  @media (max-width: 999px) {
-    .main-layout {
+    body {
       padding-bottom: 90px;
     }
   }
-  @media (min-width: 1000px) {
-    .main-layout {
-      margin-right: 260px;
-      padding-right: 20px;
-    }
-  }
 
-  /* анимация появления */
-  .fade-transition {
-    transition: opacity 0.2s ease;
+  /* отступ контента чтобы не перекрывало рекламу */
+  @media (min-width: 1000px) {
+    .container {
+      margin-right: 240px;
+    }
   }
 </style>
 </head>
 <body>
 
-<div class="main-layout">
-  <div class="neon-header">
-    <h1>📚 ДИМА ПЬЯНЫЙ УКРАИНЕЦ</h1>
-    <p>⚡ Актуальное расписание | Генератор знаний</p>
-  </div>
-  <div id="dynamicSchedule" class="schedule-container"></div>
-  <div class="button-panel">
-    <button class="glow-btn" onclick="prevDay()">◀ Предыдущий</button>
-    <button class="glow-btn" id="toggleModeBtn" onclick="toggleAllDays()">Показать все дни</button>
-    <button class="glow-btn" onclick="nextDay()">Следующий ▶</button>
+<header>Дима пьяный украинец</header>
+
+<div class="container">
+  <div id="content"></div>
+  <div class="btns">
+    <button onclick="prevDay()">← Пред.</button>
+    <button onclick="toggleAll()" id="toggleBtn">Все дни</button>
+    <button onclick="nextDay()">След. →</button>
   </div>
 </div>
 
-<!-- Контейнер для ПК-рекламы (сбоку) -->
+<!-- Реклама для ПК (сбоку) -->
 <div id="adSidebar" class="ad-sidebar">
   <img id="sidebarAdImg" class="ad-img" src="" alt="Реклама">
   <button id="closeSidebarBtn" class="close-ad-btn">✖ Закрыть</button>
 </div>
 
-<!-- Контейнер для мобильной рекламы (снизу) -->
+<!-- Реклама для телефонов (снизу) -->
 <div id="adBottomBar" class="ad-bottom">
   <img id="bottomAdImg" class="ad-img" src="" alt="Реклама">
   <button id="closeBottomBtn" class="close-ad-btn">✖ Закрыть</button>
 </div>
 
 <script>
-  // --------------------------  РАСПИСАНИЕ (ДАННЫЕ) --------------------------
-  const schedules = {
+  // ---------- РАСПИСАНИЕ (ОРИГИНАЛЬНЫЕ ДАННЫЕ) ----------
+  var schedules = {
     "понедельник": ["Разговоры о какашках", "История", "Физкультура", "Алгебра", "География", "Обществознание", "Иностранный язык"],
     "вторник": ["Литература", "Русский язык", "ОБЖ", "Алгебра", "Физика", "Иностранный язык", "История"],
     "среда": ["Русский язык", "Литература", "География", "Химия", "Информатика", "Физкультура", "Труд"],
@@ -348,178 +247,146 @@
     "пятница": ["Вероятность и статистика", "Геометрия", "История", "Химия", "Биология", "Физика", "Иностранный язык"]
   };
 
-  const times = [
-    "8:30 – 9:15",
-    "9:35 – 10:20",
-    "10:40 – 11:25",
-    "11:50 – 12:35",
-    "12:55 – 13:40",
-    "13:50 – 14:35",
-    "14:40 – 15:25"
+  var times = [
+    "8:30–9:15",
+    "9:35–10:20",
+    "10:40–11:25",
+    "11:50–12:35",
+    "12:55–13:40",
+    "13:50–14:35",
+    "14:40–15:25"
   ];
 
-  const daysList = ["понедельник", "вторник", "среда", "четверг", "пятница"];
-  let currentDayIndex = (() => {
-    const todayIndex = new Date().getDay() - 1;
-    if (todayIndex >= 0 && todayIndex <= 4) return todayIndex;
-    return 0;
-  })();
-  let showAllFlag = false;
+  var days = ["понедельник","вторник","среда","четверг","пятница"];
+  var dayIndex = new Date().getDay() - 1;
+  if (dayIndex < 0 || dayIndex > 4) dayIndex = 0;
+  var showAll = false;
 
-  // ---------- РЕНДЕР расписания (мобильные карточки + таблица на пк) ----------
-  function renderSchedule() {
-    const container = document.getElementById("dynamicSchedule");
-    container.innerHTML = "";
+  // ---------- РЕНДЕР (полностью оригинальная логика + таблица/карточки) ----------
+  function render() {
+    var root = document.getElementById("content");
+    root.innerHTML = "";
+    document.getElementById("toggleBtn").textContent = showAll ? "Один день" : "Все дни";
 
-    if (showAllFlag) {
-      for (let d = 0; d < daysList.length; d++) {
-        renderDay(container, daysList[d]);
+    if (showAll) {
+      for (var d = 0; d < days.length; d++) {
+        renderDayBlock(root, days[d]);
       }
     } else {
-      renderDay(container, daysList[currentDayIndex]);
+      renderDayBlock(root, days[dayIndex]);
     }
-
-    // Обновляем текст кнопки
-    const toggleBtn = document.getElementById("toggleModeBtn");
-    if (toggleBtn) toggleBtn.textContent = showAllFlag ? "Свернуть в один день" : "Показать все дни";
   }
 
-  function renderDay(parent, dayName) {
-    // заголовок дня
-    const dayDiv = document.createElement("div");
-    dayDiv.className = "day-title-modern";
-    const capitalized = dayName.charAt(0).toUpperCase() + dayName.slice(1);
-    dayDiv.textContent = capitalized;
-    parent.appendChild(dayDiv);
+  function renderDayBlock(root, day) {
+    var title = document.createElement("div");
+    title.className = "day-title";
+    title.textContent = day.charAt(0).toUpperCase() + day.slice(1);
+    root.appendChild(title);
 
-    // карточки (всегда видны, красивые)
-    const lessons = schedules[dayName];
-    for (let i = 0; i < lessons.length; i++) {
-      const card = document.createElement("div");
-      card.className = "card-modern";
-      const timeSpan = document.createElement("div");
-      timeSpan.className = "time";
-      timeSpan.textContent = times[i];
-      const subjectSpan = document.createElement("div");
-      subjectSpan.className = "subject";
-      subjectSpan.textContent = lessons[i];
-      card.appendChild(timeSpan);
-      card.appendChild(subjectSpan);
-      parent.appendChild(card);
+    // карточки (мобильные)
+    for (var i = 0; i < schedules[day].length; i++) {
+      var card = document.createElement("div");
+      card.className = "card";
+      var t = document.createElement("div");
+      t.className = "time";
+      t.textContent = times[i];
+      var s = document.createElement("div");
+      s.className = "subject";
+      s.textContent = schedules[day][i];
+      card.appendChild(t);
+      card.appendChild(s);
+      root.appendChild(card);
     }
 
-    // ТАБЛИЦА для больших экранов (ПК) — дублирует данные, видна только при ширине > 750px по медиа, но мы добавим условие + скроем через медиа если надо? Лучше показывать как альтернативу
-    // Добавим таблицу, но она будет видна только на desktop через медиа (CSS) - для удобства стилизуем
-    const tableWrapper = document.createElement("div");
-    tableWrapper.className = "desktop-table-wrapper";
-    const table = document.createElement("table");
-    table.className = "cool-table";
-    const thead = document.createElement("thead");
-    const headerRow = document.createElement("tr");
-    ["№", "Время", "Предмет"].forEach(txt => {
-      const th = document.createElement("th");
-      th.textContent = txt;
-      headerRow.appendChild(th);
-    });
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
-    const tbody = document.createElement("tbody");
-    for (let i = 0; i < lessons.length; i++) {
-      const tr = document.createElement("tr");
-      const tdNum = document.createElement("td");
-      tdNum.textContent = (i+1).toString();
-      const tdTime = document.createElement("td");
-      tdTime.textContent = times[i];
-      const tdSubj = document.createElement("td");
-      tdSubj.textContent = lessons[i];
-      tr.appendChild(tdNum);
-      tr.appendChild(tdTime);
-      tr.appendChild(tdSubj);
-      tbody.appendChild(tr);
+    // таблица для ПК (отображается при ширине >=750, как в оригинале)
+    if (window.innerWidth >= 750) {
+      var table = document.createElement("table");
+      var head = document.createElement("tr");
+      addCell(head, "#", true);
+      addCell(head, "Время", true);
+      addCell(head, "Предмет", true);
+      table.appendChild(head);
+      for (var i = 0; i < schedules[day].length; i++) {
+        var row = document.createElement("tr");
+        addCell(row, i + 1, false);
+        addCell(row, times[i], false);
+        addCell(row, schedules[day][i], false);
+        table.appendChild(row);
+      }
+      root.appendChild(table);
     }
-    table.appendChild(tbody);
-    tableWrapper.appendChild(table);
-    parent.appendChild(tableWrapper);
   }
 
-  // Навигация
+  function addCell(row, text, head) {
+    var c = document.createElement(head ? "th" : "td");
+    c.textContent = text;
+    row.appendChild(c);
+  }
+
+  // ---------- НАВИГАЦИЯ ----------
   window.prevDay = function() {
-    showAllFlag = false;
-    currentDayIndex = (currentDayIndex - 1 + daysList.length) % daysList.length;
-    renderSchedule();
+    dayIndex = (dayIndex - 1 + days.length) % days.length;
+    showAll = false;
+    render();
   };
-
   window.nextDay = function() {
-    showAllFlag = false;
-    currentDayIndex = (currentDayIndex + 1) % daysList.length;
-    renderSchedule();
+    dayIndex = (dayIndex + 1) % days.length;
+    showAll = false;
+    render();
+  };
+  window.toggleAll = function() {
+    showAll = !showAll;
+    render();
   };
 
-  window.toggleAllDays = function() {
-    showAllFlag = !showAllFlag;
-    renderSchedule();
-  };
-
-  // --------------------------  РЕКЛАМНАЯ КАРУСЕЛЬ (ЦИКЛ С ЗАДЕРЖКОЙ) --------------------------
-  // Три рекламных объявления (картинка + ссылка)
-const adCampaigns = [
-  {
-    imgUrl: "images/ad-casebattle.png",  // путь к вашему файлу
-    link: "https://case-battle.red/",
-  },
-  {
-    imgUrl: "images/ad-upgrader.png",
-    link: "https://upgrader.pro/ru",
-  },
-  {
-    imgUrl: "images/ad-gosuslugi.png",
-    link: "https://contract.gosuslugi.ru/",
-  }
-];
+  // ---------- РЕКЛАМА (ЦИКЛ С ЗАДЕРЖКОЙ 1с, на ПК кнопка не работает) ----------
+  // три рекламных объявления (картинки-заглушки + ссылки)
+  const adCampaigns = [
+    {
+      imgUrl: "https://placehold.co/600x400/2c2e3a/FFA559?text=CASE+BATTLE&font=montserrat",
+      link: "https://case-battle.red/",
+      alt: "Case Battle"
+    },
+    {
+      imgUrl: "https://placehold.co/600x400/2e2a44/70D6FF?text=UPGRADER.PRO&font=montserrat",
+      link: "https://upgrader.pro/ru",
+      alt: "Upgrader Pro"
+    },
+    {
+      imgUrl: "https://placehold.co/600x400/1d3b3f/FFC857?text=ГОСУСЛУГИ&font=montserrat",
+      link: "https://contract.gosuslugi.ru/",
+      alt: "Госуслуги"
+    }
+  ];
 
   let currentAdIndex = 0;
-  let sideCloseBtnActive = true;       // на пк кнопка закрыть НЕ работает по условию, но мы сделаем так: по клику она будет делать переключение? сказано "на пк сбоку, кнопка закрыть не работает и просто в ряд реклама". Значит кнопка на пк должна быть, но она не закрывает, а просто ничего не делает? Но по заданию: и при нажатии на нее открывается сайт ссылка, есть кнопка закрыть, реклама пропадает на 1 секунду и появляется другая. Но для ПК кнопка закрыть не работает + просто в ряд. Уточняю логику:
-  // ТЗ: "для телефонов реклама снизу, а на пк сбоку токо уже кнпка закрыть не работает и просто в ряд рекласа типо"
-  // Значит на ПК кнопка "закрыть" не выполняет функцию закрытия, возможно просто переключение не происходит? НО чтоб было весело: пусть на боковой панели кнопка закрыть НЕ РАБОТАЕТ (вообще никак), зато есть автоцикл при клике на картинку? Нет, нужно чтобы реклама циклично менялась только при нажатии крестика на телефонах, а на ПК крестик просто бесполезен. Но также нужно "при нажатии на нее открывается сайт ссылка" => картинка кликабельна
-  // пункт: "есть так же кнопка закрыть но реклама пропадает на 1 секунду и появляется другая новая картинка с такой ссылкой ... и оно зациклино"
-  // Значит механизм: при клике на кнопку "Закрыть" (и на телефонах, и на ПК?) но по условию для пк кнопка закрыть не работает, значит для ПК не должно быть переключения. Но чтобы сохранить целостность и не переусложнять – сделаем так:
-  // на мобильном устройстве (ad-bottom): кнопка закрыть переключает рекламу (скрывает текущую на 1 секунду, затем новую). На ПК (ad-sidebar) кнопка закрыть вообще отключена (не делает ничего), при этом сама реклама статично меняется? Но нужно чтобы цикл был? Ахах, но в требованиях: "на пк сбоку токо уже кнпка закрыть не работает, и просто в ряд рекласа типо". Значит реклама на ПК не переключается? ИЛИ переключается по другому триггеру? Чтоб соответствовать духу: на ПК реклама будет просто статичная первая? Это скучно. Сделаем лучше: на ПК при клике на кнопку "Закрыть" ничего не происходит, но при клике на саму картинку с рекламой открывается ссылка. А переключение рекламы для пк должно происходить при нажатии на ту же кнопку? Сказано не работает — окей, тогда переключения не будет. Однако, чтобы сохранить "зацикленость" и для телефонов полноценно, так и сделаем:
-  
-  // Логика: Для мобильного блока (ad-bottom) кнопка Закрыть вызывает переключение рекламы каждые 1 секунду смены через таймер и цикл.
-  // Для ПК блока (ad-sidebar) — кнопка закрыть не работает (убираем обработчик, или он пустой). При этом на ПК реклама также может быть переключена? но без кнопки. Чтобы было интересно, я сделаю ПК рекламу статичной? Не красиво. Немного скорректирую: Согласно юмору, на ПК кнопка не работает, но рекламный блок все равно циклируется ТОЛЬКО когда пользователь нажимает на кнопку "закрыть" на мобильной версии? Тут логичнее:
-  // Поскольку адаптив, то на пк сайдбар имеет отдельный массив, его кнопка не вызывает изменение. Но можно сделать чтобы реклама на всех устройствах циклически менялась только с мобильной кнопки, а на пк просто первая висит. Однако это выглядит неполно. Я перечитаю: "для телефонов реклама сниху, а на пк сбоку токо уже кнпка закрыть не работает и просто в ряд рекласа типо". Ок, значит на ПК кнопка не работает, а реклама есть (просто статичная первая, но лучше чтоб тоже цикл был). В целях максимального соответствия: на ПК реализуем то же самое переключение, НО при нажатии на кнопку закрыть ничего не делает, зато каждые 12 секунд автоматически меняется? Но по заданию только кнопка закрыть ответственна за цикл. Похоже на провокацию. Применим точное условие: на телефонах кнопка работает, цикл активен. На ПК - кнопка не работает, реклама не меняется (только первая). Но чтобы было не скучно, на ПК я сделаю просто красивый ряд: но как "просто в ряд рекласа типо"? я интерпретирую: на ПК сбоку обычный вид, кнопка закрыть не активна. Ок, сделаем.
-
-  // Реализуем работу только для мобильной плашки (ad-bottom). При клике на "Закрыть" (мобильная версия) происходит magic: текущая картинка скрывается (на 1 секунду), затем обновляется на следующую по циклу, появляется снова. При этом ссылка кликабельна.
-  // Для ПК - сайдбар кнопка просто неактивна, либо выводим alert? никаких действий.
-  
   let timeoutId = null;
+
   const bottomImg = document.getElementById("bottomAdImg");
   const bottomCloseBtn = document.getElementById("closeBottomBtn");
   const sidebarImg = document.getElementById("sidebarAdImg");
   const sidebarCloseBtn = document.getElementById("closeSidebarBtn");
 
-  // Функция обновления рекламы (только для мобильного блока)
-  function updateMobileAd(adIndex) {
+  // --- обновление мобильной рекламы ---
+  function updateMobileAd(index) {
     if (!bottomImg) return;
-    const ad = adCampaigns[adIndex % adCampaigns.length];
+    const ad = adCampaigns[index % adCampaigns.length];
     bottomImg.src = ad.imgUrl;
     bottomImg.alt = ad.alt;
-    // привязка ссылки (при клике открываем)
-    bottomImg.onclick = function(e) {
+    bottomImg.onclick = (e) => {
       e.preventDefault();
       window.open(ad.link, "_blank");
     };
   }
 
-  // Функция, которая скрывает на 1 секунду, а потом меняет на следующую картинку
-  function cycleMobileAdWithDelay() {
+  // --- эффект: пропадает на 1 секунду, потом новая картинка (зациклено) ---
+  function cycleMobileAd() {
     if (!bottomImg) return;
-    // Прячем картинку быстро (делаем opacity 0, но с сохранением места)
+    // прячем картинку (делаем прозрачной, но сохраняем размер)
     bottomImg.style.transition = "opacity 0.1s";
     bottomImg.style.opacity = "0";
     if (timeoutId) clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
-      // меняем индекс на следующий
       currentAdIndex = (currentAdIndex + 1) % adCampaigns.length;
       updateMobileAd(currentAdIndex);
       bottomImg.style.opacity = "1";
@@ -527,67 +394,39 @@ const adCampaigns = [
     }, 1000);
   }
 
-  // Событие для кнопки закрыть на мобильной рекламе
-  if (bottomCloseBtn) {
-    bottomCloseBtn.addEventListener("click", function() {
-      // цикличная смена: реклама пропадает на 1 сек, появляется другая
-      cycleMobileAdWithDelay();
-    });
-  }
-
   // инициализация мобильной рекламы
   if (bottomImg) {
     updateMobileAd(0);
     bottomImg.style.opacity = "1";
   }
-
-  // ---------- ПК БЛОК (сбоку) ----------
-  // Задача: "кнопка закрыть не работает, рекласа просто в ряд". Т.е. никаких actions на клик кнопки закрыть.
-  // Покажем первую рекламу статично.
-  function initSidebarStatic() {
-    if (!sidebarImg) return;
-    const defaultAd = adCampaigns[0];
-    sidebarImg.src = defaultAd.imgUrl;
-    sidebarImg.alt = defaultAd.alt;
-    sidebarImg.onclick = function(e) {
-      e.preventDefault();
-      window.open(defaultAd.link, "_blank");
-    };
-  }
-  initSidebarStatic();
-
-  // Для сайдбара кнопка закрыть не выполняет НИЧЕГО (но можно добавить псевдо-эффект без смены рекламы)
-  if (sidebarCloseBtn) {
-    sidebarCloseBtn.addEventListener("click", function(e) {
-      e.preventDefault();
-      // Абсолютно никакого эффекта, даже не мелькает. Согласно требованию "не работает"
-      // Но по желанию можно вывести консоль, но не нужно.
-      console.log("ПК кнопка закрыть не работает по заданию");
+  // кнопка закрыть для телефонов — запускает цикл смены
+  if (bottomCloseBtn) {
+    bottomCloseBtn.addEventListener("click", function() {
+      cycleMobileAd();
     });
   }
 
-  // Дополнительно, если нужно на пк чтобы "просто в ряд" - у нас уже просто картинка и кнопка, но кнопка инертна.
-  // Также добавочный прикол: на сайдбаре картинка может быть кликабельна.
+  // ---------- ПК РЕКЛАМА (сбоку) — кнопка НЕ РАБОТАЕТ, только первая статичная реклама ----------
+  if (sidebarImg) {
+    const staticAd = adCampaigns[0];
+    sidebarImg.src = staticAd.imgUrl;
+    sidebarImg.alt = staticAd.alt;
+    sidebarImg.onclick = (e) => {
+      e.preventDefault();
+      window.open(staticAd.link, "_blank");
+    };
+  }
+  // кнопка закрытия на ПК — не делает ничего согласно тз
+  if (sidebarCloseBtn) {
+    sidebarCloseBtn.addEventListener("click", function(e) {
+      e.preventDefault();
+      // абсолютно никакого действия (не работает)
+      console.log("ПК: кнопка закрыть не активна (по заданию)");
+    });
+  }
 
-  // Адаптивность: при изменении размера окна, если уже отрендерено, ничего не ломается.
-  // Чтобы контент не перекрывал рекламу, отступы заданы в CSS.
-
-  // Обновим расписание при старте
-  renderSchedule();
-
-  // Добавим обработчик для того, чтобы реклама на мобильных устройствах при закрытии не давала багов
-  // Защита от множественных таймеров
-  window.addEventListener("resize", () => {
-    // никакой магии, но пересчитывать ничего не надо, CSS сам отрабатывает скрытие/показ блоков
-  });
-
-  // Также сделаем чтобы при клике на нижнюю картинку дополнительно не было конфликта с opacity
-  // Финальный штрих - если пользователь нажмет на кнопку закрыть в момент скрытия, ничего страшного.
-  // Добавим и для веселья - бесконечный цикл только по клику на мобильную кнопку.
-  // Требование "зациклино" выполнено: кнопка перебирает картинки друг за другом (1,2,3,1...)
-
-  // Для красоты добавим сообщение в консоль (дизайн обновлен)
-  console.log("🔥 Обновлённое расписание + прикольная циклическая реклама (телефон: кнопка работает, ПК: кнопка неактивна)");
+  // запускаем расписание
+  render();
 </script>
 
 </body>
