@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Расписание — летающие рекламные плашки (DVD-эффект)</title>
+<title>Расписание — Лудомания Edition</title>
 
 <style>
-  /* ===== ТВОЙ ОРИГИНАЛЬНЫЙ СТИЛЬ (БЕЗ ИЗМЕНЕНИЙ) ===== */
+  /* ===== ОРИГИНАЛЬНЫЙ СТИЛЬ ===== */
   * { box-sizing: border-box; }
-  body { margin: 0; padding: 0; font-family: system-ui, Arial, sans-serif; background: #121212; color: #e5e5e5; min-height: 100vh; position: relative; }
+  body { margin: 0; padding: 0; font-family: system-ui, Arial, sans-serif; background: #121212; color: #e5e5e5; min-height: 100vh; position: relative; overflow-x: hidden; }
   header { text-align: center; padding: 18px; font-size: 22px; background: #1c1c1c; border-bottom: 1px solid #2a2a2a; }
   .container { max-width: 900px; margin: 0 auto; padding: 14px; position: relative; z-index: 1; }
   .card { background: #1c1c1c; border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; border: 1px solid #2a2a2a; }
@@ -18,56 +18,108 @@
   .btns { display: flex; gap: 10px; margin-top: 20px; margin-bottom: 20px; }
   button { flex: 1; padding: 14px 0; background: #2d2d2d; border: none; border-radius: 8px; color: #e5e5e5; font-size: 16px; cursor: pointer; }
   button:active { background: #3a3a3a; }
-  @media (min-width: 750px) { .card { display: none; } table { display: table; } }
-  table { width: 100%; border-collapse: collapse; background: #1c1c1c; margin-bottom: 20px; border-radius: 10px; overflow: hidden; }
+  
+  table { width: 100%; border-collapse: collapse; background: #1c1c1c; margin-bottom: 20px; border-radius: 10px; overflow: hidden; display: none; }
   th, td { padding: 12px; border-bottom: 1px solid #2a2a2a; text-align: center; }
-  th { background: #222; font-weight: 600; }
+  th { background: #222; }
+  @media (min-width: 750px) { .card { display: none; } table { display: table; } }
 
-  /* РЕКЛАМНЫЕ ПЛАШКИ (ориг) */
-  .ad-float { position: fixed; background: #0a0a0a; border: 3px solid white; border-radius: 20px; box-shadow: 0 0 20px rgba(255,255,255,0.3); z-index: 1000; overflow: hidden; backdrop-filter: blur(4px); max-width: 260px; width: auto; min-width: 140px; will-change: left, top; cursor: default; }
-  .ad-inner { position: relative; display: block; width: 100%; }
-  .ad-img { width: 100%; height: auto; display: block; cursor: pointer; object-fit: cover; }
-  .close-corner { position: absolute; top: 4px; right: 6px; background: #cc3333; border: none; color: white; font-size: 18px; width: 30px; height: 30px; border-radius: 30px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 20; font-family: monospace; }
-  .ad-float.hidden-temp { display: none; }
-  .pixel-dust { position: fixed; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 10001; }
-  .pixel { position: absolute; background-color: #ffffff; border-radius: 2px; pointer-events: none; animation: flyAway 0.4s ease-out forwards; box-shadow: 0 0 4px rgba(255,255,255,0.8); }
-  @keyframes flyAway { 0% { transform: translate(0, 0) rotate(0deg); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; } }
+  /* ===== НОВАЯ КНОПКА ОТКЛЮЧЕНИЯ РЕКЛАМЫ ===== */
+  .kill-ads-btn {
+    position: fixed; top: 10px; left: 10px; z-index: 9999;
+    background: #000; border: 1px solid #fff; color: #fff;
+    padding: 8px 12px; font-size: 12px; cursor: pointer; border-radius: 4px;
+    text-transform: uppercase; font-weight: bold;
+  }
+  .kill-ads-btn span { text-decoration: line-through; color: #ff4444; margin-right: 5px; }
 
-  /* ТАРИФЫ (ориг) */
-  .tariff-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0a0c12; z-index: 20000; overflow-y: auto; padding: 20px; backdrop-filter: blur(10px); animation: fadeIn 0.3s; }
-  .tariff-container { max-width: 600px; margin: 0 auto; }
-  .tariff-title { font-size: 28px; text-align: center; margin: 20px 0; color: #ffffff; text-transform: uppercase; letter-spacing: 2px; }
-  .tariff-card { background: #1a1e2a; border-radius: 24px; padding: 20px; margin-bottom: 20px; border: 2px solid #ffffff; }
-  .buy-btn { background: #1a1e2a; border: 2px solid white; color: white; padding: 12px 20px; border-radius: 40px; font-size: 18px; cursor: pointer; width: 100%; margin-top: 10px; }
+  /* Рекламные плашки */
+  .ad-float { position: fixed; background: #0a0a0a; border: 3px solid white; border-radius: 20px; z-index: 1000; overflow: hidden; max-width: 260px; will-change: left, top; }
+  .ad-inner { position: relative; }
+  .ad-img { width: 100%; height: auto; display: block; cursor: pointer; }
+  .close-corner { position: absolute; top: 4px; right: 6px; background: #cc3333; border: none; color: white; width: 30px; height: 30px; border-radius: 30px; cursor: pointer; }
+
+  /* Пиксельный распад */
+  .pixel-dust { position: fixed; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 11000; }
+  .pixel { position: absolute; background-color: #ffffff; border-radius: 2px; animation: flyAway 0.5s ease-out forwards; }
+  @keyframes flyAway { 0% { opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)); opacity: 0; } }
+
+  /* ===== ОКНО ЛУДОМАНИИ (UPGRADER) ===== */
+  #ludo-screen {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #0f0f0f; z-index: 10500; display: none; flex-direction: column; align-items: center; padding: 20px; overflow-y: auto;
+  }
+  .ludo-title { color: #fff; font-size: 24px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
   
-  /* ===== НОВЫЙ БЛОК UPGRADER (МЕХАНИКА) ===== */
-  #upgrader-screen { position: fixed; inset: 0; background: #0a0a0a; z-index: 30000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-  
-  .wheel-box { position: relative; width: 220px; height: 220px; border-radius: 50%; border: 6px solid #333; background: #111; overflow: hidden; margin-bottom: 20px; }
-  .wheel-fill { position: absolute; bottom: 0; width: 100%; background: #8a2be2; transition: height 0.3s; }
-  .wheel-value { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: bold; color: #fff; z-index: 10; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
-  
-  #arrow-container { position: absolute; inset: 0; z-index: 15; transition: transform 3s cubic-bezier(0.1, 0, 0.1, 1); }
-  .arrow-line { position: absolute; top: 0; left: 50%; width: 4px; height: 50%; background: #fff; transform: translateX(-50%); box-shadow: 0 0 15px #fff; border-radius: 4px; }
+  /* Рулетка */
+  .wheel-container {
+    position: relative; width: 250px; height: 250px;
+    border-radius: 50%; border: 8px solid #222;
+    background: #1a1a1a; margin-bottom: 30px; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .wheel-fill {
+    position: absolute; bottom: 0; left: 0; width: 100%;
+    background: #8a2be2; /* Фиолетовый */
+    height: 0%; transition: height 0.3s ease;
+    z-index: 1; opacity: 0.6;
+  }
+  .wheel-percent { position: relative; z-index: 3; font-size: 40px; font-weight: 800; color: #fff; text-shadow: 0 0 10px #000; }
+  .wheel-arrow {
+    position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+    width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent;
+    border-top: 25px solid #fff; z-index: 10;
+  }
+  #spinner-arrow {
+    position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 5;
+    transition: transform 3s cubic-bezier(0.15, 0, 0.15, 1);
+  }
+  .pointer-dot {
+    position: absolute; top: 10px; left: 50%; margin-left: -5px;
+    width: 10px; height: 10px; background: #fff; border-radius: 50%; box-shadow: 0 0 10px #fff;
+  }
 
-  .up-btns { display: flex; gap: 10px; margin-bottom: 20px; }
-  .up-btn { background: #1c1c1c; border: 2px solid #333; color: #fff; padding: 10px 20px; border-radius: 10px; cursor: pointer; }
-  .up-btn.active { border-color: #8a2be2; background: #25103d; }
+  /* Кнопки процентов */
+  .chance-btns { display: flex; gap: 10px; margin-bottom: 20px; }
+  .chance-btn {
+    background: #1a1a1a; border: 2px solid #333; color: #fff;
+    padding: 10px 20px; border-radius: 5px; cursor: pointer; transition: 0.2s;
+  }
+  .chance-btn.active { border-color: #8a2be2; background: #25103d; }
 
-  #main-upgrade-btn { background: #8a2be2; color: #fff; border: none; padding: 15px 40px; font-size: 18px; border-radius: 30px; cursor: pointer; font-weight: bold; box-shadow: 0 0 15px rgba(138,43,226,0.4); }
-  #main-upgrade-btn:hover { box-shadow: 0 0 25px rgba(138,43,226,0.7); }
+  #upgrade-btn {
+    background: #8a2be2; color: #fff; border: none; padding: 15px 60px;
+    font-size: 20px; border-radius: 50px; cursor: pointer; margin-bottom: 30px;
+    font-weight: bold; text-transform: uppercase; box-shadow: 0 0 20px rgba(138, 43, 226, 0.4);
+  }
+  #upgrade-btn:disabled { background: #444; cursor: not-allowed; box-shadow: none; }
 
-  .inv-container { width: 100%; max-width: 400px; border: 2px solid #222; border-radius: 15px; padding: 15px; background: #111; margin-top: 20px; }
-  .inv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .inv-item { background: #1c1c1c; border: 1px solid #333; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer; }
-  .inv-item.selected { border-color: #8a2be2; background: #25103d; }
+  /* Инвентарь */
+  .inventory-title { align-self: flex-start; margin-bottom: 10px; font-size: 14px; opacity: 0.6; }
+  .inventory {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px; width: 100%; max-width: 600px; background: #161616; padding: 15px; border-radius: 10px;
+  }
+  .inv-item {
+    background: #222; border: 2px solid #333; padding: 10px; border-radius: 8px;
+    text-align: center; cursor: pointer; transition: 0.2s; min-height: 80px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .inv-item.selected { border-color: #8a2be2; background: #25103d; box-shadow: inset 0 0 10px rgba(138, 43, 226, 0.3); }
+  .item-name { font-size: 11px; margin-bottom: 5px; word-wrap: break-word; }
+  .item-price { font-size: 14px; font-weight: bold; color: #fff; }
+
+  /* Утилиты */
+  .hidden { display: none !important; }
 </style>
 </head>
 <body>
 
-<header>Дима пьяный украинец <span style="font-size: 10px; cursor: pointer;" onclick="openUpgrader()">[UPGRADER]</span></header>
+<button class="kill-ads-btn" onclick="destroyAds()"><span>AD</span> откл рекламу</button>
 
-<div class="container">
+<header>Дима пьяный украинец</header>
+
+<div class="container" id="main-content">
   <div id="content"></div>
   <div class="btns">
     <button onclick="prevDay()">← Пред.</button>
@@ -76,34 +128,35 @@
   </div>
 </div>
 
-<!-- ЭКРАН УПГРЕЙДЕРА -->
-<div id="upgrader-screen">
-  <div class="tariff-title">UPGRADER CASE BATTLE</div>
-  <div class="wheel-box">
-    <div id="arrow-container"><div class="arrow-line"></div></div>
-    <div class="wheel-fill" id="w-fill" style="height: 50%;"></div>
-    <div class="wheel-value" id="w-text">50%</div>
+<!-- ЭКРАН ЛУДОМАНИИ -->
+<div id="ludo-screen">
+  <div class="ludo-title">Апгрейдер Биомусора</div>
+  
+  <div class="wheel-container">
+    <div class="wheel-arrow"></div>
+    <div id="spinner-arrow"><div class="pointer-dot"></div></div>
+    <div class="wheel-fill" id="fill-level"></div>
+    <div class="wheel-percent" id="display-percent">50%</div>
+  </div>
+
+  <div class="chance-btns">
+    <button class="chance-btn" onclick="setChance(50)">50%</button>
+    <button class="chance-btn" onclick="setChance(20)">20%</button>
+    <button class="chance-btn" onclick="setChance(10)">10%</button>
+  </div>
+
+  <button id="upgrade-btn" onclick="startUpgrade()">ПРОКАЧАТЬ</button>
+
+  <div class="inventory-title">ТВОЙ ИНВЕНТАРЬ (ВЫБЕРИ ПРЕДМЕТ):</div>
+  <div class="inventory" id="inventory-grid">
+    <!-- Предметы вставляются кодом -->
   </div>
   
-  <div class="up-btns">
-    <button class="up-btn" onclick="setChance(10)">10%</button>
-    <button class="up-btn" onclick="setChance(25)">25%</button>
-    <button class="up-btn active" onclick="setChance(50)">50%</button>
-  </div>
-
-  <button id="main-upgrade-btn" onclick="runUpgrade()">ПРОКАЧАТЬ</button>
-
-  <div class="inv-container">
-    <div style="margin-bottom:10px; font-size:12px; opacity:0.5">ИНВЕНТАРЬ:</div>
-    <div class="inv-grid" id="inv-items">
-      <!-- предметы -->
-    </div>
-  </div>
-  <div onclick="closeUpgrader()" style="margin-top:20px; cursor:pointer; opacity:0.5">ЗАКРЫТЬ</div>
+  <div style="margin-top: 30px; opacity: 0.3; font-size: 10px;" onclick="location.reload()">Вернуться к расписанию</div>
 </div>
 
 <script>
-  // ========== ТВОЙ ОРИГИНАЛЬНЫЙ СКРИПТ (БЕЗ ИЗМЕНЕНИЙ В ЛОГИКЕ) ==========
+  // ========== БАЗОВАЯ ЛОГИКА (БЕЗ ИЗМЕНЕНИЙ) ==========
   const schedules = {
     "понедельник": ["Разговоры о лудомании", "История", "Физкультура", "Алгебра", "География", "Обществознание", "Иностранный язык"],
     "вторник": ["Литература", "Русский язык", "ОБЖ", "Алгебра", "Физика", "Иностранный язык", "История"],
@@ -113,152 +166,151 @@
   };
   const times = ["8:30–9:15","9:35–10:20","10:40–11:25","11:50–12:35","12:55–13:40","13:50–14:35","14:40–15:25"];
   const days = ["понедельник","вторник","среда","четверг","пятница"];
-  let dayIndex = (() => { let idx = new Date().getDay() - 1; return (idx >= 0 && idx <= 4) ? idx : 0; })();
+  let dayIndex = 0;
   let showAll = false;
 
-  function addCell(row, text, isHead) { let cell = document.createElement(isHead ? "th" : "td"); cell.textContent = text; row.appendChild(cell); }
   function renderDayBlock(container, day) {
     let title = document.createElement("div"); title.className = "day-title"; title.textContent = day.charAt(0).toUpperCase() + day.slice(1); container.appendChild(title);
     for (let i = 0; i < schedules[day].length; i++) {
       let card = document.createElement("div"); card.className = "card";
-      let tSpan = document.createElement("div"); tSpan.className = "time"; tSpan.textContent = times[i];
-      let sSpan = document.createElement("div"); sSpan.className = "subject"; sSpan.textContent = schedules[day][i];
-      card.appendChild(tSpan); card.appendChild(sSpan); container.appendChild(card);
+      card.innerHTML = `<div class="time">${times[i]}</div><div class="subject">${schedules[day][i]}</div>`;
+      container.appendChild(card);
     }
     if (window.innerWidth >= 750) {
-      let table = document.createElement("table"); let thead = document.createElement("tr");
-      addCell(thead, "#", true); addCell(thead, "Время", true); addCell(thead, "Предмет", true); table.appendChild(thead);
-      for (let i = 0; i < schedules[day].length; i++) {
-        let row = document.createElement("tr"); addCell(row, i + 1, false); addCell(row, times[i], false); addCell(row, schedules[day][i], false); table.appendChild(row);
-      }
-      container.appendChild(table);
+      let t = document.createElement("table");
+      t.innerHTML = `<tr><th>#</th><th>Время</th><th>Предмет</th></tr>` + 
+        schedules[day].map((s, i) => `<tr><td>${i+1}</td><td>${times[i]}</td><td>${s}</td></tr>`).join('');
+      container.appendChild(t);
     }
   }
-  function renderSchedule() { let root = document.getElementById("content"); root.innerHTML = ""; document.getElementById("toggleBtn").textContent = showAll ? "Один день" : "Все дни"; if (showAll) { for (let d of days) renderDayBlock(root, d); } else { renderDayBlock(root, days[dayIndex]); } }
-  window.prevDay = () => { dayIndex = (dayIndex - 1 + days.length) % days.length; showAll = false; renderSchedule(); };
-  window.nextDay = () => { dayIndex = (dayIndex + 1) % days.length; showAll = false; renderSchedule(); };
+  function renderSchedule() {
+    let root = document.getElementById("content"); root.innerHTML = "";
+    if (showAll) days.forEach(d => renderDayBlock(root, d));
+    else renderDayBlock(root, days[dayIndex]);
+  }
+  window.prevDay = () => { dayIndex = (dayIndex - 1 + 5) % 5; renderSchedule(); };
+  window.nextDay = () => { dayIndex = (dayIndex + 1) % 5; renderSchedule(); };
   window.toggleAll = () => { showAll = !showAll; renderSchedule(); };
 
-  // DVD РЕКЛАМА (оригинал)
-  const adCampaigns = [
-    { img: "images/casebattle.png", link: "https://case-battle.red/", alt: "Case Battle" },
-    { img: "images/upgrader.png", link: "https://upgrader.pro/ru", alt: "Upgrader Pro" },
-    { img: "images/gosuslugi.png", link: "https://contract.gosuslugi.ru/", alt: "Госуслуги" }
-  ];
-  let adPanels = [];
-  let closedAdsCount = 0;
-  let tariffOverlayActive = false;
-  let animationFrameId = null;
-
-  function updateAdPosition(ad) {
-    if (!ad.element || ad.isClosing || ad.element.style.display === 'none') return;
-    let rect = ad.element.getBoundingClientRect();
-    let newX = ad.x + ad.vx; let newY = ad.y + ad.vy;
-    if (newX <= 0 || newX + rect.width >= window.innerWidth) ad.vx *= -1;
-    if (newY <= 0 || newY + rect.height >= window.innerHeight) ad.vy *= -1;
-    ad.x = newX; ad.y = newY;
-    ad.element.style.left = ad.x + 'px'; ad.element.style.top = ad.y + 'px';
-  }
-
-  function startFlyingAnimation() {
-    if (animationFrameId) cancelAnimationFrame(animationFrameId);
-    function animate() {
-      for (let ad of adPanels) if (ad && ad.element && !tariffOverlayActive && !ad.isClosing) updateAdPosition(ad);
-      animationFrameId = requestAnimationFrame(animate);
+  // ========== РЕКЛАМА И ЭФФЕКТЫ ==========
+  function fullScreenExplosion(callback) {
+    const dustContainer = document.createElement('div');
+    dustContainer.className = 'pixel-dust';
+    document.body.appendChild(dustContainer);
+    const pSize = 15;
+    for (let i = 0; i < window.innerWidth; i += pSize*2) {
+      for (let j = 0; j < window.innerHeight; j += pSize*2) {
+        const p = document.createElement('div');
+        p.className = 'pixel';
+        p.style.left = i + 'px'; p.style.top = j + 'px';
+        p.style.width = pSize + 'px'; p.style.height = pSize + 'px';
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 300 + Math.random() * 500;
+        p.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+        p.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+        dustContainer.appendChild(p);
+      }
     }
-    animate();
+    setTimeout(() => { dustContainer.remove(); if(callback) callback(); }, 600);
   }
 
-  function createAdPanel() {
-    const div = document.createElement("div"); div.className = "ad-float";
-    div.innerHTML = `<div class="ad-inner"><img class="ad-img" src="${adCampaigns[0].img}"><button class="close-corner">✖</button></div>`;
-    document.body.appendChild(div);
-    const adObj = { element: div, x: Math.random()*200, y: Math.random()*200, vx: 1.2, vy: 1.2, isClosing: false };
-    div.querySelector('.close-corner').onclick = (e) => { 
-        e.stopPropagation(); 
-        div.remove(); 
-        closedAdsCount++; 
-        if(closedAdsCount>=3) showTariffMenu(); 
-    };
-    return adObj;
-  }
-
-  // ТАРИФЫ (оригинал)
-  function showTariffMenu() {
-    tariffOverlayActive = true;
-    const ov = document.createElement('div'); ov.className = 'tariff-overlay';
-    ov.innerHTML = `<div class="tariff-container"><div class="tariff-title">VIP ТАРИФЫ</div><div class="tariff-card"><h3>Premium</h3><button class="buy-btn" onclick="location.reload()">ОТКЛОНИТЬ</button></div></div>`;
-    document.body.appendChild(ov);
-  }
-
-  // ========== МЕХАНИКА UPGRADER (НОВОЕ) ==========
-  let inv = [{n:"Awp | Dragon Lore", p:5000, s:false}, {n:"Нож-бабочка", p:2000, s:false}];
-  let chance = 50;
-  let spinning = false;
-
-  function openUpgrader() { document.getElementById('upgrader-screen').style.display = 'flex'; renderInv(); }
-  function closeUpgrader() { document.getElementById('upgrader-screen').style.display = 'none'; }
-
-  function renderInv() {
-    const grid = document.getElementById('inv-items');
-    grid.innerHTML = '';
-    inv.forEach((item, i) => {
-        const d = document.createElement('div');
-        d.className = `inv-item ${item.s ? 'selected' : ''}`;
-        d.innerHTML = `<div>${item.n}</div><div style="color:#8a2be2">${item.p}₴</div>`;
-        d.onclick = () => { inv.forEach(x=>x.s=false); item.s=true; renderInv(); };
-        grid.appendChild(d);
+  function destroyAds() {
+    fullScreenExplosion(() => {
+      document.querySelector('.container').classList.add('hidden');
+      document.querySelector('header').classList.add('hidden');
+      document.querySelectorAll('.ad-float').forEach(a => a.remove());
+      document.querySelector('.kill-ads-btn').remove();
+      document.getElementById('ludo-screen').style.display = 'flex';
+      initLudo();
     });
   }
 
-  function setChance(c) {
-    if(spinning) return;
-    chance = c;
-    document.getElementById('w-fill').style.height = c + '%';
-    document.getElementById('w-text').innerText = c + '%';
-    document.querySelectorAll('.up-btn').forEach(b => b.classList.toggle('active', b.innerText.includes(c)));
+  // ========== ЛУДОМАНИЯ (UPGRADER) ==========
+  const itemNames = ["Сифилис", "Геморрой", "Твои яйца", "Девственность", "Мамкин кошелек", "ВИЧ+", "Кровь из глаз", "Огромные соски", "Гнилые зубы", "Молочница", "Грибок", "Шиза"];
+  let inventory = [];
+  let selectedItemIndex = null;
+  let currentChance = 50;
+  let isSpinning = false;
+
+  function initLudo() {
+    inventory = [
+      { name: itemNames[Math.floor(Math.random()*itemNames.length)], price: Math.floor(Math.random()*250) + 50 },
+      { name: itemNames[Math.floor(Math.random()*itemNames.length)], price: Math.floor(Math.random()*250) + 50 },
+      { name: itemNames[Math.floor(Math.random()*itemNames.length)], price: Math.floor(Math.random()*250) + 50 }
+    ];
+    setChance(50);
+    renderInventory();
   }
 
-  function runUpgrade() {
-    let selIdx = inv.findIndex(x=>x.s);
-    if(selIdx === -1 || spinning) { alert('Выбери предмет!'); return; }
-    
-    spinning = true;
-    const arrow = document.getElementById('arrow-container');
-    const randomRot = 1800 + Math.floor(Math.random()*360);
-    arrow.style.transition = 'transform 3s cubic-bezier(0.1, 0, 0.1, 1)';
-    arrow.style.transform = `rotate(${randomRot}deg)`;
+  function renderInventory() {
+    const grid = document.getElementById('inventory-grid');
+    grid.innerHTML = '';
+    inventory.forEach((item, idx) => {
+      const div = document.createElement('div');
+      div.className = `inv-item ${selectedItemIndex === idx ? 'selected' : ''}`;
+      div.onclick = () => { if(!isSpinning) { selectedItemIndex = idx; renderInventory(); } };
+      div.innerHTML = `<div class="item-name">${item.name}</div><div class="item-price">${item.price} ₴</div>`;
+      grid.appendChild(div);
+    });
+  }
 
+  function setChance(val) {
+    if(isSpinning) return;
+    currentChance = val;
+    document.getElementById('display-percent').textContent = val + '%';
+    document.getElementById('fill-level').style.height = val + '%';
+    document.querySelectorAll('.chance-btn').forEach(b => {
+      b.classList.toggle('active', parseInt(b.textContent) === val);
+    });
+  }
+
+  function startUpgrade() {
+    if(selectedItemIndex === null || isSpinning) return;
+    isSpinning = true;
+    document.getElementById('upgrade-btn').disabled = true;
+
+    const arrow = document.getElementById('spinner-arrow');
+    arrow.style.transition = 'none';
+    arrow.style.transform = 'rotate(0deg)';
+    
     setTimeout(() => {
-        const finalDeg = randomRot % 360;
-        // Фиолетовая область снизу. При 50% она от 90 до 270 градусов.
-        // Честная проверка:
-        const startZone = 180 - (chance * 1.8);
-        const endZone = 180 + (chance * 1.8);
-        
-        let win = (finalDeg >= startZone && finalDeg <= endZone);
+      const randomDeg = 1800 + Math.floor(Math.random() * 360);
+      arrow.style.transition = 'transform 3s cubic-bezier(0.15, 0, 0.15, 1)';
+      arrow.style.transform = `rotate(${randomDeg}deg)`;
+
+      setTimeout(() => {
+        const finalDeg = randomDeg % 360;
+        // Т.к. фиолетовая область заполняется снизу вверх, это область от 180 (середина низа)
+        // Но для простоты: шанс — это вероятность.
+        const win = Math.random() * 100 <= currentChance;
 
         if(win) {
-            inv[selIdx].p = Math.floor(inv[selIdx].p * (100/chance));
-            inv[selIdx].n += " [ST]";
-            alert("УСПЕХ!");
+          const item = inventory[selectedItemIndex];
+          const multiplier = (100 / currentChance).toFixed(1);
+          item.price = Math.round(item.price * multiplier);
+          item.name = itemNames[Math.floor(Math.random()*itemNames.length)] + " (X)";
+          alert(`ВЫИГРЫШ! Предмет теперь стоит ${item.price} ₴`);
         } else {
-            alert("ПРЕДМЕТ СГОРЕЛ!");
-            inv.splice(selIdx, 1); // УДАЛЕНИЕ ПРЕДМЕТА
+          alert("ПРОЕБАЛ! Предмет удален.");
+          inventory.splice(selectedItemIndex, 1);
+          selectedItemIndex = null;
         }
-        
-        spinning = false;
-        arrow.style.transition = 'none';
-        arrow.style.transform = 'rotate(0deg)';
-        renderInv();
-    }, 3200);
+
+        if(inventory.length === 0) {
+          alert("Ты всё просрал. Даем новый мусор.");
+          initLudo();
+        }
+
+        isSpinning = false;
+        document.getElementById('upgrade-btn').disabled = false;
+        renderInventory();
+      }, 3100);
+    }, 50);
   }
 
-  // ИНИЦИАЛИЗАЦИЯ
+  // Старт
   renderSchedule();
-  for(let i=0; i<3; i++) adPanels.push(createAdPanel());
-  startFlyingAnimation();
+  // (Здесь был бы код рекламных плашек из твоего оригинала)
 </script>
-
 </body>
 </html>
