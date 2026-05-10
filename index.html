@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Расписание — летающие рекламные плашки (DVD-эффект)</title>
+<title>Расписание — летающие рекламные плашки (DVD-эффект) + рулетка</title>
 
 <style>
-  /* ===== ОРИГИНАЛЬНЫЙ СТИЛЬ РАСПИСАНИЯ ===== */
+  /* ===== ОРИГИНАЛЬНЫЙ СТИЛЬ РАСПИСАНИЯ (НЕТРОНУТ) ===== */
   * {
     box-sizing: border-box;
   }
@@ -109,7 +109,7 @@
     font-weight: 600;
   }
 
-  /* ===== РЕКЛАМНЫЕ ПЛАШКИ (белая обводка) — летающие ===== */
+  /* ===== РЕКЛАМНЫЕ ПЛАШКИ ===== */
   .ad-float {
     position: fixed;
     background: #0a0a0a;
@@ -141,15 +141,15 @@
   }
   .ad-float.hidden-temp { display: none; }
 
-  /* Пиксельный распад (чёрные частицы для взрыва) */
+  /* Пиксельный распад */
   .pixel-dust { position: fixed; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 10001; }
-  .pixel { position: absolute; border-radius: 2px; pointer-events: none; animation: flyAway 0.5s ease-out forwards; }
+  .pixel { position: absolute; background-color: #ffffff; border-radius: 2px; pointer-events: none; animation: flyAway 0.4s ease-out forwards; box-shadow: 0 0 4px rgba(255,255,255,0.8); }
   @keyframes flyAway {
     0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
     100% { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; }
   }
 
-  /* ===== МЕНЮ ТАРИФОВ (ЧЁРНО-БЕЛЫЙ СТИЛЬ) ===== */
+  /* ===== МЕНЮ ТАРИФОВ (ОРИГИНАЛ) ===== */
   .tariff-overlay {
     position: fixed;
     top: 0;
@@ -230,7 +230,7 @@
   }
   .close-tariff:hover { color: #ffffff; }
 
-  /* Форма оформления */
+  /* Форма оформления (ОРИГИНАЛ) */
   .order-form {
     background: #0f111a;
     border-radius: 24px;
@@ -289,7 +289,7 @@
     opacity: 1;
   }
 
-  /* КНОПКА ОТКЛЮЧЕНИЯ РЕКЛАМЫ */
+  /* КНОПКА ОТКЛЮЧЕНИЯ РЕКЛАМЫ (ДОБАВЛЕНА) */
   .ad-killer {
     position: fixed;
     top: 20px;
@@ -323,7 +323,7 @@
     transform: scale(0.95);
   }
 
-  /* Стили для рулетки */
+  /* ===== СТИЛИ ДЛЯ РУЛЕТКИ (ДОБАВЛЕНЫ, НЕ ТРОГАЮТ ОРИГИНАЛ) ===== */
   .roulette-overlay {
     position: fixed;
     top: 0;
@@ -345,57 +345,27 @@
     width: 540px;
     max-width: 92vw;
     text-align: center;
-    box-shadow: 0 0 50px rgba(255,255,255,0.2);
   }
-  .item-card {
-    background: #0a0a0a;
-    border: 2px solid #444;
-    border-radius: 20px;
-    padding: 12px;
-    flex: 1;
-    cursor: pointer;
-    transition: 0.1s;
-  }
-  .item-card.selected {
-    border-color: #aa66ff;
-    background: #1a1a2a;
-    box-shadow: 0 0 12px #aa66ff;
-  }
-  .mult-btn {
-    background: #1a1a1a;
-    border: 1px solid white;
-    padding: 8px 24px;
-    border-radius: 40px;
-    cursor: pointer;
-    font-weight: bold;
-    color: white;
-    transition: 0.1s;
-  }
-  .mult-btn.active {
-    background: white;
-    color: black;
-  }
-  .spin-btn {
-    background: white;
-    color: black;
-    font-weight: bold;
-    font-size: 22px;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 60px;
-    cursor: pointer;
-    width: 80%;
-    margin: 10px 0;
-  }
-  .spin-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+  .wheel-area { position: relative; width: 260px; height: 260px; margin: 0 auto 20px; }
+  .wheel-area canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+  .inventory-scroll { max-height: 140px; overflow-y: auto; margin: 15px 0; padding: 5px; }
+  .inventory-items { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .item-card { background: #0a0a0a; border: 2px solid #444; border-radius: 20px; padding: 12px; min-width: 100px; cursor: pointer; }
+  .item-card.selected { border-color: #aa66ff; background: #1a1a2a; box-shadow: 0 0 12px #aa66ff; }
+  .item-name { font-weight: bold; font-size: 14px; }
+  .item-price { font-size: 13px; color: #ffaa66; margin-top: 6px; }
+  .multipliers { display: flex; gap: 12px; justify-content: center; margin: 15px 0; flex-wrap: wrap; }
+  .mult-btn { background: #1a1a1a; border: 1px solid white; padding: 8px 20px; border-radius: 40px; cursor: pointer; font-weight: bold; color: white; }
+  .mult-btn.active { background: white; color: black; }
+  .spin-btn { background: white; color: black; font-weight: bold; font-size: 22px; padding: 12px 24px; border: none; border-radius: 60px; cursor: pointer; width: 80%; margin: 10px 0; }
+  .spin-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .result-area { background: #0a0a0a; border-radius: 30px; padding: 12px; margin-top: 16px; font-size: 14px; min-height: 70px; }
+  .reset-btn { background: #aa3333; border: none; color: white; padding: 10px 20px; border-radius: 40px; margin-top: 10px; cursor: pointer; }
 </style>
 </head>
 <body>
 
-<!-- КНОПКА ОТКЛЮЧЕНИЯ РЕКЛАМЫ -->
+<!-- КНОПКА ОТКЛЮЧЕНИЯ РЕКЛАМЫ (ДОБАВЛЕНА) -->
 <div id="adKillerBtn" class="ad-killer">
   <span class="strike">AD</span>
   <span class="label">откл рекламу</span>
@@ -413,7 +383,7 @@
 </div>
 
 <script>
-  // ========== РАСПИСАНИЕ (оригинал) ==========
+  // ========== РАСПИСАНИЕ (ОРИГИНАЛ, НЕТРОНУТ) ==========
   const schedules = {
     "понедельник": ["Разговоры о лудомании", "История", "Физкультура", "Алгебра", "География", "Обществознание", "Иностранный язык"],
     "вторник": ["Литература", "Русский язык", "ОБЖ", "Алгебра", "Физика", "Иностранный язык", "История"],
@@ -449,7 +419,7 @@
   window.nextDay = () => { dayIndex = (dayIndex + 1) % days.length; showAll = false; renderSchedule(); };
   window.toggleAll = () => { showAll = !showAll; renderSchedule(); };
 
-  // ========== ЛЕТАЮЩИЕ РЕКЛАМНЫЕ ПЛАШКИ (оригинал) ==========
+  // ========== ЛЕТАЮЩИЕ РЕКЛАМНЫЕ ПЛАШКИ (ОРИГИНАЛ) ==========
   const adCampaigns = [
     { img: "images/casebattle.png", link: "https://case-battle.red/", alt: "Case Battle" },
     { img: "images/upgrader.png", link: "https://upgrader.pro/ru", alt: "Upgrader Pro" },
@@ -627,7 +597,7 @@
     if (animationFrameId) cancelAnimationFrame(animationFrameId);
   }
   
-  // ========== ТАРИФЫ (оригинал, полностью) ==========
+  // ========== ТАРИФЫ (ОРИГИНАЛ, ПОЛНОСТЬЮ НЕТРОНУТ) ==========
   function showTariffMenu() {
     if (tariffOverlayActive) return;
     tariffOverlayActive = true;
@@ -785,7 +755,7 @@
     });
   }
   
-  // ========== ВЗРЫВ ЧЁРНЫМИ ПИКСЕЛЯМИ ==========
+  // ========== ВЗРЫВ ЧЁРНЫМИ ПИКСЕЛЯМИ И РУЛЕТКА (ДОБАВЛЕНЫ) ==========
   function explodeToRoulette() {
     const dust = document.createElement('div');
     dust.className = 'pixel-dust';
@@ -821,251 +791,72 @@
     }, 400);
   }
   
-  // ========== РУЛЕТКА (ИСПРАВЛЕННАЯ) ==========
-  // Странные названия для выигрышей
-  const weirdNames = [
-    "Гонорея", "Сифилис", "Хламидиоз", "Триппер", "ВИЧ-инфекция",
-    "Твои яйки", "Мамины сиськи", "Девственность", "Педикулёз", "Герпес",
-    "Оспа", "Коронавирус", "Гепатит С", "Туберкулёз", "Свиной грипп"
-  ];
+  const weirdNames = ["Гонорея","Сифилис","Хламидиоз","Триппер","ВИЧ","СПИД","Твои яйки","Мамины сиськи","Девственность","Герпес","Оспа","Коронавирус","Гепатит","Туберкулёз","Свиной грипп","Кишечная палочка","Стафилококк","Педикулёз","Чесотка","Молочница"];
   
-  let inventory = [
-    { name: "Твои яйки", price: 50 },
-    { name: "Мамины сиськи", price: 10 },
-    { name: "Сифилис", price: 100 }
-  ];
-  let selectedItemIdx = 0;
-  let currentMultiplier = 2;
-  let spinning = false;
-  let arrowAngle = 0;
+  let inventory = [{name:"Твои яйки",price:50},{name:"Мамины сиськи",price:10},{name:"Сифилис",price:100}];
+  let selectedIdx = 0, mult = 2, spinning = false, arrowDeg = 0;
   
-  function getChancePercent(mult) {
-    if (mult === 2) return 50;
-    if (mult === 5) return 20;
-    if (mult === 10) return 10;
-    return 50;
+  function getChance(m){ if(m===2) return 50; if(m===5) return 20; return 10; }
+  
+  function drawWheel(percent){
+    let c = document.getElementById("wheelCanvas"); if(!c) return;
+    let ctx = c.getContext("2d"); c.width = c.height = 260;
+    let cx = 130, cy = 130, r = 120, start = 90, end = start + (percent/100)*360;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,start*Math.PI/180,end*Math.PI/180); ctx.fillStyle = "#aa66ff"; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,end*Math.PI/180,(start+360)*Math.PI/180); ctx.fillStyle = "#1a1a1a"; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.strokeStyle = "#fff"; ctx.lineWidth = 3; ctx.stroke();
+    ctx.fillStyle = "#fff"; ctx.font = "bold 28px monospace"; ctx.fillText(percent+"%", 108, 140);
   }
   
-  // Рисуем круг с наполнением СНИЗУ ВВЕРХ (от 6 часов)
-  function drawWheel(percent) {
-    const canvas = document.getElementById("wheelCanvas");
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    const w = canvas.width = 280;
-    const h = canvas.height = 280;
-    ctx.clearRect(0, 0, w, h);
-    
-    const centerX = 140, centerY = 140, radius = 128;
-    // начинаем с 90 градусов (6 часов)
-    const startAngle = 90;
-    const angle = (percent / 100) * 360;
-    const endAngle = startAngle + angle;
-    
-    // фиолетовое наполнение (снизу вверх)
-    ctx.beginPath();
-    ctx.moveTo(centerX, centerY);
-    ctx.arc(centerX, centerY, radius, startAngle * Math.PI / 180, endAngle * Math.PI / 180);
-    ctx.fillStyle = "#aa66ff";
-    ctx.fill();
-    
-    // пустая часть (тёмная)
-    ctx.beginPath();
-    ctx.moveTo(centerX, centerY);
-    ctx.arc(centerX, centerY, radius, endAngle * Math.PI / 180, (startAngle + 360) * Math.PI / 180);
-    ctx.fillStyle = "#1a1a2a";
-    ctx.fill();
-    
-    // обводка круга
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-    ctx.strokeStyle = "white";
-    ctx.lineWidth = 3;
-    ctx.stroke();
-    
-    // маленькая центральная точка
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, 6, 0, 2 * Math.PI);
-    ctx.fillStyle = "#aa66ff";
-    ctx.fill();
-    ctx.strokeStyle = "white";
-    ctx.stroke();
-    
-    // процент по центру БЕЛЫМ
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 34px monospace";
-    ctx.shadowBlur = 0;
-    ctx.fillText(percent + "%", 105, 155);
+  function drawArrow(deg){
+    let c = document.getElementById("arrowCanvas"); if(!c) return;
+    let ctx = c.getContext("2d"); c.width = c.height = 260;
+    let cx = 130, cy = 130, r = 120, rad = deg*Math.PI/180, x = cx + r*Math.cos(rad), y = cy + r*Math.sin(rad);
+    let ang = Math.atan2(y-cy, x-cx);
+    ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+14*Math.cos(ang+Math.PI/2), y+14*Math.sin(ang+Math.PI/2)); ctx.lineTo(x+14*Math.cos(ang-Math.PI/2), y+14*Math.sin(ang-Math.PI/2)); ctx.fillStyle = "#fff"; ctx.fill();
+    ctx.strokeStyle = "#000"; ctx.lineWidth = 1.5; ctx.stroke();
   }
   
-  // Рисуем стрелку на внешнем крае круга
-  function drawArrow(angleDeg) {
-    const canvas = document.getElementById("arrowCanvas");
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    const w = canvas.width = 280;
-    const h = canvas.height = 280;
-    ctx.clearRect(0, 0, w, h);
-    
-    const centerX = 140, centerY = 140, radius = 128;
-    const rad = angleDeg * Math.PI / 180;
-    const arrowX = centerX + radius * Math.cos(rad);
-    const arrowY = centerY + radius * Math.sin(rad);
-    
-    // угол направления стрелки (наружу)
-    const angleToCenter = Math.atan2(arrowY - centerY, arrowX - centerX);
-    const tipX = arrowX;
-    const tipY = arrowY;
-    const leftX = arrowX + 12 * Math.cos(angleToCenter + Math.PI/2);
-    const leftY = arrowY + 12 * Math.sin(angleToCenter + Math.PI/2);
-    const rightX = arrowX + 12 * Math.cos(angleToCenter - Math.PI/2);
-    const rightY = arrowY + 12 * Math.sin(angleToCenter - Math.PI/2);
-    
-    ctx.beginPath();
-    ctx.moveTo(tipX, tipY);
-    ctx.lineTo(leftX, leftY);
-    ctx.lineTo(rightX, rightY);
-    ctx.fillStyle = "#ffffff";
-    ctx.fill();
-    ctx.strokeStyle = "#000";
-    ctx.lineWidth = 1;
-    ctx.stroke();
-  }
+  function getResult(deg, chance){ let start=90, end=start+chance*3.6; let n=deg%360; if(n<0)n+=360; return n>=start && n<=end; }
   
-  function getArrowResult(angleDeg, chancePercent) {
-    const startAngle = 90;
-    const winRangeEnd = startAngle + (chancePercent / 100) * 360;
-    let normalized = angleDeg % 360;
-    if (normalized < 0) normalized += 360;
-    return normalized >= startAngle && normalized <= winRangeEnd;
-  }
-  
-  function spinWheel() {
-    if (spinning) return;
-    spinning = true;
-    document.querySelectorAll('.mult-btn').forEach(btn => btn.style.pointerEvents = 'none');
-    const spinBtn = document.getElementById("spinBtn");
-    spinBtn.disabled = true;
-    
-    const chance = getChancePercent(currentMultiplier);
-    const betItem = inventory[selectedItemIdx];
-    const winAmount = betItem.price * currentMultiplier;
-    
-    const totalSpins = 10 + Math.random() * 6;
-    const targetAngle = Math.random() * 360;
-    const startAngleArrow = arrowAngle % 360;
-    let delta = targetAngle - startAngleArrow;
-    if (delta < 0) delta += 360;
-    const finalDelta = totalSpins * 360 + delta;
-    const duration = 2500; // медленно
-    const startTime = performance.now();
-    
-    function animateSpin(now) {
-      let t = Math.min(1, (now - startTime) / duration);
-      let easeOut = 1 - Math.pow(1 - t, 3);
-      let currentDelta = finalDelta * easeOut;
-      arrowAngle = (startAngleArrow + currentDelta) % 360;
-      drawArrow(arrowAngle);
-      if (t < 1) {
-        requestAnimationFrame(animateSpin);
-      } else {
-        const finalNorm = arrowAngle % 360;
-        const win = getArrowResult(finalNorm, chance);
-        
-        if (win) {
-          const randomName = weirdNames[Math.floor(Math.random() * weirdNames.length)];
-          const newItem = { name: randomName, price: winAmount };
-          inventory.push(newItem);
-          document.getElementById("resultMsg").innerHTML = `🎉 МАЛАДЕЦ! ВЫ ВЫИГРАЛИ ${winAmount}₴ 🎉<br>➕ Получен предмет: ${randomName}`;
-        } else {
-          // Удаляем предмет полностью
-          inventory.splice(selectedItemIdx, 1);
-          if (inventory.length === 0) {
-            // Если инвентарь пуст, добавляем дефолтный предмет
-            inventory.push({ name: "Твои яйки", price: 50 });
-          }
-          if (selectedItemIdx >= inventory.length) selectedItemIdx = 0;
-          document.getElementById("resultMsg").innerHTML = `😭 НЕ БЕДА! ВЫ ПРОИГРАЛИ ${betItem.price}₴ (${betItem.name}) 😭`;
-        }
-        renderInventory();
-        spinning = false;
-        document.querySelectorAll('.mult-btn').forEach(btn => btn.style.pointerEvents = 'auto');
-        spinBtn.disabled = false;
+  function spin(){
+    if(spinning) return; spinning = true;
+    document.querySelectorAll(".mult-btn").forEach(b=>b.style.pointerEvents="none");
+    let btn = document.getElementById("spinBtn"); btn.disabled = true;
+    let chance = getChance(mult), bet = inventory[selectedIdx], winAmount = bet.price * mult;
+    let totalSpins = 10+Math.random()*6, target = Math.random()*360, startAng = arrowDeg%360, delta = target-startAng;
+    if(delta<0) delta+=360; let final = totalSpins*360+delta, startTime = performance.now(), dur = 2500;
+    function animSpin(now){
+      let t = Math.min(1,(now-startTime)/dur), ease = 1-Math.pow(1-t,3), cur = startAng + final*ease;
+      arrowDeg = cur%360; drawArrow(arrowDeg);
+      if(t<1){ requestAnimationFrame(animSpin); } else {
+        let win = getResult(arrowDeg, chance);
+        if(win){ let rn = weirdNames[Math.floor(Math.random()*weirdNames.length)]; inventory.push({name:rn, price:winAmount}); document.getElementById("resultMsg").innerHTML = `🎉 ВЫИГРЫШ! +${winAmount}₴<br>➕ ${rn}`; }
+        else { inventory.splice(selectedIdx,1); if(inventory.length===0){ document.getElementById("resultMsg").innerHTML = `😭 ПРОИГРЫШ! ${bet.name} удалён<br>❌ ИНВЕНТАРЬ ПУСТ`; } else { document.getElementById("resultMsg").innerHTML = `😭 ПРОИГРЫШ! ${bet.name} удалён`; } }
+        if(inventory.length===0){ document.getElementById("resultMsg").innerHTML += '<br><button class="reset-btn" onclick="location.reload()">🔄 НАЧАТЬ ЗАНОВО</button>'; }
+        if(selectedIdx>=inventory.length && inventory.length>0) selectedIdx=0; renderInv();
+        spinning=false; document.querySelectorAll(".mult-btn").forEach(b=>b.style.pointerEvents="auto"); btn.disabled=false;
       }
     }
-    requestAnimationFrame(animateSpin);
+    requestAnimationFrame(animSpin);
   }
   
-  function renderInventory() {
-    const container = document.getElementById("inventoryItems");
-    if (!container) return;
-    container.innerHTML = inventory.map((item, idx) => `
-      <div class="item-card ${selectedItemIdx === idx ? 'selected' : ''}" data-idx="${idx}">
-        <div class="item-name">${item.name}</div>
-        <div class="item-price">${item.price} ₴</div>
-      </div>
-    `).join('');
-    document.querySelectorAll('.item-card').forEach(card => {
-      card.addEventListener('click', () => {
-        if (spinning) return;
-        selectedItemIdx = parseInt(card.dataset.idx);
-        renderInventory();
-        const chance = getChancePercent(currentMultiplier);
-        document.getElementById("resultMsg").innerHTML = `Выбрано: ${inventory[selectedItemIdx].name} (${inventory[selectedItemIdx].price}₴) | Множитель x${currentMultiplier} | Шанс ${chance}%`;
-      });
-    });
+  function renderInv(){
+    let cont = document.getElementById("inventoryItems"); if(!cont) return;
+    if(inventory.length===0){ cont.innerHTML='<div style="color:#aaa;text-align:center;width:100%;padding:20px;">Инвентарь пуст<br>Нажмите "Начать заново"</div>'; return; }
+    cont.innerHTML = inventory.map((it,idx)=>`<div class="item-card ${selectedIdx===idx?"selected":""}" data-idx="${idx}"><div class="item-name">${it.name}</div><div class="item-price">${it.price} ₴</div></div>`).join('');
+    document.querySelectorAll(".item-card").forEach(c=>c.addEventListener("click",()=>{ if(spinning) return; selectedIdx=parseInt(c.dataset.idx); renderInv(); let ch=getChance(mult); document.getElementById("resultMsg").innerHTML=`Выбрано: ${inventory[selectedIdx].name} (${inventory[selectedIdx].price}₴) | x${mult} | шанс ${ch}%`; }));
   }
   
-  function showRouletteGame() {
-    const container = document.createElement('div');
-    container.className = 'roulette-overlay';
-    container.innerHTML = `
-      <div class="roulette-card">
-        <div style="position: relative; width: 280px; height: 280px; margin: 0 auto 20px;">
-          <canvas id="wheelCanvas" width="280" height="280" style="position: absolute; top:0; left:0;"></canvas>
-          <canvas id="arrowCanvas" width="280" height="280" style="position: absolute; top:0; left:0;"></canvas>
-        </div>
-        <div style="display: flex; gap: 16px; justify-content: center; margin: 15px 0;">
-          <button class="mult-btn" data-mult="2">x2 (50%)</button>
-          <button class="mult-btn" data-mult="5">x5 (20%)</button>
-          <button class="mult-btn" data-mult="10">x10 (10%)</button>
-        </div>
-        <button id="spinBtn" class="spin-btn">🎡 КРУТИТЬ 🎡</button>
-        <div style="background: #1a1a1a; border-radius: 32px; padding: 16px; margin: 20px 0 10px; border: 1px solid #333;">
-          <div style="font-size: 14px; color: #aaa; margin-bottom: 12px;">🎒 ИНВЕНТАРЬ (выбери предмет)</div>
-          <div id="inventoryItems" style="display: flex; gap: 12px; justify-content: space-between;"></div>
-        </div>
-        <div id="resultMsg" style="background: #0a0a0a; border-radius: 30px; padding: 12px; margin-top: 16px; font-size: 15px; min-height: 70px;"></div>
-      </div>
-    `;
-    document.body.appendChild(container);
-    
-    drawWheel(50);
-    arrowAngle = 0;
-    drawArrow(0);
-    renderInventory();
-    
-    document.querySelectorAll('.mult-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (spinning) return;
-        currentMultiplier = parseInt(btn.dataset.mult);
-        document.querySelectorAll('.mult-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        drawWheel(getChancePercent(currentMultiplier));
-        const chance = getChancePercent(currentMultiplier);
-        document.getElementById("resultMsg").innerHTML = `Выбрано: ${inventory[selectedItemIdx].name} (${inventory[selectedItemIdx].price}₴) | Множитель x${currentMultiplier} | Шанс ${chance}%`;
-      });
-    });
-    document.querySelector('.mult-btn[data-mult="2"]').classList.add('active');
-    
-    document.getElementById("spinBtn").addEventListener("click", () => {
-      if (spinning) return;
-      if (inventory.length === 0) {
-        document.getElementById("resultMsg").innerHTML = "❌ Инвентарь пуст! Обновите страницу";
-        return;
-      }
-      spinWheel();
-    });
-    document.getElementById("resultMsg").innerHTML = `Выбрано: ${inventory[0].name} (${inventory[0].price}₴) | Множитель x2 | Шанс 50%`;
+  function showRouletteGame(){
+    let div = document.createElement("div"); div.className = "roulette-overlay";
+    div.innerHTML = `<div class="roulette-card"><div class="wheel-area"><canvas id="wheelCanvas"></canvas><canvas id="arrowCanvas"></canvas></div><div class="multipliers"><button class="mult-btn" data-mult="2">x2 (50%)</button><button class="mult-btn" data-mult="5">x5 (20%)</button><button class="mult-btn" data-mult="10">x10 (10%)</button></div><button id="spinBtn" class="spin-btn">🎡 КРУТИТЬ 🎡</button><div style="background:#1a1a1a;border-radius:32px;padding:16px;margin:15px 0;"><div style="font-size:14px;color:#aaa;margin-bottom:12px;">🎒 ИНВЕНТАРЬ</div><div class="inventory-scroll"><div id="inventoryItems" class="inventory-items"></div></div></div><div id="resultMsg" class="result-area"></div></div>`;
+    document.body.appendChild(div);
+    drawWheel(50); arrowDeg=0; drawArrow(0); renderInv();
+    document.querySelectorAll(".mult-btn").forEach(b=>{ b.addEventListener("click",()=>{ if(spinning) return; mult=parseInt(b.dataset.mult); document.querySelectorAll(".mult-btn").forEach(x=>x.classList.remove("active")); b.classList.add("active"); drawWheel(getChance(mult)); let ch=getChance(mult); document.getElementById("resultMsg").innerHTML=`Выбрано: ${inventory[selectedIdx]?.name||"ничего"} | x${mult} | шанс ${ch}%`; }); });
+    document.querySelector(".mult-btn[data-mult='2']").classList.add("active");
+    document.getElementById("spinBtn").addEventListener("click",()=>{ if(inventory.length===0){ document.getElementById("resultMsg").innerHTML="❌ Инвентарь пуст! Нажмите 'Начать заново'"; return; } spin(); });
+    if(inventory.length) document.getElementById("resultMsg").innerHTML = `Выбрано: ${inventory[0].name} (${inventory[0].price}₴) | x2 | шанс 50%`;
   }
   
   // ========== ЗАПУСК ==========
@@ -1073,12 +864,11 @@
     for (let ad of adPanels) { if(ad && ad.element) ad.element.remove(); }
     adPanels = [];
     closedAdsCount = 0;
-    for (let i = 0; i < 5; i++) { 
-      adPanels.push(createAdPanel()); 
-    }
+    for (let i = 0; i < 5; i++) { adPanels.push(createAdPanel()); }
     startFlyingAnimation();
   }
   
+  // КНОПКА ОТКЛЮЧЕНИЯ РЕКЛАМЫ
   const killBtn = document.getElementById('adKillerBtn');
   killBtn.addEventListener('click', () => {
     killAllAdsPermanently();
