@@ -3,900 +3,212 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Расписание — летающие рекламные плашки (DVD-эффект) + рулетка</title>
+<title>Дима Лудоман Edition</title>
 
 <style>
-  /* ===== ОРИГИНАЛЬНЫЙ СТИЛЬ РАСПИСАНИЯ (НЕТРОНУТ) ===== */
-  * {
-    box-sizing: border-box;
-  }
-
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: system-ui, Arial, sans-serif;
-    background: #121212;
-    color: #e5e5e5;
-    min-height: 100vh;
-    position: relative;
-  }
-
-  header {
-    text-align: center;
-    padding: 18px;
-    font-size: 22px;
-    background: #1c1c1c;
-    border-bottom: 1px solid #2a2a2a;
-  }
-
-  .container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 14px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .card {
-    background: #1c1c1c;
-    border-radius: 10px;
-    padding: 14px 16px;
-    margin-bottom: 12px;
-    border: 1px solid #2a2a2a;
-  }
-
-  .card .time {
-    opacity: 0.7;
-    font-size: 14px;
-    margin-bottom: 4px;
-  }
-
-  .card .subject {
-    font-size: 17px;
-    font-weight: 500;
-  }
-
-  .day-title {
-    font-size: 19px;
-    margin: 20px 0 10px;
-    opacity: 0.85;
-  }
-
-  .btns {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-
-  button {
-    flex: 1;
-    padding: 14px 0;
-    background: #2d2d2d;
-    border: none;
-    border-radius: 8px;
-    color: #e5e5e5;
-    font-size: 16px;
-    cursor: pointer;
-  }
-
-  button:active {
-    background: #3a3a3a;
-  }
-
-  @media (min-width: 750px) {
-    .card { display: none; }
-    table { display: table; }
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #1c1c1c;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-
-  th, td {
-    padding: 12px;
-    border-bottom: 1px solid #2a2a2a;
-    text-align: center;
-  }
-
-  th {
-    background: #222;
-    font-weight: 600;
-  }
-
-  /* ===== РЕКЛАМНЫЕ ПЛАШКИ ===== */
-  .ad-float {
-    position: fixed;
-    background: #0a0a0a;
-    border: 3px solid white;
-    border-radius: 20px;
-    box-shadow: 0 0 20px rgba(255,255,255,0.3);
-    z-index: 1000;
-    overflow: hidden;
-    backdrop-filter: blur(4px);
-    max-width: 260px;
-    width: auto;
-    min-width: 140px;
-    will-change: left, top;
-    cursor: default;
-  }
-
-  @media (max-width: 700px) {
-    .ad-float { max-width: 180px; border-width: 2px; }
-    .close-corner { width: 26px; height: 26px; font-size: 16px; }
-  }
-
-  .ad-inner { position: relative; display: block; width: 100%; }
-  .ad-img { width: 100%; height: auto; display: block; cursor: pointer; object-fit: cover; }
-  .close-corner {
-    position: absolute; top: 4px; right: 6px; background: #cc3333; border: none;
-    color: white; font-size: 18px; width: 30px; height: 30px; border-radius: 30px;
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    z-index: 20; font-family: monospace;
-  }
-  .ad-float.hidden-temp { display: none; }
-
-  /* Пиксельный распад */
-  .pixel-dust { position: fixed; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 10001; }
-  .pixel { position: absolute; background-color: #ffffff; border-radius: 2px; pointer-events: none; animation: flyAway 0.4s ease-out forwards; box-shadow: 0 0 4px rgba(255,255,255,0.8); }
-  @keyframes flyAway {
-    0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
-    100% { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; }
-  }
-
-  /* ===== МЕНЮ ТАРИФОВ (ОРИГИНАЛ) ===== */
-  .tariff-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #0a0c12;
-    z-index: 20000;
-    overflow-y: auto;
-    padding: 20px;
-    backdrop-filter: blur(10px);
-    animation: fadeIn 0.3s;
-  }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  /* ===== ГЛОБАЛЬНЫЕ СТИЛИ ===== */
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 0; font-family: system-ui, Arial, sans-serif; background: #121212; color: #e5e5e5; min-height: 100vh; position: relative; overflow-x: hidden; }
+  header { text-align: center; padding: 18px; font-size: 22px; background: #1c1c1c; border-bottom: 1px solid #2a2a2a; }
+  .container { max-width: 900px; margin: 0 auto; padding: 14px; position: relative; z-index: 1; }
   
-  .tariff-container {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  .tariff-title {
-    font-size: 28px;
-    text-align: center;
-    margin: 20px 0;
-    color: #ffffff;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-  }
-  .tariff-card {
-    background: #1a1e2a;
-    border-radius: 24px;
-    padding: 20px;
-    margin-bottom: 20px;
-    border: 2px solid #ffffff;
-    transition: 0.1s;
-  }
-  .tariff-name {
-    font-size: 26px;
-    font-weight: bold;
-    color: #ffffff;
-  }
-  .tariff-price {
-    font-size: 32px;
-    margin: 10px 0;
-    color: #ffffff;
-  }
-  .tariff-features {
-    list-style: none;
-    padding: 0;
-    margin: 15px 0;
-  }
-  .tariff-features li {
-    padding: 6px 0;
-    border-bottom: 1px solid #2a2e3a;
-    color: #dddddd;
-  }
-  .buy-btn {
-    background: #1a1e2a;
-    border: 2px solid white;
-    color: white;
-    padding: 12px 20px;
-    border-radius: 40px;
-    font-size: 18px;
-    cursor: pointer;
-    width: 100%;
-    margin-top: 10px;
-    transition: 0.1s;
-  }
-  .buy-btn:active {
-    background: #2a2e3a;
-  }
-  .close-tariff {
-    text-align: center;
-    margin-top: 40px;
-    padding-bottom: 30px;
-    color: #888;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  .close-tariff:hover { color: #ffffff; }
+  /* Расписание */
+  .card { background: #1c1c1c; border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; border: 1px solid #2a2a2a; }
+  .card .time { opacity: 0.7; font-size: 14px; margin-bottom: 4px; }
+  .card .subject { font-size: 17px; font-weight: 500; }
+  .day-title { font-size: 19px; margin: 20px 0 10px; opacity: 0.85; }
+  .btns { display: flex; gap: 10px; margin-top: 20px; margin-bottom: 20px; }
+  button { flex: 1; padding: 14px 0; background: #2d2d2d; border: none; border-radius: 8px; color: #e5e5e5; font-size: 16px; cursor: pointer; }
+  
+  table { width: 100%; border-collapse: collapse; background: #1c1c1c; margin-bottom: 20px; border-radius: 10px; overflow: hidden; display: none; }
+  th, td { padding: 12px; border-bottom: 1px solid #2a2a2a; text-align: center; }
+  @media (min-width: 750px) { .card { display: none; } table { display: table; } }
 
-  /* Форма оформления (ОРИГИНАЛ) */
-  .order-form {
-    background: #0f111a;
-    border-radius: 24px;
-    padding: 20px;
-    margin-top: 10px;
-    border: 1px solid #333;
-  }
-  .order-form input, .order-form select {
-    width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    background: #1e2230;
-    border: 1px solid #3a3e50;
-    color: white;
-    border-radius: 12px;
-  }
-  .order-form input:focus, .order-form select:focus {
-    outline: none;
-    border-color: white;
-  }
-  .invoice {
-    background: #0a0c16;
-    padding: 16px;
-    border-radius: 16px;
-    margin: 15px 0;
-    border: 1px solid #333;
-  }
-  .invoice-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid #2a2e3e;
-    color: #dddddd;
-  }
-  .total-row {
-    font-weight: bold;
-    font-size: 20px;
-    color: #ffffff;
-    border-top: 2px solid #ffffff;
-    margin-top: 8px;
-    padding-top: 12px;
-  }
-  #nextToInvoiceBtn {
-    background: #2a2e3a;
-    border: 2px solid #555;
-    color: #888;
-    cursor: not-allowed;
-    opacity: 0.6;
-    transition: 0.1s;
-  }
-  #nextToInvoiceBtn.active {
-    background: #1a1e2a;
-    border: 2px solid white;
-    color: white;
-    cursor: pointer;
-    opacity: 1;
-  }
+  /* ===== РЕКЛАМА ===== */
+  .ad-float { position: fixed; background: #0a0a0a; border: 3px solid white; border-radius: 20px; z-index: 1000; overflow: hidden; max-width: 200px; cursor: default; }
+  .close-corner { position: absolute; top: 4px; right: 6px; background: #cc3333; border: none; color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; }
+  .ad-img { width: 100%; display: block; }
 
-  /* КНОПКА ОТКЛЮЧЕНИЯ РЕКЛАМЫ (ДОБАВЛЕНА) */
-  .ad-killer {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    background: #111;
-    border: 2px solid white;
-    border-radius: 40px;
-    padding: 8px 18px 8px 14px;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    backdrop-filter: blur(4px);
-    font-weight: bold;
-    box-shadow: 0 0 8px rgba(255,255,255,0.3);
-  }
-  .ad-killer .strike {
-    font-size: 22px;
-    font-weight: 800;
-    color: #ff4444;
-    text-decoration: line-through;
-    text-decoration-thickness: 3px;
-  }
-  .ad-killer .label {
-    font-size: 13px;
-    color: white;
-    font-family: monospace;
-  }
-  .ad-killer:active {
-    transform: scale(0.95);
-  }
+  /* Кнопка убийца рекламы */
+  .kill-ads-btn { position: fixed; top: 10px; left: 10px; z-index: 9999; background: #000; border: 1px solid #fff; color: #fff; padding: 8px 12px; font-size: 12px; cursor: pointer; }
+  .kill-ads-btn span { text-decoration: line-through; color: #ff4444; }
 
-  /* ===== СТИЛИ ДЛЯ РУЛЕТКИ (ДОБАВЛЕНЫ, НЕ ТРОГАЮТ ОРИГИНАЛ) ===== */
-  .roulette-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.95);
-    z-index: 30000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: monospace;
-  }
-  .roulette-card {
-    background: #0a0a0a;
-    border: 2px solid white;
-    border-radius: 48px;
-    padding: 24px;
-    width: 540px;
-    max-width: 92vw;
-    text-align: center;
-  }
-  .wheel-area { position: relative; width: 260px; height: 260px; margin: 0 auto 20px; }
-  .wheel-area canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-  .inventory-scroll { max-height: 140px; overflow-y: auto; margin: 15px 0; padding: 5px; }
-  .inventory-items { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-  .item-card { background: #0a0a0a; border: 2px solid #444; border-radius: 20px; padding: 12px; min-width: 100px; cursor: pointer; }
-  .item-card.selected { border-color: #aa66ff; background: #1a1a2a; box-shadow: 0 0 12px #aa66ff; }
-  .item-name { font-weight: bold; font-size: 14px; }
-  .item-price { font-size: 13px; color: #ffaa66; margin-top: 6px; }
-  .multipliers { display: flex; gap: 12px; justify-content: center; margin: 15px 0; flex-wrap: wrap; }
-  .mult-btn { background: #1a1a1a; border: 1px solid white; padding: 8px 20px; border-radius: 40px; cursor: pointer; font-weight: bold; color: white; }
-  .mult-btn.active { background: white; color: black; }
-  .spin-btn { background: white; color: black; font-weight: bold; font-size: 22px; padding: 12px 24px; border: none; border-radius: 60px; cursor: pointer; width: 80%; margin: 10px 0; }
-  .spin-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .result-area { background: #0a0a0a; border-radius: 30px; padding: 12px; margin-top: 16px; font-size: 14px; min-height: 70px; }
-  .reset-btn { background: #aa3333; border: none; color: white; padding: 10px 20px; border-radius: 40px; margin-top: 10px; cursor: pointer; }
+  /* Эффект взрыва */
+  .pixel-dust { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:10001; }
+  .pixel { position: absolute; background: #fff; animation: fly 0.5s forwards; }
+  @keyframes fly { 100% { transform: translate(var(--dx), var(--dy)); opacity: 0; } }
+
+  /* ===== ЛУДОМАНИЯ (ФИОЛЕТОВАЯ) ===== */
+  #ludo-screen { position: fixed; inset: 0; background: #0f0f0f; z-index: 10500; display: none; flex-direction: column; align-items: center; padding: 20px; overflow-y: auto; }
+  .wheel-container { position: relative; width: 220px; height: 220px; border: 6px solid #222; border-radius: 50%; background: #1a1a1a; margin: 20px 0; overflow: hidden; }
+  .wheel-fill { position: absolute; bottom: 0; width: 100%; background: #8a2be2; opacity: 0.7; transition: height 0.4s; }
+  .wheel-percent { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: bold; color: #fff; z-index: 5; }
+  #spinner { position: absolute; inset: 0; z-index: 6; transition: transform 3s cubic-bezier(0.1, 0, 0.1, 1); }
+  .pointer { position: absolute; top: 5px; left: 50%; width: 12px; height: 12px; background: #fff; border-radius: 50%; box-shadow: 0 0 10px #fff; transform: translateX(-50%); }
+  
+  .chance-btns button { background: #1a1a1a; border: 2px solid #333; margin: 5px; padding: 10px 15px; width: 70px; color: #fff; }
+  .chance-btns .active { border-color: #8a2be2; color: #8a2be2; }
+  #upgrade-btn { background: #8a2be2; color: #fff; width: 220px; padding: 15px; margin: 20px 0; font-weight: bold; }
+
+  .inventory { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 400px; }
+  .inv-item { background: #1a1a1a; border: 2px solid #333; padding: 10px; text-align: center; cursor: pointer; border-radius: 8px; }
+  .inv-item.selected { border-color: #8a2be2; }
+
+  /* Тарифы */
+  .tariff-overlay { position: fixed; inset: 0; background: #0a0c12; z-index: 20000; padding: 20px; overflow-y: auto; }
+  .tariff-card { background: #1a1e2a; border: 2px solid #fff; border-radius: 20px; padding: 20px; margin-bottom: 20px; }
+  .buy-btn { background: #fff; color: #000; width: 100%; padding: 15px; border-radius: 30px; font-weight: bold; margin-top: 10px; }
 </style>
 </head>
 <body>
 
-<!-- КНОПКА ОТКЛЮЧЕНИЯ РЕКЛАМЫ (ДОБАВЛЕНА) -->
-<div id="adKillerBtn" class="ad-killer">
-  <span class="strike">AD</span>
-  <span class="label">откл рекламу</span>
-</div>
+<button class="kill-ads-btn" onclick="explodeToLudo()"><span>AD</span> откл рекламу</button>
 
-<header>Дима пьяный украинец</header>
-
-<div class="container">
-  <div id="content"></div>
-  <div class="btns">
-    <button onclick="prevDay()">← Пред.</button>
-    <button onclick="toggleAll()" id="toggleBtn">Все дни</button>
-    <button onclick="nextDay()">След. →</button>
+<div id="main-ui">
+  <header>Дима пьяный украинец</header>
+  <div class="container">
+    <div id="content"></div>
+    <div class="btns">
+      <button onclick="prevDay()">← Пред.</button>
+      <button onclick="toggleAll()" id="toggleBtn">Все дни</button>
+      <button onclick="nextDay()">След. →</button>
+    </div>
   </div>
 </div>
 
+<div id="ludo-screen">
+  <div style="font-size: 24px; color: #8a2be2;">UPGRADER</div>
+  <div class="wheel-container">
+    <div class="wheel-fill" id="fill"></div>
+    <div class="wheel-percent" id="perc-val">50%</div>
+    <div id="spinner"><div class="pointer"></div></div>
+  </div>
+  <div class="chance-btns">
+    <button onclick="setChance(50)" id="c50" class="active">50%</button>
+    <button onclick="setChance(20)" id="c20">20%</button>
+    <button onclick="setChance(10)" id="c10">10%</button>
+  </div>
+  <button id="upgrade-btn" onclick="spin()">ПРОКАЧАТЬ</button>
+  <div class="inventory" id="inv"></div>
+  <button style="margin-top: 40px; background: none; font-size: 12px; color: #555;" onclick="location.reload()">Вернуться к расписанию</button>
+</div>
+
 <script>
-  // ========== РАСПИСАНИЕ (ОРИГИНАЛ, НЕТРОНУТ) ==========
-  const schedules = {
-    "понедельник": ["Разговоры о лудомании", "История", "Физкультура", "Алгебра", "География", "Обществознание", "Иностранный язык"],
-    "вторник": ["Литература", "Русский язык", "ОБЖ", "Алгебра", "Физика", "Иностранный язык", "История"],
-    "среда": ["Русский язык", "Литература", "География", "Химия", "Информатика", "Физкультура", "Труд"],
-    "четверг": ["кейс батл", "Алгебра", "Геометрия", "Физика", "Биология", "Русский язык", "Литература"],
-    "пятница": ["Вероятность и статистика", "Геометрия", "История", "Химия", "Биология", "Физика", "Иностранный язык"]
-  };
+  // РАСПИСАНИЕ
+  const sch = {"понедельник": ["Разговоры о лудомании", "История", "Физкультура", "Алгебра", "География", "Обществознание", "Иностранный язык"],"вторник": ["Литература", "Русский язык", "ОБЖ", "Алгебра", "Физика", "Иностранный язык", "История"],"среда": ["Русский язык", "Литература", "География", "Химия", "Информатика", "Физкультура", "Труд"],"четверг": ["кейс батл", "Алгебра", "Геометрия", "Физика", "Биология", "Русский язык", "Литература"],"пятница": ["Вероятность и статистика", "Геометрия", "История", "Химия", "Биология", "Физика", "Иностранный язык"]};
   const times = ["8:30–9:15","9:35–10:20","10:40–11:25","11:50–12:35","12:55–13:40","13:50–14:35","14:40–15:25"];
-  const days = ["понедельник","вторник","среда","четверг","пятница"];
-  let dayIndex = (() => { let idx = new Date().getDay() - 1; return (idx >= 0 && idx <= 4) ? idx : 0; })();
-  let showAll = false;
+  const days = Object.keys(sch);
+  let dIdx = 0, showAll = false;
 
-  function addCell(row, text, isHead) { let cell = document.createElement(isHead ? "th" : "td"); cell.textContent = text; row.appendChild(cell); }
-  function renderDayBlock(container, day) {
-    let title = document.createElement("div"); title.className = "day-title"; title.textContent = day.charAt(0).toUpperCase() + day.slice(1); container.appendChild(title);
-    for (let i = 0; i < schedules[day].length; i++) {
-      let card = document.createElement("div"); card.className = "card";
-      let tSpan = document.createElement("div"); tSpan.className = "time"; tSpan.textContent = times[i];
-      let sSpan = document.createElement("div"); sSpan.className = "subject"; sSpan.textContent = schedules[day][i];
-      card.appendChild(tSpan); card.appendChild(sSpan); container.appendChild(card);
-    }
-    if (window.innerWidth >= 750) {
-      let table = document.createElement("table"); let thead = document.createElement("tr");
-      addCell(thead, "#", true); addCell(thead, "Время", true); addCell(thead, "Предмет", true); table.appendChild(thead);
-      for (let i = 0; i < schedules[day].length; i++) {
-        let row = document.createElement("tr"); addCell(row, i + 1, false); addCell(row, times[i], false); addCell(row, schedules[day][i], false); table.appendChild(row);
-      }
-      container.appendChild(table);
-    }
-  }
-  function renderSchedule() { let root = document.getElementById("content"); root.innerHTML = ""; document.getElementById("toggleBtn").textContent = showAll ? "Один день" : "Все дни"; if (showAll) { for (let d of days) renderDayBlock(root, d); } else { renderDayBlock(root, days[dayIndex]); } }
-  window.prevDay = () => { dayIndex = (dayIndex - 1 + days.length) % days.length; showAll = false; renderSchedule(); };
-  window.nextDay = () => { dayIndex = (dayIndex + 1) % days.length; showAll = false; renderSchedule(); };
-  window.toggleAll = () => { showAll = !showAll; renderSchedule(); };
-
-  // ========== ЛЕТАЮЩИЕ РЕКЛАМНЫЕ ПЛАШКИ (ОРИГИНАЛ) ==========
-  const adCampaigns = [
-    { img: "images/casebattle.png", link: "https://case-battle.red/", alt: "Case Battle" },
-    { img: "images/upgrader.png", link: "https://upgrader.pro/ru", alt: "Upgrader Pro" },
-    { img: "images/gosuslugi.png", link: "https://contract.gosuslugi.ru/", alt: "Госуслуги" }
-  ];
-  
-  let adPanels = [];
-  let closedAdsCount = 0;
-  let tariffOverlayActive = false;
-  let animationFrameId = null;
-  
-  function updateAdPosition(ad) {
-    if (!ad.element || ad.isClosing) return;
-    if (ad.element.style.display === 'none') return;
-    
-    let rect = ad.element.getBoundingClientRect();
-    let adWidth = rect.width;
-    let adHeight = rect.height;
-    
-    let newX = ad.x + ad.vx;
-    let newY = ad.y + ad.vy;
-    
-    if (newX <= 0) { newX = 0; ad.vx = Math.abs(ad.vx); }
-    if (newX + adWidth >= window.innerWidth) { newX = window.innerWidth - adWidth; ad.vx = -Math.abs(ad.vx); }
-    if (newY <= 0) { newY = 0; ad.vy = Math.abs(ad.vy); }
-    if (newY + adHeight >= window.innerHeight) { newY = window.innerHeight - adHeight; ad.vy = -Math.abs(ad.vy); }
-    
-    ad.x = newX;
-    ad.y = newY;
-    ad.element.style.left = ad.x + 'px';
-    ad.element.style.top = ad.y + 'px';
-  }
-  
-  function startFlyingAnimation() {
-    if (animationFrameId) cancelAnimationFrame(animationFrameId);
-    function animate() {
-      for (let ad of adPanels) {
-        if (ad && ad.element && !tariffOverlayActive && !ad.isClosing) {
-          updateAdPosition(ad);
-        }
-      }
-      animationFrameId = requestAnimationFrame(animate);
-    }
-    animate();
-  }
-  
-  function getRandomPositionAndDirection(adElement) {
-    if (!adElement) return { x: 20, y: 20, vx: 0.8, vy: 0.8 };
-    const adWidth = adElement.offsetWidth || 180;
-    const adHeight = adElement.offsetHeight || 140;
-    const maxX = Math.max(10, window.innerWidth - adWidth - 10);
-    const maxY = Math.max(10, window.innerHeight - adHeight - 10);
-    let x = Math.random() * maxX;
-    let y = Math.random() * maxY;
-    let vx = (Math.random() * 1.0 + 0.5) * (Math.random() > 0.5 ? 1 : -1);
-    let vy = (Math.random() * 1.0 + 0.5) * (Math.random() > 0.5 ? 1 : -1);
-    if (Math.abs(vx) < 0.4) vx = vx > 0 ? 0.6 : -0.6;
-    if (Math.abs(vy) < 0.4) vy = vy > 0 ? 0.6 : -0.6;
-    return { x, y, vx, vy };
-  }
-  
-  function updateAdImage(ad) {
-    const campaign = adCampaigns[ad.imageIndex % adCampaigns.length];
-    if (ad.imgElement) {
-      ad.imgElement.src = campaign.img;
-      ad.imgElement.alt = campaign.alt;
-      ad.imgElement.onclick = (e) => { e.preventDefault(); window.open(campaign.link, "_blank"); };
-    }
-  }
-  
-  function pixelExplode(element, callback) {
-    if (!element) { if(callback) callback(); return; }
-    const rect = element.getBoundingClientRect();
-    const width = rect.width, height = rect.height, left = rect.left, top = rect.top;
-    const dustContainer = document.createElement('div'); dustContainer.className = 'pixel-dust'; document.body.appendChild(dustContainer);
-    const pixelSize = 8, cols = Math.ceil(width / pixelSize), rows = Math.ceil(height / pixelSize);
-    for (let i = 0; i < cols; i++) {
-      for (let j = 0; j < rows; j++) {
-        const pixel = document.createElement('div'); pixel.className = 'pixel';
-        pixel.style.left = (left + i * pixelSize) + 'px'; pixel.style.top = (top + j * pixelSize) + 'px';
-        pixel.style.width = pixelSize + 'px'; pixel.style.height = pixelSize + 'px';
-        pixel.style.backgroundColor = '#ffffff';
-        pixel.style.boxShadow = '0 0 4px rgba(255,255,255,0.8)';
-        const angle = Math.random() * Math.PI * 2; const distance = 80 + Math.random() * 150;
-        pixel.style.setProperty('--dx', Math.cos(angle) * distance + 'px'); pixel.style.setProperty('--dy', Math.sin(angle) * distance + 'px');
-        dustContainer.appendChild(pixel);
-        setTimeout(() => { if(pixel && pixel.remove) pixel.remove(); }, 450);
-      }
-    }
-    element.style.visibility = 'hidden'; element.style.opacity = '0';
-    setTimeout(() => { if(dustContainer && dustContainer.remove) dustContainer.remove(); if(callback) callback(); }, 200);
-  }
-  
-  function closeAdWithAnimation(ad, onComplete) {
-    if (!ad || !ad.element || ad.isClosing) { if(onComplete) onComplete(); return; }
-    ad.isClosing = true;
-    const element = ad.element;
-    element.style.pointerEvents = 'none';
-    pixelExplode(element, () => {
-      element.classList.add('hidden-temp');
-      element.style.visibility = 'hidden';
-      ad.imageIndex = (ad.imageIndex + 1) % adCampaigns.length;
-      updateAdImage(ad);
-      const newPos = getRandomPositionAndDirection(ad.element);
-      ad.x = newPos.x;
-      ad.y = newPos.y;
-      ad.vx = newPos.vx;
-      ad.vy = newPos.vy;
-      ad.element.style.left = ad.x + 'px';
-      ad.element.style.top = ad.y + 'px';
-      element.classList.remove('hidden-temp');
-      ad.isClosing = false;
-      element.style.visibility = 'visible';
-      element.style.opacity = '1';
-      element.style.animation = 'none';
-      element.offsetHeight;
-      element.style.animation = 'popIn 0.2s cubic-bezier(0.34, 1.2, 0.64, 1)';
-      element.style.pointerEvents = '';
-      if (onComplete) onComplete();
-    });
-  }
-  
-  function createAdPanel() {
-    const div = document.createElement("div"); div.className = "ad-float";
-    const inner = document.createElement("div"); inner.className = "ad-inner";
-    const img = document.createElement("img"); img.className = "ad-img";
-    const closeBtn = document.createElement("button"); closeBtn.className = "close-corner"; closeBtn.textContent = "✖";
-    inner.appendChild(img); inner.appendChild(closeBtn); div.appendChild(inner); document.body.appendChild(div);
-    
-    const initPos = getRandomPositionAndDirection(div);
-    div.style.left = initPos.x + 'px';
-    div.style.top = initPos.y + 'px';
-    
-    const adObj = {
-      element: div,
-      imgElement: img,
-      closeBtn,
-      imageIndex: Math.floor(Math.random() * adCampaigns.length),
-      isClosing: false,
-      x: initPos.x,
-      y: initPos.y,
-      vx: initPos.vx,
-      vy: initPos.vy
+  function render() {
+    const root = document.getElementById("content"); root.innerHTML = "";
+    const renderDay = (d) => {
+      root.innerHTML += `<div class="day-title">${d}</div>`;
+      sch[d].forEach((s, i) => {
+        root.innerHTML += `<div class="card"><div class="time">${times[i]}</div><div class="subject">${s}</div></div>`;
+      });
     };
-    updateAdImage(adObj);
-    
-    closeBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      if (adObj.isClosing || tariffOverlayActive) return;
-      closedAdsCount++;
-      closeAdWithAnimation(adObj, () => {
-        if (closedAdsCount >= 3 && !tariffOverlayActive) {
-          showTariffMenu();
-        }
-      });
-    });
-    return adObj;
+    if(showAll) days.forEach(renderDay); else renderDay(days[dIdx]);
   }
-  
-  function hideAllAds() {
-    for (let ad of adPanels) {
-      if (ad && ad.element) ad.element.style.display = 'none';
-    }
-  }
-  function showAllAds() {
-    for (let ad of adPanels) {
-      if (ad && ad.element) ad.element.style.display = '';
-    }
-  }
-  function killAllAdsPermanently() {
-    for (let ad of adPanels) {
-      if (ad && ad.element) ad.element.remove();
-    }
-    adPanels = [];
-    if (animationFrameId) cancelAnimationFrame(animationFrameId);
-  }
-  
-  // ========== ТАРИФЫ (ОРИГИНАЛ, ПОЛНОСТЬЮ НЕТРОНУТ) ==========
-  function showTariffMenu() {
-    if (tariffOverlayActive) return;
-    tariffOverlayActive = true;
-    hideAllAds();
-    
-    const overlay = document.createElement('div'); overlay.className = 'tariff-overlay';
-    overlay.innerHTML = `
-      <div class="tariff-container">
-        <div class="tariff-title">💸 VIP ТАРИФЫ ДЛЯ ПИЗДАТЫХ 💸</div>
-        <div class="tariff-card" data-tariff="premium">
-          <div class="tariff-name">🚀 ZA SVO</div>
-          <div class="tariff-price">₴ 99 999</div>
-          <ul class="tariff-features">
-            <li>✅ Доступ к расписанию</li>
-            <li>✅ Личный "Дима пьяный украинец"</li>
-            <li>✅ Ваня воздухан</li>
-            <li>✅ Клеймо еблана</li>
-          </ul>
-          <button class="buy-btn" data-price="99999" data-name="ZA SVO">КУПИТЬ ЗА 99 999 ₴</button>
-        </div>
-        <div class="tariff-card" data-tariff="ultra">
-          <div class="tariff-name">👑 КОРОЛЬ ВОЗДУХА</div>
-          <div class="tariff-price">₴ 499 999</div>
-          <ul class="tariff-features">
-            <li>✅ Все фишки премиума</li>
-            <li>✅ Реклама будет закрываться за тебя (может быть)</li>
-            <li>✅ Огромные ЯЙЦА</li>
-            <li>✅ Кейс батл не будет давать диме</li>
-          </ul>
-          <button class="buy-btn" data-price="499999" data-name="КОРОЛЬ ВОЗДУХА">КУПИТЬ ЗА 499 999 ₴</button>
-        </div>
-        <div class="tariff-card" data-tariff="god">
-          <div class="tariff-name">⚡ У МЕНЯ ЧЕРВИ В ГЛАЗАХ</div>
-          <div class="tariff-price">₴ 1 337 000</div>
-          <ul class="tariff-features">
-            <li>✅ Тимошина пожрет говна</li>
-            <li>✅ Бонуска в кб +10%</li>
-            <li>✅ Стальные яйки</li>
-            <li>✅ Бессрочная гарантия на </li>
-          </ul>
-          <button class="buy-btn" data-price="1337000" data-name="У МЕНЯ ЧЕРВИ В ГЛАЗАХ">КУПИТЬ ЗА 1 337 000 ₴</button>
-        </div>
-        <div class="close-tariff" id="closeTariffBtn">❌ нет, спасибо, я бедный ❌</div>
-      </div>
-    `;
-    document.body.appendChild(overlay);
-    
-    overlay.querySelectorAll('.buy-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const price = parseInt(btn.dataset.price);
-        const name = btn.dataset.name;
-        showOrderForm(overlay, price, name);
-      });
-    });
-    const closeBtnEl = overlay.querySelector('#closeTariffBtn');
-    closeBtnEl.addEventListener('click', () => {
-      overlay.remove();
-      tariffOverlayActive = false;
-      showAllAds();
-      closedAdsCount = 0;
-    });
-  }
-  
-  function showOrderForm(overlay, basePrice, tariffName) {
-    const container = overlay.querySelector('.tariff-container');
-    container.innerHTML = `
-      <div class="tariff-title">📝 ОФОРМЛЕНИЕ ТАРИФА "${tariffName}"</div>
-      <div class="order-form">
-        <input type="text" id="fullName" placeholder="ФИО (как в паспорте)">
-        <input type="text" id="passport" placeholder="Серия и номер паспорта">
-        <input type="text" id="phone" placeholder="Телефон (обязательно)">
-        <input type="text" id="address" placeholder="Адрес прописки">
-        <select id="delivery">
-          <option value="0">Курьером в зубы (+500₴)</option>
-          <option value="1">Почтой Украины (+200₴)</option>
-          <option value="2">Телепортация (ещё нет) (+9999₴)</option>
-        </select>
-        <button id="nextToInvoiceBtn" disabled>👉 ПЕРЕЙТИ К ОПЛАТЕ 👈</button>
-      </div>
-      <div class="close-tariff" id="backToTariffs">◀ Назад к тарифам</div>
-    `;
-    
-    const fullNameInput = document.getElementById('fullName');
-    const passportInput = document.getElementById('passport');
-    const phoneInput = document.getElementById('phone');
-    const addressInput = document.getElementById('address');
-    const nextBtn = document.getElementById('nextToInvoiceBtn');
-    
-    function checkFormComplete() {
-      const allFilled = fullNameInput.value.trim() !== '' &&
-                        passportInput.value.trim() !== '' &&
-                        phoneInput.value.trim() !== '' &&
-                        addressInput.value.trim() !== '';
-      nextBtn.disabled = !allFilled;
-      if (allFilled) nextBtn.classList.add('active');
-      else nextBtn.classList.remove('active');
-    }
-    
-    fullNameInput.addEventListener('input', checkFormComplete);
-    passportInput.addEventListener('input', checkFormComplete);
-    phoneInput.addEventListener('input', checkFormComplete);
-    addressInput.addEventListener('input', checkFormComplete);
-    checkFormComplete();
-    
-    const backBtn = container.querySelector('#backToTariffs');
-    backBtn.addEventListener('click', () => {
-      overlay.remove();
-      showTariffMenu();
-    });
-    
-    nextBtn.addEventListener('click', () => {
-      if (nextBtn.disabled) return;
-      const deliverySelect = document.getElementById('delivery');
-      let deliveryCost = 0, deliveryText = "";
-      switch(deliverySelect.value) {
-        case "0": deliveryCost = 500; deliveryText = "Курьером в зубы"; break;
-        case "1": deliveryCost = 200; deliveryText = "Почтой Украины"; break;
-        case "2": deliveryCost = 9999; deliveryText = "Телепортация"; break;
-      }
-      const commissions = [
-        { name: "Комиссия за что-то", percent: 15 },
-        { name: "Сбор Кирушэ на депозит", percent: 12 },
-        { name: "Налог", percent: 8 },
-        { name: "Плата за воздух", percent: 5 }
-      ];
-      let total = basePrice + deliveryCost;
-      let commissionRows = [];
-      for (let comm of commissions) {
-        let amount = Math.round(total * comm.percent / 100);
-        commissionRows.push({ name: comm.name, amount: amount, percent: comm.percent });
-        total += amount;
-      }
-      total = Math.round(total);
-      
-      let invoiceHtml = `<div class="invoice"><div class="invoice-row"><span>💰 Тариф "${tariffName}"</span><span>${basePrice.toLocaleString()} ₴</span></div>`;
-      invoiceHtml += `<div class="invoice-row"><span>🚚 Доставка: ${deliveryText}</span><span>+${deliveryCost.toLocaleString()} ₴</span></div>`;
-      for (let cr of commissionRows) {
-        invoiceHtml += `<div class="invoice-row"><span>${cr.name} (${cr.percent}%)</span><span>+${cr.amount.toLocaleString()} ₴</span></div>`;
-      }
-      invoiceHtml += `<div class="invoice-row total-row"><span>🐷 ИТОГО К ОПЛАТЕ</span><span>${total.toLocaleString()} ₴</span></div>`;
-      invoiceHtml += `<div style="font-size:12px; opacity:0.6; margin-top:12px;">Комиссия за что-то уже включена</div></div>`;
-      invoiceHtml += `<button id="payFinalBtn" style="background:#1a1e2a; border:2px solid white; color:white; width:100%; padding:14px; border-radius:40px; font-size:18px;">💳 ОПЛАТИТЬ 💳</button>`;
-      
-      container.innerHTML = `
-        <div class="tariff-title">🧾 ЧЕК НА ОПЛАТУ</div>
-        ${invoiceHtml}
-        <div class="close-tariff" id="backToForm" style="margin-top:20px;">◀ Редактировать данные</div>
-      `;
-      const backForm = container.querySelector('#backToForm');
-      backForm.addEventListener('click', () => { showOrderForm(overlay, basePrice, tariffName); });
-      const payBtn = container.querySelector('#payFinalBtn');
-      payBtn.addEventListener('click', () => {
-        window.open("https://sovcombank.ru/apply/credit/city-spb/", "_blank");
-      });
-    });
-  }
-  
-  // ========== ВЗРЫВ ЧЁРНЫМИ ПИКСЕЛЯМИ И РУЛЕТКА (ДОБАВЛЕНЫ) ==========
-  function explodeToRoulette() {
-    const dust = document.createElement('div');
-    dust.className = 'pixel-dust';
-    document.body.appendChild(dust);
-    
-    const w = window.innerWidth, h = window.innerHeight;
-    const pixelSize = 14;
-    const cols = Math.ceil(w / pixelSize);
-    const rows = Math.ceil(h / pixelSize);
-    
-    for (let i = 0; i < cols; i++) {
-      for (let j = 0; j < rows; j++) {
-        const pixel = document.createElement('div');
-        pixel.className = 'pixel';
-        pixel.style.left = (i * pixelSize) + 'px';
-        pixel.style.top = (j * pixelSize) + 'px';
-        pixel.style.width = pixelSize + 'px';
-        pixel.style.height = pixelSize + 'px';
-        pixel.style.backgroundColor = '#000000';
-        const angle = Math.random() * Math.PI * 2;
-        const distance = 120 + Math.random() * 200;
-        pixel.style.setProperty('--dx', Math.cos(angle) * distance + 'px');
-        pixel.style.setProperty('--dy', Math.sin(angle) * distance + 'px');
-        dust.appendChild(pixel);
-        setTimeout(() => { if(pixel && pixel.remove) pixel.remove(); }, 550);
-      }
-    }
-    
-    setTimeout(() => {
-      document.body.innerHTML = '';
-      document.body.style.background = '#000';
-      showRouletteGame();
-    }, 400);
-  }
-  
-  const weirdNames = ["Гонорея","Сифилис","Хламидиоз","Триппер","ВИЧ","СПИД","Твои яйки","Мамины сиськи","Девственность","Герпес","Оспа","Коронавирус","Гепатит","Туберкулёз","Свиной грипп","Кишечная палочка","Стафилококк","Педикулёз","Чесотка","Молочница"];
-  
-  let inventory = [{name:"Твои яйки",price:50},{name:"Мамины сиськи",price:10},{name:"Сифилис",price:100}];
-  let selectedIdx = 0, mult = 2, spinning = false, arrowDeg = 0;
-  
-  function getChance(m){ if(m===2) return 50; if(m===5) return 20; return 10; }
-  
-  function drawWheel(percent){
-    let c = document.getElementById("wheelCanvas"); if(!c) return;
-    let ctx = c.getContext("2d"); c.width = c.height = 260;
-    let cx = 130, cy = 130, r = 120, start = 90, end = start + (percent/100)*360;
-    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,start*Math.PI/180,end*Math.PI/180); ctx.fillStyle = "#aa66ff"; ctx.fill();
-    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,end*Math.PI/180,(start+360)*Math.PI/180); ctx.fillStyle = "#1a1a1a"; ctx.fill();
-    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.strokeStyle = "#fff"; ctx.lineWidth = 3; ctx.stroke();
-    ctx.fillStyle = "#fff"; ctx.font = "bold 28px monospace"; ctx.fillText(percent+"%", 108, 140);
-  }
-  
-  function drawArrow(deg){
-    let c = document.getElementById("arrowCanvas"); if(!c) return;
-    let ctx = c.getContext("2d"); c.width = c.height = 260;
-    let cx = 130, cy = 130, r = 120, rad = deg*Math.PI/180, x = cx + r*Math.cos(rad), y = cy + r*Math.sin(rad);
-    let ang = Math.atan2(y-cy, x-cx);
-    ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+14*Math.cos(ang+Math.PI/2), y+14*Math.sin(ang+Math.PI/2)); ctx.lineTo(x+14*Math.cos(ang-Math.PI/2), y+14*Math.sin(ang-Math.PI/2)); ctx.fillStyle = "#fff"; ctx.fill();
-    ctx.strokeStyle = "#000"; ctx.lineWidth = 1.5; ctx.stroke();
-  }
-  
-  function getResult(deg, chance){ let start=90, end=start+chance*3.6; let n=deg%360; if(n<0)n+=360; return n>=start && n<=end; }
-  
-  function spin(){
-    if(spinning) return; spinning = true;
-    document.querySelectorAll(".mult-btn").forEach(b=>b.style.pointerEvents="none");
-    let btn = document.getElementById("spinBtn"); btn.disabled = true;
-    let chance = getChance(mult), bet = inventory[selectedIdx], winAmount = bet.price * mult;
-    let totalSpins = 10+Math.random()*6, target = Math.random()*360, startAng = arrowDeg%360, delta = target-startAng;
-    if(delta<0) delta+=360; let final = totalSpins*360+delta, startTime = performance.now(), dur = 2500;
-    function animSpin(now){
-      let t = Math.min(1,(now-startTime)/dur), ease = 1-Math.pow(1-t,3), cur = startAng + final*ease;
-      arrowDeg = cur%360; drawArrow(arrowDeg);
-      if(t<1){ requestAnimationFrame(animSpin); } else {
-        let win = getResult(arrowDeg, chance);
-        if(win){ let rn = weirdNames[Math.floor(Math.random()*weirdNames.length)]; inventory.push({name:rn, price:winAmount}); document.getElementById("resultMsg").innerHTML = `🎉 ВЫИГРЫШ! +${winAmount}₴<br>➕ ${rn}`; }
-        else { inventory.splice(selectedIdx,1); if(inventory.length===0){ document.getElementById("resultMsg").innerHTML = `😭 ПРОИГРЫШ! ${bet.name} удалён<br>❌ ИНВЕНТАРЬ ПУСТ`; } else { document.getElementById("resultMsg").innerHTML = `😭 ПРОИГРЫШ! ${bet.name} удалён`; } }
-        if(inventory.length===0){ document.getElementById("resultMsg").innerHTML += '<br><button class="reset-btn" onclick="location.reload()">🔄 НАЧАТЬ ЗАНОВО</button>'; }
-        if(selectedIdx>=inventory.length && inventory.length>0) selectedIdx=0; renderInv();
-        spinning=false; document.querySelectorAll(".mult-btn").forEach(b=>b.style.pointerEvents="auto"); btn.disabled=false;
-      }
-    }
-    requestAnimationFrame(animSpin);
-  }
-  
-  function renderInv(){
-    let cont = document.getElementById("inventoryItems"); if(!cont) return;
-    if(inventory.length===0){ cont.innerHTML='<div style="color:#aaa;text-align:center;width:100%;padding:20px;">Инвентарь пуст<br>Нажмите "Начать заново"</div>'; return; }
-    cont.innerHTML = inventory.map((it,idx)=>`<div class="item-card ${selectedIdx===idx?"selected":""}" data-idx="${idx}"><div class="item-name">${it.name}</div><div class="item-price">${it.price} ₴</div></div>`).join('');
-    document.querySelectorAll(".item-card").forEach(c=>c.addEventListener("click",()=>{ if(spinning) return; selectedIdx=parseInt(c.dataset.idx); renderInv(); let ch=getChance(mult); document.getElementById("resultMsg").innerHTML=`Выбрано: ${inventory[selectedIdx].name} (${inventory[selectedIdx].price}₴) | x${mult} | шанс ${ch}%`; }));
-  }
-  
-  function showRouletteGame(){
-    let div = document.createElement("div"); div.className = "roulette-overlay";
-    div.innerHTML = `<div class="roulette-card"><div class="wheel-area"><canvas id="wheelCanvas"></canvas><canvas id="arrowCanvas"></canvas></div><div class="multipliers"><button class="mult-btn" data-mult="2">x2 (50%)</button><button class="mult-btn" data-mult="5">x5 (20%)</button><button class="mult-btn" data-mult="10">x10 (10%)</button></div><button id="spinBtn" class="spin-btn">🎡 КРУТИТЬ 🎡</button><div style="background:#1a1a1a;border-radius:32px;padding:16px;margin:15px 0;"><div style="font-size:14px;color:#aaa;margin-bottom:12px;">🎒 ИНВЕНТАРЬ</div><div class="inventory-scroll"><div id="inventoryItems" class="inventory-items"></div></div></div><div id="resultMsg" class="result-area"></div></div>`;
-    document.body.appendChild(div);
-    drawWheel(50); arrowDeg=0; drawArrow(0); renderInv();
-    document.querySelectorAll(".mult-btn").forEach(b=>{ b.addEventListener("click",()=>{ if(spinning) return; mult=parseInt(b.dataset.mult); document.querySelectorAll(".mult-btn").forEach(x=>x.classList.remove("active")); b.classList.add("active"); drawWheel(getChance(mult)); let ch=getChance(mult); document.getElementById("resultMsg").innerHTML=`Выбрано: ${inventory[selectedIdx]?.name||"ничего"} | x${mult} | шанс ${ch}%`; }); });
-    document.querySelector(".mult-btn[data-mult='2']").classList.add("active");
-    document.getElementById("spinBtn").addEventListener("click",()=>{ if(inventory.length===0){ document.getElementById("resultMsg").innerHTML="❌ Инвентарь пуст! Нажмите 'Начать заново'"; return; } spin(); });
-    if(inventory.length) document.getElementById("resultMsg").innerHTML = `Выбрано: ${inventory[0].name} (${inventory[0].price}₴) | x2 | шанс 50%`;
-  }
-  
-  // ========== ЗАПУСК ==========
-  function initAds() {
-    for (let ad of adPanels) { if(ad && ad.element) ad.element.remove(); }
-    adPanels = [];
-    closedAdsCount = 0;
-    for (let i = 0; i < 5; i++) { adPanels.push(createAdPanel()); }
-    startFlyingAnimation();
-  }
-  
-  // КНОПКА ОТКЛЮЧЕНИЯ РЕКЛАМЫ
-  const killBtn = document.getElementById('adKillerBtn');
-  killBtn.addEventListener('click', () => {
-    killAllAdsPermanently();
-    killBtn.remove();
-    explodeToRoulette();
-  });
-  
-  window.addEventListener("resize", () => {
-    if(!tariffOverlayActive) {
-      for(let ad of adPanels) {
-        let maxX = window.innerWidth - ad.element.offsetWidth;
-        let maxY = window.innerHeight - ad.element.offsetHeight;
-        if (ad.x > maxX) ad.x = Math.max(0, maxX);
-        if (ad.y > maxY) ad.y = Math.max(0, maxY);
-        ad.element.style.left = ad.x + 'px';
-        ad.element.style.top = ad.y + 'px';
-        if (ad.x <= 0) ad.vx = Math.abs(ad.vx);
-        if (ad.x + ad.element.offsetWidth >= window.innerWidth) ad.vx = -Math.abs(ad.vx);
-        if (ad.y <= 0) ad.vy = Math.abs(ad.vy);
-        if (ad.y + ad.element.offsetHeight >= window.innerHeight) ad.vy = -Math.abs(ad.vy);
-      }
-    }
-    renderSchedule();
-  });
-  
-  renderSchedule();
-  initAds();
-</script>
+  window.prevDay = () => { dIdx = (dIdx-1+5)%5; showAll=false; render(); };
+  window.nextDay = () => { dIdx = (dIdx+1)%5; showAll=false; render(); };
+  window.toggleAll = () => { showAll = !showAll; render(); };
 
+  // РЕКЛАМА (DVD)
+  let ads = [];
+  function createAd() {
+    const div = document.createElement('div'); div.className = 'ad-float';
+    div.innerHTML = `<button class="close-corner" onclick="this.parentElement.remove(); checkAdsCount();">✖</button>
+                     <img src="https://via.placeholder.com/200x120/000/fff?text=CASE+BATTLE" class="ad-img">`;
+    document.body.appendChild(div);
+    let x = Math.random()*200, y = Math.random()*200, vx = 2, vy = 2;
+    function move() {
+      x += vx; y += vy;
+      if(x <= 0 || x + 200 >= window.innerWidth) vx *= -1;
+      if(y <= 0 || y + 150 >= window.innerHeight) vy *= -1;
+      div.style.left = x+'px'; div.style.top = y+'px';
+      requestAnimationFrame(move);
+    }
+    move();
+  }
+  for(let i=0; i<3; i++) createAd();
+
+  let closedCount = 0;
+  function checkAdsCount() { closedCount++; if(closedCount >= 3) showTariffs(); }
+
+  // ТАРИФЫ
+  function showTariffs() {
+    const ov = document.createElement('div'); ov.className = 'tariff-overlay';
+    ov.innerHTML = `<div class="tariff-card"><h2>ТАРИФ "ZA SVO"</h2><p>99 999 ₴</p>
+                    <button class="buy-btn" onclick="alert('Денег нет, но вы держитесь')">КУПИТЬ</button></div>
+                    <center onclick="this.parentElement.remove()">закрыть</center>`;
+    document.body.appendChild(ov);
+  }
+
+  // ЛУДОМАНИЯ
+  const pool = ["Сифилис", "Мама", "Твои яйца", "Сиськи", "Девственность", "Геморрой", "ВИЧ+", "Зубной налет"];
+  let inv = [], selIdx = 0, chance = 50, spinning = false;
+
+  function initInv() {
+    inv = Array(3).fill(0).map(() => ({ name: pool[Math.floor(Math.random()*pool.length)], price: Math.floor(Math.random()*300) }));
+    renderInv();
+  }
+
+  function renderInv() {
+    const g = document.getElementById('inv'); g.innerHTML = "";
+    inv.forEach((it, i) => {
+      g.innerHTML += `<div class="inv-item ${selIdx==i?'selected':''}" onclick="selIdx=${i};renderInv()">${it.name}<br>${it.price}₴</div>`;
+    });
+  }
+
+  function setChance(c) { 
+    if(spinning) return; chance = c; 
+    document.getElementById('perc-val').innerText = c+'%';
+    document.getElementById('fill').style.height = c+'%';
+    ['c50','c20','c10'].forEach(id => document.getElementById(id).className = '');
+    document.getElementById('c'+c).className = 'active';
+  }
+
+  function spin() {
+    if(spinning) return; spinning = true;
+    const s = document.getElementById('spinner');
+    const deg = 1800 + Math.random()*360;
+    s.style.transform = `rotate(${deg}deg)`;
+    setTimeout(() => {
+      spinning = false;
+      if(Math.random()*100 <= chance) {
+        inv[selIdx].price = Math.round(inv[selIdx].price * (100/chance));
+        inv[selIdx].name = pool[Math.floor(Math.random()*pool.length)];
+        alert("ВЫИГРАЛ!");
+      } else {
+        alert("ПРОЕБАЛ!");
+        inv[selIdx] = { name: "Мусор", price: 0 };
+      }
+      s.style.transition = 'none'; s.style.transform = 'rotate(0deg)';
+      setTimeout(() => s.style.transition = '', 50);
+      renderInv();
+    }, 3000);
+  }
+
+  function explodeToLudo() {
+    const d = document.createElement('div'); d.className = 'pixel-dust'; document.body.appendChild(d);
+    for(let i=0; i<100; i++) {
+      const p = document.createElement('div'); p.className = 'pixel';
+      p.style.left = Math.random()*100+'%'; p.style.top = Math.random()*100+'%';
+      p.style.width = '10px'; p.style.height = '10px';
+      p.style.setProperty('--dx', (Math.random()-0.5)*1000+'px');
+      p.style.setProperty('--dy', (Math.random()-0.5)*1000+'px');
+      d.appendChild(p);
+    }
+    setTimeout(() => {
+      document.getElementById('main-ui').style.display = 'none';
+      document.querySelectorAll('.ad-float').forEach(a => a.remove());
+      document.getElementById('ludo-screen').style.display = 'flex';
+      initInv();
+    }, 500);
+  }
+
+  render();
+</script>
 </body>
 </html>
