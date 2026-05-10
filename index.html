@@ -141,9 +141,9 @@
   }
   .ad-float.hidden-temp { display: none; }
 
-  /* Пиксельный распад (белые частицы) */
+  /* Пиксельный распад (чёрные частицы для взрыва) */
   .pixel-dust { position: fixed; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 10001; }
-  .pixel { position: absolute; background-color: #ffffff; border-radius: 2px; pointer-events: none; animation: flyAway 0.4s ease-out forwards; box-shadow: 0 0 4px rgba(255,255,255,0.8); }
+  .pixel { position: absolute; border-radius: 2px; pointer-events: none; animation: flyAway 0.5s ease-out forwards; }
   @keyframes flyAway {
     0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
     100% { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; }
@@ -323,7 +323,7 @@
     transform: scale(0.95);
   }
 
-  /* Стили для рулетки (добавляются динамически) */
+  /* Стили для рулетки */
   .roulette-overlay {
     position: fixed;
     top: 0;
@@ -413,7 +413,7 @@
 </div>
 
 <script>
-  // ========== РАСПИСАНИЕ (оригинал, без изменений) ==========
+  // ========== РАСПИСАНИЕ (оригинал) ==========
   const schedules = {
     "понедельник": ["Разговоры о лудомании", "История", "Физкультура", "Алгебра", "География", "Обществознание", "Иностранный язык"],
     "вторник": ["Литература", "Русский язык", "ОБЖ", "Алгебра", "Физика", "Иностранный язык", "История"],
@@ -792,7 +792,7 @@
     document.body.appendChild(dust);
     
     const w = window.innerWidth, h = window.innerHeight;
-    const pixelSize = 12;
+    const pixelSize = 14;
     const cols = Math.ceil(w / pixelSize);
     const rows = Math.ceil(h / pixelSize);
     
@@ -806,11 +806,11 @@
         pixel.style.height = pixelSize + 'px';
         pixel.style.backgroundColor = '#000000';
         const angle = Math.random() * Math.PI * 2;
-        const distance = 100 + Math.random() * 200;
+        const distance = 120 + Math.random() * 200;
         pixel.style.setProperty('--dx', Math.cos(angle) * distance + 'px');
         pixel.style.setProperty('--dy', Math.sin(angle) * distance + 'px');
         dust.appendChild(pixel);
-        setTimeout(() => { if(pixel && pixel.remove) pixel.remove(); }, 500);
+        setTimeout(() => { if(pixel && pixel.remove) pixel.remove(); }, 550);
       }
     }
     
@@ -818,20 +818,26 @@
       document.body.innerHTML = '';
       document.body.style.background = '#000';
       showRouletteGame();
-    }, 350);
+    }, 400);
   }
   
   // ========== РУЛЕТКА (ИСПРАВЛЕННАЯ) ==========
+  // Странные названия для выигрышей
+  const weirdNames = [
+    "Гонорея", "Сифилис", "Хламидиоз", "Триппер", "ВИЧ-инфекция",
+    "Твои яйки", "Мамины сиськи", "Девственность", "Педикулёз", "Герпес",
+    "Оспа", "Коронавирус", "Гепатит С", "Туберкулёз", "Свиной грипп"
+  ];
+  
   let inventory = [
     { name: "Твои яйки", price: 50 },
-    { name: "Мама", price: 10 },
+    { name: "Мамины сиськи", price: 10 },
     { name: "Сифилис", price: 100 }
   ];
   let selectedItemIdx = 0;
   let currentMultiplier = 2;
   let spinning = false;
   let arrowAngle = 0;
-  let animationId = null;
   
   function getChancePercent(mult) {
     if (mult === 2) return 50;
@@ -840,6 +846,7 @@
     return 50;
   }
   
+  // Рисуем круг с наполнением СНИЗУ ВВЕРХ (от 6 часов)
   function drawWheel(percent) {
     const canvas = document.getElementById("wheelCanvas");
     if (!canvas) return;
@@ -848,12 +855,13 @@
     const h = canvas.height = 280;
     ctx.clearRect(0, 0, w, h);
     
-    const centerX = 140, centerY = 140, radius = 130;
-    const startAngle = -90; // 12 часов — 0°, но нам нужно с 6 часов (180°)
+    const centerX = 140, centerY = 140, radius = 128;
+    // начинаем с 90 градусов (6 часов)
+    const startAngle = 90;
     const angle = (percent / 100) * 360;
     const endAngle = startAngle + angle;
     
-    // фиолетовое наполнение
+    // фиолетовое наполнение (снизу вверх)
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
     ctx.arc(centerX, centerY, radius, startAngle * Math.PI / 180, endAngle * Math.PI / 180);
@@ -874,7 +882,7 @@
     ctx.lineWidth = 3;
     ctx.stroke();
     
-    // центральная метка (маленькая точка для красоты)
+    // маленькая центральная точка
     ctx.beginPath();
     ctx.arc(centerX, centerY, 6, 0, 2 * Math.PI);
     ctx.fillStyle = "#aa66ff";
@@ -882,13 +890,14 @@
     ctx.strokeStyle = "white";
     ctx.stroke();
     
-    // процент по центру
+    // процент по центру БЕЛЫМ
     ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 32px monospace";
+    ctx.font = "bold 34px monospace";
     ctx.shadowBlur = 0;
-    ctx.fillText(percent + "%", 108, 155);
+    ctx.fillText(percent + "%", 105, 155);
   }
   
+  // Рисуем стрелку на внешнем крае круга
   function drawArrow(angleDeg) {
     const canvas = document.getElementById("arrowCanvas");
     if (!canvas) return;
@@ -897,13 +906,13 @@
     const h = canvas.height = 280;
     ctx.clearRect(0, 0, w, h);
     
-    const centerX = 140, centerY = 140, radius = 130;
+    const centerX = 140, centerY = 140, radius = 128;
     const rad = angleDeg * Math.PI / 180;
-    const arrowX = centerX + (radius - 12) * Math.cos(rad);
-    const arrowY = centerY + (radius - 12) * Math.sin(rad);
+    const arrowX = centerX + radius * Math.cos(rad);
+    const arrowY = centerY + radius * Math.sin(rad);
     
-    // рисуем стрелку (треугольник, направленный по радиусу)
-    const angleToCenter = Math.atan2(centerY - arrowY, centerX - arrowX);
+    // угол направления стрелки (наружу)
+    const angleToCenter = Math.atan2(arrowY - centerY, arrowX - centerX);
     const tipX = arrowX;
     const tipY = arrowY;
     const leftX = arrowX + 12 * Math.cos(angleToCenter + Math.PI/2);
@@ -923,7 +932,7 @@
   }
   
   function getArrowResult(angleDeg, chancePercent) {
-    const startAngle = -90;
+    const startAngle = 90;
     const winRangeEnd = startAngle + (chancePercent / 100) * 360;
     let normalized = angleDeg % 360;
     if (normalized < 0) normalized += 360;
@@ -941,13 +950,13 @@
     const betItem = inventory[selectedItemIdx];
     const winAmount = betItem.price * currentMultiplier;
     
-    const totalSpins = 12 + Math.random() * 8;
+    const totalSpins = 10 + Math.random() * 6;
     const targetAngle = Math.random() * 360;
     const startAngleArrow = arrowAngle % 360;
     let delta = targetAngle - startAngleArrow;
     if (delta < 0) delta += 360;
     const finalDelta = totalSpins * 360 + delta;
-    const duration = 2200;
+    const duration = 2500; // медленно
     const startTime = performance.now();
     
     function animateSpin(now) {
@@ -963,16 +972,18 @@
         const win = getArrowResult(finalNorm, chance);
         
         if (win) {
-          const newItem = { name: betItem.name, price: winAmount };
+          const randomName = weirdNames[Math.floor(Math.random() * weirdNames.length)];
+          const newItem = { name: randomName, price: winAmount };
           inventory.push(newItem);
-          document.getElementById("resultMsg").innerHTML = `🎉 МАЛАДЕЦ! ВЫ ВЫИГРАЛИ ${winAmount}₴ (${betItem.name} x${currentMultiplier}) 🎉<br>➕ Предмет добавлен в инвентарь`;
+          document.getElementById("resultMsg").innerHTML = `🎉 МАЛАДЕЦ! ВЫ ВЫИГРАЛИ ${winAmount}₴ 🎉<br>➕ Получен предмет: ${randomName}`;
         } else {
-          if (inventory.length > 1) {
-            inventory.splice(selectedItemIdx, 1);
-            if (selectedItemIdx >= inventory.length) selectedItemIdx = 0;
-          } else {
-            inventory[0].price = Math.max(1, Math.floor(inventory[0].price / 2));
+          // Удаляем предмет полностью
+          inventory.splice(selectedItemIdx, 1);
+          if (inventory.length === 0) {
+            // Если инвентарь пуст, добавляем дефолтный предмет
+            inventory.push({ name: "Твои яйки", price: 50 });
           }
+          if (selectedItemIdx >= inventory.length) selectedItemIdx = 0;
           document.getElementById("resultMsg").innerHTML = `😭 НЕ БЕДА! ВЫ ПРОИГРАЛИ ${betItem.price}₴ (${betItem.name}) 😭`;
         }
         renderInventory();
